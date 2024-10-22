@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {default as Tabs} from './Tabs';
 import MainSplash from '../screens/MainSplash';
+import Welcome from '../screens/Welcome';
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -28,7 +29,7 @@ const Navigation = () => {
         <>
           <Stack.Screen
             name="Splash"
-            component={MainSplash}
+            component={Welcome}
             options={{headerShown: false}}
           />
           <Stack.Screen

@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     borderColor: '#72a045',
     borderRadius: 10,
     backgroundColor: '#ffffff',
-    color: '72a045',
+    color: '#72a045',
     textAlign: 'center',
   },
   input_password: {
