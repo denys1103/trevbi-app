@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Dimensions, PixelRatio} from 'react-native';
+import {HOST_URL} from "@env"
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const widthBaseScale = SCREEN_WIDTH / 414;
 const heightBaseScale = SCREEN_HEIGHT / 896;
@@ -28,9 +29,10 @@ const pixelSizeVertical = size => {
 const pixelSizeHorizontal = size => {
   return widthPixel(size);
 };
-const baseURL = 'http://192.168.148.128:3000/api';
-const imageURL = 'http://192.168.148.128:3000/uploads/images/';
-export default axios.create({baseURL: 'http://192.168.148.128:3000/api'});
+
+const baseURL = HOST_URL + '/api';
+const imageURL = HOST_URL + '/uploads/images/';
+export default axios.create({baseURL: HOST_URL + '/api'});
 const theme = {
   aliases: {
     bg: 'backgroundColor',

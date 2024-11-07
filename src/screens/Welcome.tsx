@@ -24,18 +24,18 @@ const WELCOME_STEPS: WelcomeStepType[] = [
   {
     id: '1',
     title: 'Welcome to CleanLabel!',
-    description: 'CleanLabel is a mobile app that allows you to scan the barcodes of food and personal care products and instantly see their impact on your health.',
+    description: 'CleanLabel is a mobile app that allows you to scan the ingredients of food and personal care products and instantly see their impact on your health.',
     image: images().welcomeStep1,
     imageStyle: { width: 142, height: 142 },
-    gradientBg: ['rgba(69, 153, 102, 1)', 'rgba(107, 214, 149, 0.9)'],
+    gradientBg: ['rgba(102,123,104, 1)', 'rgba(102,123,104, 0.9)'],
   },
   {
     id: '2',
     title: 'Features of the app',
-    description: 'CleanLabel is a food scanner app that instantly shows if a food product is good for your health or not.',
+    description: 'CleanLabel is a food scanner app that instantly and transparently shows if a food product is good for your health or not.',
     image: images().welcomeStep2,
     imageStyle: { width: 200, height: 200 },
-    gradientBg: ['rgba(0, 144, 141, 1)', 'rgba(50, 211, 208, 0.9)'],
+    gradientBg: ['rgba(155, 186, 119, 1)', 'rgba(155, 186, 119, 0.9)'],
   },
   {
     id: '3',
@@ -43,15 +43,15 @@ const WELCOME_STEPS: WelcomeStepType[] = [
     description: 'Learn how to buy the best quality products from the grocery store with the CleanLabel app.',
     image: images().welcomeStep3,
     imageStyle: { width: 200, height: 200 },
-    gradientBg: ['rgba(24, 90, 151, 1)', 'rgba(56, 140, 217, 0.9)'],
+    gradientBg: ['rgba(163,184,153, 1)', 'rgba(163,184,153, 0.9)'],
   },
   {
     id: '4',
     title: 'How to do it',
-    description: 'Just point your camera, scan the barcode, and find out if that box of pasta, loaf of bread, or box of cereal is made with best-in-class ingredients, or if you should put it back.',
+    description: 'Just point your camera, scan the ingredients, and find out if that box of pasta, loaf of bread, or box of cereal is made with best-in-class ingredients, or if you should put it back.',
     image: images().welcomeStep4,
     imageStyle: { width: 200, height: 200 },
-    gradientBg: ['rgba(105, 33, 149, 1)', 'rgba(136, 55, 186, 0.9)'],
+    gradientBg: ['rgba(102,123,104, 1)', 'rgba(102,123,104, 0.9)'],
   },
 ];
 
@@ -143,7 +143,7 @@ export default function WelcomeScreen({ route, navigation }: any) {
   });
 
   const _goToAuthScreen = async () => {
-    navigation.navigate('Login');
+    navigation.navigate('Scan');
     AsyncStorage.setItem('WELCOME_STORAGE_KEY', 'true');
   };
 
@@ -154,7 +154,7 @@ export default function WelcomeScreen({ route, navigation }: any) {
           style={styles.buttonContainer}
           activeOpacity={0.6}
           onPress={_goToAuthScreen}>
-          <Heading fontSize="$xl" textAlign="center">Start Your Journey</Heading>
+          <Heading fontSize="$xl" textAlign="center">Start Scanning</Heading>
         </TouchableOpacity>
       );
     } else if (currentStep === 0) {
