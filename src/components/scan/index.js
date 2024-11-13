@@ -36,7 +36,8 @@ const ScanAndRecognizeScreen = () => {
 
   const getIngredientsList = (inputText) => {
     return inputText
-      .split(/[,;:()"]/)
+      // .split(/[,;:()."]/)
+      .split(/[,;:()."]|\b(?:and|or)\b/i)
       .map(sentence => sentence.trim())
       .filter(sentence => sentence && (sentence.match(/\s/g) || []).length < 3);
   };
@@ -80,13 +81,38 @@ const ScanAndRecognizeScreen = () => {
           Alert.alert('Get Avoid Data', e);
         }
 
-        const ocrResults = result.blocks.flatMap((block) =>
+        let ocrResults = result.blocks.flatMap((block) =>
           block.lines.flatMap((line) => line.elements)
         );
+        const ocrWords = result.blocks.flatMap((block) =>
+          block.lines.flatMap((line) => line.elements.map((element) => element.elementText))
+        );
+        // console.log('ocrWords origin:', ocrWords);
+        try {
+          const { data } = await client.post('/getCorrectWords', {
+            ocrWords,
+          });
+    
+          if (data.success) {
+            // console.log('ocrWords:', data.results);
+            if(data.results.length == ocrResults.length){
+              ocrResults.forEach((item, index) => {
+                item.elementText = data.results[index];
+              });
+            }
+          } else {
+            console.log('server error!');
+          }
+        } catch (e) {
+          console.log('new error:', e);
+          Alert.alert('Get Correct Words Data', e);
+        } finally {
+          setTextBlocks(ocrResults);
+          setIsScanning(false);
+          setOkBtnStatus(true);
+        }
         // console.log(JSON.stringify(result, null, 2))
-        setTextBlocks(ocrResults);
-        setIsScanning(false);
-        setOkBtnStatus(true);
+        
       } catch (error) {
         setOkBtnStatus(true);
         console.log(error)
@@ -145,7 +171,7 @@ const ScanAndRecognizeScreen = () => {
           activeOpacity={0.9}
         >
           <Image source={{ uri: `file://${capturedPhoto.path}` }} style={StyleSheet.absoluteFill} />
-          <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,0.6)', width:width, height:height})}>
+          <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
           </View>
         </TouchableOpacity>
       )}
@@ -159,7 +185,7 @@ const ScanAndRecognizeScreen = () => {
             activeOpacity={0.9}
           >
             {textBlocks.map((block, index) => {
-              const cleanedBlockText = block.elementText.replace(/,$/, '').trim();
+              const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
               const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
               
               let matchName = '';
@@ -168,7 +194,7 @@ const ScanAndRecognizeScreen = () => {
               }
 
               if (singleMatch == undefined && !block.elementText.includes(',') && index < textBlocks.length - 1) {
-                const nextBlockText = textBlocks[index + 1].elementText.replace(/,$/, '').trim();
+                const nextBlockText = textBlocks[index + 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
                 const combinedText = `${cleanedBlockText} ${nextBlockText}`;
                 
                 const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
@@ -178,7 +204,7 @@ const ScanAndRecognizeScreen = () => {
               }
 
               if (singleMatch == undefined && index > 0) {
-                const beforeBlockText = textBlocks[index - 1].elementText.replace(/,$/, '').trim();
+                const beforeBlockText = textBlocks[index - 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
                 const combinedText = `${beforeBlockText} ${cleanedBlockText}`;
                 
                 const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
@@ -186,6 +212,11 @@ const ScanAndRecognizeScreen = () => {
                   matchName = matchInNameList;
                 }
               }
+              //control font width
+              const textLength = block.elementText.length;
+              const characterWidth = 0.6 * block.elementFrame.height;
+              const textWidth = characterWidth * textLength;
+              const targetScaleX = block.elementFrame.width / textWidth;
               return (
                 <TouchableOpacity
                   key={index}
@@ -214,6 +245,7 @@ const ScanAndRecognizeScreen = () => {
                       color: matchName!='' ? 'red' : 'black',
                       fontSize : block.elementFrame.height/scale,
                       lineHeight : block.elementFrame.height/scale,
+                      transform: [{ scaleX: targetScaleX }],
                       // includeFontPadding: false,
                     }}
                   >
@@ -298,6 +330,8 @@ const styles = StyleSheet.create({
     paddingRight: '2%',
     paddingLeft: '2%',
     borderRadius: fontPixel(8),
+    borderColor: 'rgba(102,123,104, 1)',
+    borderWidth: heightPixel(2),
     // height: '50%',
   },
   modalTextStyle: {
