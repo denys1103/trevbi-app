@@ -87,6 +87,33 @@ const ScanAndRecognizeScreen = () => {
         const ocrWords = result.blocks.flatMap((block) =>
           block.lines.flatMap((line) => line.elements.map((element) => element.elementText))
         );
+
+        for (let i = 0; i < ocrResults.length; i++) {
+          // Initially set boundingCenterY to y
+          ocrResults[i].elementFrame.boundingCenterY = ocrResults[i].elementFrame.y;
+        
+          if (i > 0) {
+            const current = ocrResults[i].elementFrame;
+            const previous = ocrResults[i - 1].elementFrame;
+        
+            // Check if `x` position of the previous element is less than the current
+            if (previous.x < current.x) {
+              // Check if the current `y` overlaps with the previous element's range
+              if (
+                previous.y <= current.y &&
+                previous.y + previous.height > current.y
+              ) {
+                current.boundingCenterY = previous.boundingCenterY;
+              }
+              if (
+                previous.y > current.y &&
+                previous.y + previous.height < current.y
+              ) {
+                current.boundingCenterY = previous.boundingCenterY;
+              }
+            }
+          }
+        }
         // console.log('ocrWords origin:', ocrWords);
         try {
           const { data } = await client.post('/getCorrectWords', {
@@ -231,7 +258,7 @@ const ScanAndRecognizeScreen = () => {
                   style={{
                     position: 'absolute',
                     left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
-                    top: (block.elementFrame.y - (block.elementFrame.height/2.0))/scale,
+                    top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
                     // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
                     // backgroundColor: 'rgba(255,255,255,0)',
                     padding: 0,
