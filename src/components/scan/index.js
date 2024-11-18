@@ -37,7 +37,7 @@ const ScanAndRecognizeScreen = () => {
   const getIngredientsList = (inputText) => {
     return inputText
       // .split(/[,;:()."]/)
-      .split(/[,;:()."]|\b(?:and|or)\b/i)
+      .split(/[,;:()."]|\b(?:and|or|with)\b/i)
       .map(sentence => sentence.trim())
       .filter(sentence => sentence && (sentence.match(/\s/g) || []).length < 3);
   };
@@ -81,40 +81,38 @@ const ScanAndRecognizeScreen = () => {
           Alert.alert('Get Avoid Data', e);
         }
 
-        let ocrResults = result.blocks.flatMap((block) =>
+        let ocrText = result.blocks.flatMap((block) =>
           block.lines.flatMap((line) => line.elements)
         );
         const ocrWords = result.blocks.flatMap((block) =>
           block.lines.flatMap((line) => line.elements.map((element) => element.elementText))
         );
 
-        for (let i = 0; i < ocrResults.length; i++) {
-          // Initially set boundingCenterY to y
-          ocrResults[i].elementFrame.boundingCenterY = ocrResults[i].elementFrame.y;
+        let ocrResults = ocrText.map((current, index, array) => {
+          const updatedFrame = { ...current.elementFrame, boundingCenterY: current.elementFrame.y };
         
-          if (i > 0) {
-            const current = ocrResults[i].elementFrame;
-            const previous = ocrResults[i - 1].elementFrame;
+          if (index > 0) {
+            const previous = array[index - 1].elementFrame;
         
-            // Check if `x` position of the previous element is less than the current
-            if (previous.x < current.x) {
-              // Check if the current `y` overlaps with the previous element's range
+            if (previous.x < current.elementFrame.x) {
               if (
-                previous.y <= current.y &&
-                previous.y + previous.height > current.y
+                previous.y <= current.elementFrame.y &&
+                previous.y + previous.height > current.elementFrame.y
               ) {
-                current.boundingCenterY = previous.boundingCenterY;
+                updatedFrame.boundingCenterY = previous.boundingCenterY;
               }
               if (
-                previous.y > current.y &&
-                previous.y + previous.height < current.y
+                previous.y > current.elementFrame.y &&
+                previous.y + previous.height < current.elementFrame.y
               ) {
-                current.boundingCenterY = previous.boundingCenterY;
+                updatedFrame.boundingCenterY = previous.boundingCenterY;
               }
             }
           }
-        }
-        // console.log('ocrWords origin:', ocrWords);
+        
+          return { elementText:current.elementText, elementFrame: updatedFrame};
+        });
+        // console.log('correctPositionResult:', ocrResults);
         try {
           const { data } = await client.post('/getCorrectWords', {
             ocrWords,
