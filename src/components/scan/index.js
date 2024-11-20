@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -52,8 +52,9 @@ const ScanAndRecognizeScreen = () => {
           quality: 90
         })
         setCapturedPhoto(photo);
+        const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
         const result = await PhotoRecognizer({
-          uri:`file://${photo.path}`,
+          uri:photoURI,
           width:photo.width,
           height:photo.height
         })
@@ -161,15 +162,17 @@ const ScanAndRecognizeScreen = () => {
     return (
       <View style={[styles.permissionContainer, StyleSheet.absoluteFill]}>
         <Text style={styles.permissionText}></Text>
-        <TouchableOpacity
-          style={styles.okButton}
-          onPress={async () => {
-            const newStatus = await Camera.requestCameraPermission();
-            setHasPermission(newStatus === 'granted');
-          }}
-        >
-          <Text style={styles.buttonText}>Grant Permission</Text>
-        </TouchableOpacity>
+        <View style={styles.permissionButtonView}>
+          <TouchableOpacity
+            style={styles.okButton}
+            onPress={async () => {
+              const newStatus = await Camera.requestCameraPermission();
+              setHasPermission(newStatus === 'granted');
+            }}
+          >
+            <Text style={styles.buttonText}>Grant Permission</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -195,7 +198,7 @@ const ScanAndRecognizeScreen = () => {
           }}
           activeOpacity={0.9}
         >
-          <Image source={{ uri: `file://${capturedPhoto.path}` }} style={StyleSheet.absoluteFill} />
+          <Image source={{ uri: Platform.OS === 'ios' ? capturedPhoto.path : `file://${capturedPhoto.path}` }} style={StyleSheet.absoluteFill} />
           <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
           </View>
         </TouchableOpacity>
@@ -323,6 +326,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#9bba77',
     alignItems: 'center',
     width: '100%',
+  },
+  permissionButtonView: {
+    paddingTop: '20%',
   },
   buttonContainer: {
     position: 'absolute',
