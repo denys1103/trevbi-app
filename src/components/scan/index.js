@@ -4,6 +4,7 @@ import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel} from '../../config';
+import RNFS from 'react-native-fs';
 
 const ScanAndRecognizeScreen = () => {
   const [textBlocks, setTextBlocks] = useState([]); 
@@ -21,6 +22,9 @@ const ScanAndRecognizeScreen = () => {
 
   const device = useCameraDevice('back');
 
+  const appDir = `${RNFS.DocumentDirectoryPath}/CleanLabel/ScanHistory`;
+  const indexFilePath = `${appDir}/index.json`;
+
   useEffect(() => {
     const requestCameraPermission = async () => {
       const status = await Camera.getCameraPermissionStatus();
@@ -34,6 +38,25 @@ const ScanAndRecognizeScreen = () => {
     requestCameraPermission();
   }, []);
 
+  const createAppDir = async () => {
+    if (!(await RNFS.exists(appDir))) {
+      await RNFS.mkdir(appDir);
+    }
+    if (!(await RNFS.exists(indexFilePath))) {
+      await RNFS.writeFile(indexFilePath, JSON.stringify([]));
+    }
+  };
+
+  const updateIndexFile = async (newEntry) => {
+    try {
+      const currentIndex = JSON.parse(await RNFS.readFile(indexFilePath));
+      currentIndex.push(newEntry);
+      await RNFS.writeFile(indexFilePath, JSON.stringify(currentIndex));
+    } catch (error) {
+      console.error('Failed to update index file:', error);
+    }
+  };
+
   const getIngredientsList = (inputText) => {
     return inputText
       // .split(/[,;:()."]/)
@@ -45,14 +68,21 @@ const ScanAndRecognizeScreen = () => {
   const captureAndRecognizeText = async () => {
     if (device) {
       try {
+        await createAppDir();
         setOkBtnStatus(false);
         setModalVisibleStatus(false);
+
+        const photoPath = `${appDir}/photo_${Date.now()}.jpg`;
+        const avoidPath = `${appDir}/avoid_${Date.now()}.json`;
+        const blockPath = `${appDir}/block_${Date.now()}.json`;
+
         // const photo = await photoCamera.current.takePhoto()
         const photo = await photoCamera.current.takeSnapshot({
           quality: 90
         })
         setCapturedPhoto(photo);
         const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
+        await RNFS.copyFile(photo.path, photoPath);
         const result = await PhotoRecognizer({
           uri:photoURI,
           width:photo.width,
@@ -67,6 +97,7 @@ const ScanAndRecognizeScreen = () => {
     
           if (data.success) {
             setAvoidIngredients(data.results);
+            await RNFS.writeFile(avoidPath, JSON.stringify({ avoidIngredients: data.results }));
             // console.log('avoidIngredients:', data.results);
             const nameArray = data.results.map(doc => doc.name);
             setAvoidIngredientsName(nameArray);
@@ -134,6 +165,9 @@ const ScanAndRecognizeScreen = () => {
           Alert.alert('Get Correct Words Data', e);
         } finally {
           setTextBlocks(ocrResults);
+          await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
+          const newEntry = { photoPath, avoidPath, blockPath };
+          await updateIndexFile(newEntry);
           setIsScanning(false);
           setOkBtnStatus(true);
         }
