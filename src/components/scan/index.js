@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimens
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Spinner from 'react-native-loading-spinner-overlay';
-import client, {fontPixel, widthPixel, heightPixel} from '../../config';
+import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
 
 const ScanAndRecognizeScreen = () => {
@@ -21,9 +21,6 @@ const ScanAndRecognizeScreen = () => {
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
 
   const device = useCameraDevice('back');
-
-  const appDir = `${RNFS.DocumentDirectoryPath}/CleanLabel/ScanHistory`;
-  const indexFilePath = `${appDir}/index.json`;
 
   useEffect(() => {
     const requestCameraPermission = async () => {

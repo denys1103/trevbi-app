@@ -7,6 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Box from '../components/core/Box';
 import Heading from '../components/core/Heading';
+import {
+  heightPixel,
+} from '../config';
 
 type WelcomeStepType = {
   id: string;
@@ -147,15 +150,27 @@ export default function WelcomeScreen({ route, navigation }: any) {
     AsyncStorage.setItem('WELCOME_STORAGE_KEY', 'true');
   };
 
+  const _goToHistoryScreen = async () => {
+    navigation.navigate('History');
+  };
+
   const _renderActions = () => {
     if (isLastStep) {
       return (
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          activeOpacity={0.6}
-          onPress={_goToAuthScreen}>
-          <Heading fontSize="$xl" textAlign="center">Start Scanning</Heading>
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            activeOpacity={0.6}
+            onPress={_goToAuthScreen}>
+            <Heading fontSize="$xl" textAlign="center">Start Scanning</Heading>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.historyButtonContainer}
+            activeOpacity={0.6}
+            onPress={_goToHistoryScreen}>
+            <Heading fontSize="$xl" textAlign="center" color="#61a148">Scan History</Heading>
+          </TouchableOpacity>
+        </>
       );
     } else if (currentStep === 0) {
       return (
@@ -232,7 +247,8 @@ export default function WelcomeScreen({ route, navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: { marginHorizontal: 24 },
+  buttonContainer: { marginHorizontal: heightPixel(24) },
+  historyButtonContainer: { marginHorizontal: heightPixel(24), paddingTop: heightPixel(24) },
   buttonContent: {
     borderRadius: 100,
     height: 48,

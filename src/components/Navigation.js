@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {default as Tabs} from './Tabs';
 import ScanComponent from '../components/scan/index';
+import HistoryComponent from './scan/History';
 import Welcome from '../screens/Welcome';
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
@@ -35,6 +36,11 @@ const Navigation = () => {
           <Stack.Screen
             name="Scan"
             component={ScanComponent}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="History"
+            component={HistoryComponent}
             options={{headerShown: false}}
           />
           <Stack.Screen
