@@ -16,9 +16,11 @@ import {
   indexFilePath,
 } from '../../config';
 import RNFS from 'react-native-fs';
+import ViewDetailsComponent from './ViewDetails';
 
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
@@ -72,14 +74,25 @@ const ScanHistory = ({ navigation }) => {
   useEffect(() => {
     fetchScanHistory();
   }, []);
+  
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
+  const goBackToHistory = () => {
+    setSelectedItem(null);
+  };
+
+  if (selectedItem) {
+    return <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />;
+  }
 
   const renderItem = ({ item }) => (
     <View>
       <TouchableOpacity
-        activeOpacity={0.6}
+        activeOpacity={0.7}
         onPress={() => {
-          // console.log('onpress');
-          viewDetails(item)
+          handleItemClick(item)
         }}>
         <View style={styles.box}>
           <Image
@@ -98,15 +111,6 @@ const ScanHistory = ({ navigation }) => {
       </TouchableOpacity>
     </View>
   );
-
-  const viewDetails = async (item) => {
-    try {
-      const avoidContent = await RNFS.readFile(item.avoidPath, 'utf8');
-      const parsedData = JSON.parse(avoidContent);
-    } catch (error) {
-      console.error('Error reading item details:', error);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
