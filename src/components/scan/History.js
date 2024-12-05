@@ -12,6 +12,7 @@ import {
 import {
   fontPixel,
   heightPixel,
+  appDir,
   indexFilePath,
 } from '../../config';
 import RNFS from 'react-native-fs';
@@ -19,8 +20,18 @@ import RNFS from 'react-native-fs';
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
 
+  const createAppDir = async () => {
+    if (!(await RNFS.exists(appDir))) {
+      await RNFS.mkdir(appDir);
+    }
+    if (!(await RNFS.exists(indexFilePath))) {
+      await RNFS.writeFile(indexFilePath, JSON.stringify([]));
+    }
+  };
+
   const fetchScanHistory = async () => {
     try {
+      await createAppDir();
       if (await RNFS.exists(indexFilePath)) {
         const indexData = JSON.parse(await RNFS.readFile(indexFilePath));
 
