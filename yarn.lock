@@ -3167,6 +3167,7 @@ __metadata:
     react-native-reanimated: ^3.5.4
     react-native-safe-area-context: ^4.6.4
     react-native-screens: ^3.27.0
+    react-native-search-bar: ^3.5.1
     react-native-svg: ^13.4.0
     react-native-toast-message: ^2.2.1
     react-native-vision-camera: ^4.3.2
@@ -8815,7 +8816,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -9031,6 +9032,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: cb8a0c8d8a41a8a1065cc2253e4272a970366a7d80bc54e889b2f48de7ccccd3e828e2701de39c0453a67956ec0cad140fb506324cce04419b5e2eb495c038c2
+  languageName: node
+  linkType: hard
+
+"react-native-search-bar@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "react-native-search-bar@npm:3.5.1"
+  dependencies:
+    prop-types: ^15.5.10
+  peerDependencies:
+    react: ">=15.1 || >=16.0.0"
+    react-native: ">=0.40"
+  checksum: 1455285d6f06ebeef38ceb8903fb5376e55ae85dc757ea5dbd08d8b145eab4898ebada16a54ee99389f7ed4957e894425057c8c3b4845c5f4ddf4210df3346c9
   languageName: node
   linkType: hard
 

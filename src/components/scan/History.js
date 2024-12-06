@@ -17,9 +17,11 @@ import {
 } from '../../config';
 import RNFS from 'react-native-fs';
 import ViewDetailsComponent from './ViewDetails';
+import SearchBar from 'react-native-search-bar';
 
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
+  const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const createAppDir = async () => {
@@ -66,6 +68,7 @@ const ScanHistory = ({ navigation }) => {
         );
 
         setHistoryData(historyEntries);
+        setSearchHistoryData(historyEntries);
       }
     } catch (error) {
       console.error('Error fetching history:', error);
@@ -112,10 +115,34 @@ const ScanHistory = ({ navigation }) => {
     </View>
   );
 
+  const searchHistory = text => {
+    if (text) {
+      const newData = historyData.filter(item => {
+        const itemData = item.nameArray
+          ? item.nameArray.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setSearchHistoryData(newData);
+    } else {
+      setSearchHistoryData(historyData);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{paddingHorizontal: '10%'}}>
+        <SearchBar
+          backgroundColor={'transparent'}
+          placeholder="Search Bad Ingredient"
+          onChangeText={searchHistory}
+          onSearchButtonPress={searchHistory}
+          onCancelButtonPress={searchHistory}
+        />
+      </View>
       <FlatList
-        data={historyData}
+        data={searchHistoryData}
         keyExtractor={(item, index) => `${item.photoPath}-${index}`}
         renderItem={renderItem}
         // contentContainerStyle={styles.list}
@@ -130,6 +157,7 @@ const ScanHistory = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingVertical: heightPixel(20),
   },
   image: {
     width: heightPixel(60),
