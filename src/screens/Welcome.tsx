@@ -146,13 +146,13 @@ export default function WelcomeScreen({ route, navigation }: any) {
   });
 
   const _goToAuthScreen = async () => {
-    navigation.navigate('Scan');
+    navigation.navigate('Dashboard');
     AsyncStorage.setItem('WELCOME_STORAGE_KEY', 'true');
   };
 
-  const _goToHistoryScreen = async () => {
-    navigation.navigate('History');
-  };
+  // const _goToHistoryScreen = async () => {
+  //   navigation.navigate('History');
+  // };
 
   const _renderActions = () => {
     if (isLastStep) {
@@ -164,12 +164,12 @@ export default function WelcomeScreen({ route, navigation }: any) {
             onPress={_goToAuthScreen}>
             <Heading fontSize="$xl" textAlign="center">Start Scanning</Heading>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.historyButtonContainer}
             activeOpacity={0.6}
             onPress={_goToHistoryScreen}>
             <Heading fontSize="$xl" textAlign="center" color="#61a148">Scan History</Heading>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </>
       );
     } else if (currentStep === 0) {

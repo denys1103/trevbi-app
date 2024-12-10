@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,11 +18,13 @@ import {
 import RNFS from 'react-native-fs';
 import ViewDetailsComponent from './ViewDetails';
 import SearchBar from 'react-native-search-bar';
+import {GlobalContext} from '../../context';
 
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const { checkEvent } = useContext(GlobalContext);
 
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
@@ -76,7 +78,7 @@ const ScanHistory = ({ navigation }) => {
   };
   useEffect(() => {
     fetchScanHistory();
-  }, []);
+  }, [checkEvent]);
   
   const handleItemClick = (item) => {
     setSelectedItem(item);

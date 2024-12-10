@@ -123,6 +123,8 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                     fontSize : block.elementFrame.height/scale,
                     lineHeight : block.elementFrame.height/scale,
                     transform: [{ scaleX: targetScaleX }],
+                    transformOrigin: '0% 50% 0',
+                    letterSpacing: 0,
                     // includeFontPadding: false,
                   }}
                 >

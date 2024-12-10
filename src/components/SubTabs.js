@@ -2,6 +2,10 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {getHeaderTitle} from '@react-navigation/elements';
 import {Home} from './home';
+import ScanComponent from './scan/index';
+import HistoryComponent from './scan/History';
+import {Text, View, Image, StyleSheet} from 'react-native';
+
 import {
   widthPixel,
 } from '../config';
@@ -11,10 +15,10 @@ const Tab = createBottomTabNavigator();
 function CustomTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Scan"
       backBehaviour="initialRoute"
       screenOptions={{
-        tabBarActiveTintColor: '#1da1f2',
+        tabBarActiveTintColor: '#61a148',
         tabBarInactiveTintColor: '#000000',
         headerBackTitleVisible: true,
         tabBarStyle: {
@@ -37,10 +41,57 @@ function CustomTabs() {
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="Scan"
+        component={ScanComponent}
         options={{
-          tabBarLabel: 'HOME',
+          tabBarLabel: 'SCAN',
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/scan_active.png')}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/scan.png')}
+              />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryComponent}
+        options={{
+          tabBarLabel: 'HISTORY',
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/history_active.png')}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/history.png')}
+              />
+            ),
         }}
       />
     </Tab.Navigator>

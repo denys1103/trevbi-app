@@ -14,6 +14,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [splashLoading, setSplashLoading] = useState(false);
   const [error, setError] = useState('');
   const [isConnected, setIsConnected] = useState(true);
+  const [checkEvent, setCheckEvent] = useState(false);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -57,6 +58,8 @@ export const GlobalContextProvider = ({ children }) => {
         splashLoading,
         error,
         isConnected,
+        checkEvent,
+        setCheckEvent,
       }}>
       {children}
     </GlobalContext.Provider>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
+import {GlobalContext} from '../../context';
 
 const ScanAndRecognizeScreen = () => {
   const [textBlocks, setTextBlocks] = useState([]); 
@@ -19,6 +20,7 @@ const ScanAndRecognizeScreen = () => {
   const [avoidIngredientsName, setAvoidIngredientsName] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
+  const { setCheckEvent, checkEvent } = useContext(GlobalContext);
 
   const device = useCameraDevice('back');
 
@@ -132,10 +134,11 @@ const ScanAndRecognizeScreen = () => {
               }
               if (
                 previous.y > current.elementFrame.y &&
-                previous.y + previous.height < current.elementFrame.y
+                previous.y - previous.height < current.elementFrame.y
               ) {
                 updatedFrame.boundingCenterY = previous.boundingCenterY;
               }
+              array[index].elementFrame = updatedFrame;
             }
           }
         
@@ -165,6 +168,8 @@ const ScanAndRecognizeScreen = () => {
           await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
           const newEntry = { photoPath, avoidPath, blockPath };
           await updateIndexFile(newEntry);
+          // console.log(JSON.stringify(ocrResults, null, 2))
+          setCheckEvent(!checkEvent);
           setIsScanning(false);
           setOkBtnStatus(true);
         }
@@ -305,6 +310,8 @@ const ScanAndRecognizeScreen = () => {
                       fontSize : block.elementFrame.height/scale,
                       lineHeight : block.elementFrame.height/scale,
                       transform: [{ scaleX: targetScaleX }],
+                      transformOrigin: '0% 50% 0',
+                      letterSpacing: 0,
                       // includeFontPadding: false,
                     }}
                   >

@@ -22,7 +22,7 @@ const Navigation = () => {
         />
       ) : userInfo.token ? (
         <Stack.Screen
-          name="Dashboard"
+          name="Tabs"
           component={Tabs}
           options={{headerShown: false}}
         />
@@ -34,15 +34,15 @@ const Navigation = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
-            name="Scan"
-            component={ScanComponent}
+            name="Dashboard"
+            component={Tabs}
             options={{headerShown: false}}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="History"
             component={HistoryComponent}
             options={{headerShown: false}}
-          />
+          /> */}
           <Stack.Screen
             name="Login"
             component={LoginScreen}
