@@ -17,7 +17,7 @@ import {
 } from '../../config';
 import RNFS from 'react-native-fs';
 import ViewDetailsComponent from './ViewDetails';
-import SearchBar from 'react-native-search-bar';
+// import SearchBar from 'react-native-search-bar';
 import {GlobalContext} from '../../context';
 
 const ScanHistory = ({ navigation }) => {
@@ -135,13 +135,13 @@ const ScanHistory = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{paddingHorizontal: '10%'}}>
-        <SearchBar
+        {/*<SearchBar
           backgroundColor={'transparent'}
           placeholder="Search Bad Ingredient"
           onChangeText={searchHistory}
           onSearchButtonPress={searchHistory}
           onCancelButtonPress={searchHistory}
-        />
+        />*/}
       </View>
       <FlatList
         data={searchHistoryData}
