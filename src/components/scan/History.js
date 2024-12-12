@@ -19,12 +19,14 @@ import RNFS from 'react-native-fs';
 import ViewDetailsComponent from './ViewDetails';
 // import SearchBar from 'react-native-search-bar';
 import {GlobalContext} from '../../context';
+import { SearchBar } from '@rneui/themed';
 
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const { checkEvent } = useContext(GlobalContext);
+  const [search, setSearch] = useState('');
 
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
@@ -118,6 +120,7 @@ const ScanHistory = ({ navigation }) => {
   );
 
   const searchHistory = text => {
+    setSearch(text);
     if (text) {
       const newData = historyData.filter(item => {
         const itemData = item.nameArray
@@ -142,6 +145,14 @@ const ScanHistory = ({ navigation }) => {
           onSearchButtonPress={searchHistory}
           onCancelButtonPress={searchHistory}
         />*/}
+        <SearchBar
+          placeholder="Search Bad Ingredient"
+          onChangeText={searchHistory}
+          platform={Platform.OS === 'ios' ? 'ios' : 'android'}
+          containerStyle={{borderRadius:heightPixel(20), marginBottom:heightPixel(10)}}
+          inputContainerStyle={{borderRadius:heightPixel(20)}}
+          value={search}
+        />
       </View>
       <FlatList
         data={searchHistoryData}
