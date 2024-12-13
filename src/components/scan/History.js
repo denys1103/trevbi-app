@@ -151,6 +151,8 @@ const ScanHistory = ({ navigation }) => {
           platform={Platform.OS === 'ios' ? 'ios' : 'android'}
           containerStyle={{borderRadius:heightPixel(20), marginBottom:heightPixel(10)}}
           inputContainerStyle={{borderRadius:heightPixel(20)}}
+          searchIcon={Platform.OS === 'ios' ? {name: 'search'} : null}
+          clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
           value={search}
         />
       </View>
