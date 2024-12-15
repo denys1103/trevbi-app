@@ -61,7 +61,11 @@ const ScanAndRecognizeScreen = () => {
       // .split(/[,;:()."]/)
       .split(/[,;:()."]|\b(?:and|or|with)\b/i)
       .map(sentence => sentence.trim())
-      .filter(sentence => sentence && (sentence.match(/\s/g) || []).length < 3);
+      .filter(sentence => sentence && (sentence.match(/\s/g) || []).length < 4);
+  };
+
+  const isObjectEmpty = (objectName) => {
+    return JSON.stringify(objectName) === "{}";
   };
 
   const captureAndRecognizeText = async () => {
@@ -77,7 +81,7 @@ const ScanAndRecognizeScreen = () => {
 
         // const photo = await photoCamera.current.takePhoto()
         const photo = await photoCamera.current.takeSnapshot({
-          quality: 90
+          quality: 100
         })
         setCapturedPhoto(photo);
         const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
@@ -87,94 +91,104 @@ const ScanAndRecognizeScreen = () => {
           width:photo.width,
           height:photo.height
         })
-        let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
-
-        try {
-          const { data } = await client.post('/getAvoidData', {
-            IngredientsList,
-          });
-    
-          if (data.success) {
-            setAvoidIngredients(data.results);
-            await RNFS.writeFile(avoidPath, JSON.stringify({ avoidIngredients: data.results }));
-            // console.log('avoidIngredients:', data.results);
-            const nameArray = data.results.map(doc => doc.name);
-            setAvoidIngredientsName(nameArray);
-            if(nameArray.length == 0) {
-              setModalData({'name':'', 'description': 'There is no the bad ingredients'});
-              setModalVisibleStatus(true);
-            }
-          } else {
-            console.log('server error!');
-          }
-        } catch (e) {
-          console.log('new error:', e);
-          Alert.alert('Get Avoid Data', e);
-        }
-
-        let ocrText = result.blocks.flatMap((block) =>
-          block.lines.flatMap((line) => line.elements)
-        );
-        const ocrWords = result.blocks.flatMap((block) =>
-          block.lines.flatMap((line) => line.elements.map((element) => element.elementText))
-        );
-
-        let ocrResults = ocrText.map((current, index, array) => {
-          const updatedFrame = { ...current.elementFrame, boundingCenterY: current.elementFrame.y };
-        
-          if (index > 0) {
-            const previous = array[index - 1].elementFrame;
-        
-            if (previous.x < current.elementFrame.x) {
-              if (
-                previous.y <= current.elementFrame.y &&
-                previous.y + previous.height > current.elementFrame.y
-              ) {
-                updatedFrame.boundingCenterY = previous.boundingCenterY;
-              }
-              if (
-                previous.y > current.elementFrame.y &&
-                previous.y - previous.height < current.elementFrame.y
-              ) {
-                updatedFrame.boundingCenterY = previous.boundingCenterY;
-              }
-              array[index].elementFrame = updatedFrame;
-            }
-          }
-        
-          return { elementText:current.elementText, elementFrame: updatedFrame};
-        });
-        // console.log('correctPositionResult:', ocrResults);
-        try {
-          const { data } = await client.post('/getCorrectWords', {
-            ocrWords,
-          });
-    
-          if (data.success) {
-            // console.log('ocrWords:', data.results);
-            if(data.results.length == ocrResults.length){
-              ocrResults.forEach((item, index) => {
-                item.elementText = data.results[index];
+        if(!isObjectEmpty(result)){
+          let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+          if(IngredientsList.length>0){
+            try {
+              const { data } = await client.post('/getAvoidData', {
+                IngredientsList,
               });
+        
+              if (data.success) {
+                setAvoidIngredients(data.results);
+                await RNFS.writeFile(avoidPath, JSON.stringify({ avoidIngredients: data.results }));
+                // console.log('avoidIngredients:', data.results);
+                const nameArray = data.results.map(doc => doc.name);
+                setAvoidIngredientsName(nameArray);
+                if(nameArray.length == 0) {
+                  setModalData({'name':'', 'description': 'There is no the bad ingredients'});
+                  setModalVisibleStatus(true);
+                }
+              } else {
+                console.log('server error!');
+              }
+            } catch (e) {
+              console.log('new error:', e);
+              Alert.alert('Get Avoid Data', e);
             }
           } else {
-            console.log('server error!');
+            setAvoidIngredients([]);
+            await RNFS.writeFile(avoidPath, JSON.stringify({ avoidIngredients: [] }));
+            setAvoidIngredientsName([]);
+            setModalData({'name':'', 'description': 'There is no the bad ingredients'});
+            setModalVisibleStatus(true);
           }
-        } catch (e) {
-          console.log('new error:', e);
-          Alert.alert('Get Correct Words Data', e);
-        } finally {
-          setTextBlocks(ocrResults);
-          await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
-          const newEntry = { photoPath, avoidPath, blockPath };
-          await updateIndexFile(newEntry);
-          // console.log(JSON.stringify(ocrResults, null, 2))
-          setCheckEvent(!checkEvent);
-          setIsScanning(false);
+
+          let ocrText = result.blocks.flatMap((block) =>
+            block.lines.flatMap((line) => line.elements)
+          );
+          const ocrWords = result.blocks.flatMap((block) =>
+            block.lines.flatMap((line) => line.elements.map((element) => element.elementText))
+          );
+
+          let ocrResults = ocrText.map((current, index, array) => {
+            const updatedFrame = { ...current.elementFrame, boundingCenterY: current.elementFrame.y };
+          
+            if (index > 0) {
+              const previous = array[index - 1].elementFrame;
+          
+              if (previous.x < current.elementFrame.x) {
+                if (
+                  previous.y <= current.elementFrame.y &&
+                  previous.y + previous.height > current.elementFrame.y
+                ) {
+                  updatedFrame.boundingCenterY = previous.boundingCenterY;
+                }
+                if (
+                  previous.y > current.elementFrame.y &&
+                  previous.y - previous.height < current.elementFrame.y
+                ) {
+                  updatedFrame.boundingCenterY = previous.boundingCenterY;
+                }
+                array[index].elementFrame = updatedFrame;
+              }
+            }
+          
+            return { elementText:current.elementText, elementFrame: updatedFrame};
+          });
+          try {
+            const { data } = await client.post('/getCorrectWords', {
+              ocrWords,
+            });
+      
+            if (data.success) {
+              if(data.results.length == ocrResults.length){
+                ocrResults.forEach((item, index) => {
+                  item.elementText = data.results[index];
+                });
+              }
+            } else {
+              console.log('server error!');
+            }
+          } catch (e) {
+            console.log('new error:', e);
+            Alert.alert('Get Correct Words Data', e);
+          } finally {
+            setTextBlocks(ocrResults);
+            await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
+            const newEntry = { photoPath, avoidPath, blockPath };
+            await updateIndexFile(newEntry);
+            // console.log(JSON.stringify(ocrResults, null, 2))
+            setCheckEvent(!checkEvent);
+            setIsScanning(false);
+            setOkBtnStatus(true);
+          }
+          // console.log(JSON.stringify(result, null, 2))
+        } else {
+          setModalData({'name':'', 'description': 'There is no captured text.\nPlease try again.'});
+          setModalVisibleStatus(true);
           setOkBtnStatus(true);
         }
-        // console.log(JSON.stringify(result, null, 2))
-        
       } catch (error) {
         setOkBtnStatus(true);
         console.log(error)
@@ -307,7 +321,7 @@ const ScanAndRecognizeScreen = () => {
                   <Text
                     style={{
                       color: matchName!='' ? 'red' : 'black',
-                      fontSize : block.elementFrame.height/scale,
+                      fontSize : block.elementFrame.height/scale*0.9,
                       lineHeight : block.elementFrame.height/scale,
                       transform: [{ scaleX: targetScaleX }],
                       transformOrigin: '0% 50% 0',

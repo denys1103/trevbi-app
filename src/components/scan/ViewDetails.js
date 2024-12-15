@@ -120,7 +120,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 <Text
                   style={{
                     color: matchName!='' ? 'red' : 'black',
-                    fontSize : block.elementFrame.height/scale,
+                    fontSize : block.elementFrame.height/scale*0.9,
                     lineHeight : block.elementFrame.height/scale,
                     transform: [{ scaleX: targetScaleX }],
                     transformOrigin: '0% 50% 0',
