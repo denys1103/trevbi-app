@@ -12,6 +12,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
   const [avoidIngredientsName, setAvoidIngredientsName] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
+  const [cameraRatioX, setCameraRatioX] = useState(1);
 
   const loadData = async () => {
     try {
@@ -25,6 +26,10 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
         setModalData({'name':'', 'description': 'There is no the bad ingredients'});
         setModalVisibleStatus(true);
       }
+
+      const ratioContent = await RNFS.readFile(item.ratioPath, 'utf8');
+      const ratioParse = JSON.parse(ratioContent);
+      setCameraRatioX(ratioParse.ratioX);
 
       const blockContent = await RNFS.readFile(item.blockPath, 'utf8');
       const blockAvoidData = JSON.parse(blockContent);
@@ -107,21 +112,21 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 disabled={matchName === ''}
                 style={{
                   position: 'absolute',
-                  left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
-                  top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
+                  left: (block.elementFrame.x - (block.elementFrame.width/2.0))/cameraRatioX,
+                  top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/cameraRatioX,
                   // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
                   // backgroundColor: 'rgba(255,255,255,0)',
                   padding: 0,
                   margin: 0,
                   // width : block.elementFrame.width/scale,
-                  height : block.elementFrame.height/scale,
+                  height : block.elementFrame.height/cameraRatioX,
                 }}
                 >
                 <Text
                   style={{
                     color: matchName!='' ? 'red' : 'black',
-                    fontSize : block.elementFrame.height/scale*0.9,
-                    lineHeight : block.elementFrame.height/scale,
+                    fontSize : block.elementFrame.height/cameraRatioX*0.95,
+                    lineHeight : block.elementFrame.height/cameraRatioX,
                     transform: [{ scaleX: targetScaleX }],
                     transformOrigin: '0% 50% 0',
                     letterSpacing: 0,

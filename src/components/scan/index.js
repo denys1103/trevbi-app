@@ -21,6 +21,8 @@ const ScanAndRecognizeScreen = () => {
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
+  const [cameraRatioX, setCameraRatioX] = useState(1);
+  const [cameraRatioY, setCameraRatioY] = useState(1);
 
   const device = useCameraDevice('back');
 
@@ -78,11 +80,12 @@ const ScanAndRecognizeScreen = () => {
         const photoPath = `${appDir}/photo_${Date.now()}.jpg`;
         const avoidPath = `${appDir}/avoid_${Date.now()}.json`;
         const blockPath = `${appDir}/block_${Date.now()}.json`;
+        const ratioPath = `${appDir}/ratio_${Date.now()}.json`;
 
-        // const photo = await photoCamera.current.takePhoto()
-        const photo = await photoCamera.current.takeSnapshot({
-          quality: 100
-        })
+        const photo = await photoCamera.current.takePhoto()
+        // const photo = await photoCamera.current.takeSnapshot({
+        //   quality: 100
+        // })
         setCapturedPhoto(photo);
         const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
         await RNFS.copyFile(photo.path, photoPath);
@@ -91,6 +94,15 @@ const ScanAndRecognizeScreen = () => {
           width:photo.width,
           height:photo.height
         })
+        if(photo.width > photo.height){
+          setCameraRatioY(photo.width/height);
+          setCameraRatioX(photo.height/width);
+          await RNFS.writeFile(ratioPath, JSON.stringify({ ratioX: (photo.height/width) }));
+        }else{
+          setCameraRatioY(photo.height/height);
+          setCameraRatioX(photo.width/width);
+          await RNFS.writeFile(ratioPath, JSON.stringify({ ratioX: (photo.width/width) }));
+        }
         if(!isObjectEmpty(result)){
           let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
           if(IngredientsList.length>0){
@@ -176,7 +188,7 @@ const ScanAndRecognizeScreen = () => {
           } finally {
             setTextBlocks(ocrResults);
             await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
-            const newEntry = { photoPath, avoidPath, blockPath };
+            const newEntry = { photoPath, avoidPath, blockPath, ratioPath };
             await updateIndexFile(newEntry);
             // console.log(JSON.stringify(ocrResults, null, 2))
             setCheckEvent(!checkEvent);
@@ -308,21 +320,21 @@ const ScanAndRecognizeScreen = () => {
                   disabled={matchName === ''}
                   style={{
                     position: 'absolute',
-                    left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
-                    top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
+                    left: (block.elementFrame.x - (block.elementFrame.width/2.0))/cameraRatioX,
+                    top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/cameraRatioX,
                     // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
                     // backgroundColor: 'rgba(255,255,255,0)',
                     padding: 0,
                     margin: 0,
                     // width : block.elementFrame.width/scale,
-                    height : block.elementFrame.height/scale,
+                    height : block.elementFrame.height/cameraRatioX,
                   }}
                   >
                   <Text
                     style={{
                       color: matchName!='' ? 'red' : 'black',
-                      fontSize : block.elementFrame.height/scale*0.9,
-                      lineHeight : block.elementFrame.height/scale,
+                      fontSize : block.elementFrame.height/cameraRatioX*0.95,
+                      lineHeight : block.elementFrame.height/cameraRatioX,
                       transform: [{ scaleX: targetScaleX }],
                       transformOrigin: '0% 50% 0',
                       letterSpacing: 0,

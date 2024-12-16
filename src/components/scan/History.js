@@ -45,11 +45,12 @@ const ScanHistory = ({ navigation }) => {
 
         const validatedHistory = await Promise.all(
           indexData.map(async (entry) => {
-            const photoExists = await RNFS.exists(entry.photoPath);
-            const aboidExists = await RNFS.exists(entry.avoidPath);
-            const blockExists = await RNFS.exists(entry.blockPath);
+            const photoExists = entry.photoPath ? await RNFS.exists(entry.photoPath) : false;
+            const avoidExists = entry.avoidPath ? await RNFS.exists(entry.avoidPath) : false;
+            const blockExists = entry.blockPath ? await RNFS.exists(entry.blockPath) : false;
+            const ratioExists = entry.ratioPath ? await RNFS.exists(entry.ratioPath) : false;
 
-            return photoExists && aboidExists && blockExists ? entry : null;
+            return photoExists && avoidExists && blockExists && ratioExists ? entry : null;
           })
         );
 
