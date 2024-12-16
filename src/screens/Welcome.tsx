@@ -1,6 +1,6 @@
 import { Canvas, Image, LinearGradient, Rect, useImage, vec } from '@shopify/react-native-skia';
 import { useMemo, useState } from 'react';
-import { Text, View, ImageSourcePropType, ImageStyle, Image as RNImage, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions } from 'react-native';
+import { Text, View, ImageSourcePropType, ImageStyle, Image as RNImage, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, Linking } from 'react-native';
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import { images } from '../../assets/images/images';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -162,6 +162,11 @@ export default function WelcomeScreen({ route, navigation }: any) {
             style={styles.buttonContainer}
             activeOpacity={0.6}
             onPress={_goToAuthScreen}>
+            {/* onPress={() =>
+              Linking.openURL(
+                'http://94.131.101.208/admin/login',
+              )
+            }> */}
             <Heading fontSize="$xl" textAlign="center">Start Scanning</Heading>
           </TouchableOpacity>
           {/* <TouchableOpacity
