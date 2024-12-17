@@ -34,9 +34,11 @@ const pixelSizeHorizontal = size => {
   return widthPixel(size);
 };
 
-const baseURL = HOST_URL + '/api';
+// const baseURL = HOST_URL + '/api';
+const baseURL = 'http://94.131.101.208/api';
 const imageURL = HOST_URL + '/uploads/images/';
-export default axios.create({baseURL: HOST_URL + '/api'});
+// export default axios.create({baseURL: HOST_URL + '/api'});
+export default axios.create({baseURL: 'http://94.131.101.208/api'});
 const theme = {
   aliases: {
     bg: 'backgroundColor',
