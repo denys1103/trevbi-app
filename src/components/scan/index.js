@@ -98,6 +98,12 @@ const ScanAndRecognizeScreen = () => {
     requestCameraPermission();
   }, []);
 
+  useEffect(() => {
+    if (photoCamera.current) {
+      photoCamera.current.focus({ x: width/2, y: height/2 });
+    }
+  }, []);
+
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
       await RNFS.mkdir(appDir);
