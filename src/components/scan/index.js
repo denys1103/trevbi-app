@@ -1,11 +1,18 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
+import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
 import {GlobalContext} from '../../context';
+
+Reanimated.addWhitelistedNativeProps({
+  zoom: true,
+})
+const ReanimatedCamera = Reanimated.createAnimatedComponent(VisionCamera)
 
 const ScanAndRecognizeScreen = () => {
   const [textBlocks, setTextBlocks] = useState([]); 
@@ -21,10 +28,62 @@ const ScanAndRecognizeScreen = () => {
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
-  const [cameraRatioX, setCameraRatioX] = useState(1);
-  const [cameraRatioY, setCameraRatioY] = useState(1);
 
   const device = useCameraDevice('back');
+  const zoom = useSharedValue(device?.neutralZoom || 1);
+  const zoomOffset = useSharedValue(0);
+  const isFocusing = useRef(false);
+
+  const gestureZoom = Gesture.Pinch()
+    .onBegin(() => {
+      zoomOffset.value = zoom.value
+    })
+    .onUpdate(event => {
+      const z = zoomOffset.value * event.scale;
+      zoom.value = interpolate(
+        z,
+        [1, 10],
+        [device?.minZoom || 1, device?.maxZoom || 10],
+        Extrapolation.CLAMP,
+      )
+    })
+
+  const animatedProps = useAnimatedProps(() => ({
+    zoom: zoom.value,
+  }));
+
+  // const focus = useCallback((point) => {
+  //   if (photoCamera.current == null) return;
+  //   photoCamera.current.focus(point);
+  // }, []);
+  const focus = useCallback(async (point) => {
+    if (isFocusing.current) return;
+  
+    const cameraRef = photoCamera.current;
+    if (!cameraRef) return;
+  
+    try {
+      isFocusing.current = true;
+      await cameraRef.focus(point);
+    } catch (error) {
+      console.warn('Focus failed:', error);
+    } finally {
+      isFocusing.current = false;
+    }
+  }, []);
+
+  // const gestureFocus = Gesture.Tap()
+  //   .onEnd(({ x, y }) => {
+  //     runOnJS(focus)({ x, y })
+  //   })
+  const gestureFocus = Gesture.Tap()
+    .onEnd((event) => {
+      if (event.x != null && event.y != null) {
+        runOnJS(focus)({ x: event.x, y: event.y });
+      }
+    });
+
+  const combinedGesture = Gesture.Simultaneous(gestureFocus, gestureZoom);
 
   useEffect(() => {
     const requestCameraPermission = async () => {
@@ -80,12 +139,11 @@ const ScanAndRecognizeScreen = () => {
         const photoPath = `${appDir}/photo_${Date.now()}.jpg`;
         const avoidPath = `${appDir}/avoid_${Date.now()}.json`;
         const blockPath = `${appDir}/block_${Date.now()}.json`;
-        const ratioPath = `${appDir}/ratio_${Date.now()}.json`;
 
-        const photo = await photoCamera.current.takePhoto()
-        // const photo = await photoCamera.current.takeSnapshot({
-        //   quality: 100
-        // })
+        // const photo = await photoCamera.current.takePhoto()
+        const photo = await photoCamera.current.takeSnapshot({
+          quality: 100
+        })
         setCapturedPhoto(photo);
         const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
         await RNFS.copyFile(photo.path, photoPath);
@@ -94,15 +152,6 @@ const ScanAndRecognizeScreen = () => {
           width:photo.width,
           height:photo.height
         })
-        if(photo.width > photo.height){
-          setCameraRatioY(photo.width/height);
-          setCameraRatioX(photo.height/width);
-          await RNFS.writeFile(ratioPath, JSON.stringify({ ratioX: (photo.height/width) }));
-        }else{
-          setCameraRatioY(photo.height/height);
-          setCameraRatioX(photo.width/width);
-          await RNFS.writeFile(ratioPath, JSON.stringify({ ratioX: (photo.width/width) }));
-        }
         if(!isObjectEmpty(result)){
           let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
           if(IngredientsList.length>0){
@@ -188,7 +237,7 @@ const ScanAndRecognizeScreen = () => {
           } finally {
             setTextBlocks(ocrResults);
             await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
-            const newEntry = { photoPath, avoidPath, blockPath, ratioPath };
+            const newEntry = { photoPath, avoidPath, blockPath };
             await updateIndexFile(newEntry);
             // console.log(JSON.stringify(ocrResults, null, 2))
             setCheckEvent(!checkEvent);
@@ -240,17 +289,20 @@ const ScanAndRecognizeScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Spinner visible={!okBtnStatus} />
       {isScanning && !!device && (
-        <VisionCamera
-          style={StyleSheet.absoluteFill}
-          device={device}
-          ref={photoCamera}
-          isActive={true}
-          photo={true}
-          // mode={'translate'}
-        />
+        <GestureDetector gesture={combinedGesture}>
+          <ReanimatedCamera
+            style={StyleSheet.absoluteFill}
+            device={device}
+            ref={photoCamera}
+            isActive={true}
+            photo={true}
+            animatedProps={animatedProps}
+            // mode={'translate'}
+          />
+        </GestureDetector>
       )}
 
       {capturedPhoto && (
@@ -320,21 +372,21 @@ const ScanAndRecognizeScreen = () => {
                   disabled={matchName === ''}
                   style={{
                     position: 'absolute',
-                    left: (block.elementFrame.x - (block.elementFrame.width/2.0))/cameraRatioX,
-                    top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/cameraRatioX,
+                    left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
+                    top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
                     // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
                     // backgroundColor: 'rgba(255,255,255,0)',
                     padding: 0,
                     margin: 0,
                     // width : block.elementFrame.width/scale,
-                    height : block.elementFrame.height/cameraRatioX,
+                    height : block.elementFrame.height/scale,
                   }}
                   >
                   <Text
                     style={{
                       color: matchName!='' ? 'red' : 'black',
-                      fontSize : block.elementFrame.height/cameraRatioX*0.95,
-                      lineHeight : block.elementFrame.height/cameraRatioX,
+                      fontSize : block.elementFrame.height/scale*0.95,
+                      lineHeight : block.elementFrame.height/scale,
                       transform: [{ scaleX: targetScaleX }],
                       transformOrigin: '0% 50% 0',
                       letterSpacing: 0,
@@ -378,7 +430,7 @@ const ScanAndRecognizeScreen = () => {
           </View>
         </View>
       )}
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
