@@ -31,11 +31,11 @@ const ScanAndRecognizeScreen = () => {
 
   // const device = useCameraDevice('back');
   const device = useCameraDevice('back', {
-    physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
+    physicalDevices: ['ultra-wide-angle-camera']
   });
   const zoom = useSharedValue(device?.neutralZoom || 1);
   const zoomOffset = useSharedValue(0);
-  const isFocusing = useRef(false);
+  // const isFocusing = useRef(false);
 
   const gestureZoom = Gesture.Pinch()
     .onBegin(() => {
@@ -55,38 +55,30 @@ const ScanAndRecognizeScreen = () => {
     zoom: zoom.value,
   }));
 
-  // const focus = useCallback((point) => {
-  //   if (photoCamera.current == null) return;
-  //   photoCamera.current.focus(point);
+  // const focus = useCallback(async (point) => {
+  //   if (isFocusing.current) return;
+  
+  //   const cameraRef = photoCamera.current;
+  //   if (!cameraRef) return;
+  
+  //   try {
+  //     isFocusing.current = true;
+  //     await cameraRef.focus(point);
+  //   } catch (error) {
+  //     console.warn('Focus failed:', error);
+  //   } finally {
+  //     isFocusing.current = false;
+  //   }
   // }, []);
-  const focus = useCallback(async (point) => {
-    if (isFocusing.current) return;
-  
-    const cameraRef = photoCamera.current;
-    if (!cameraRef) return;
-  
-    try {
-      isFocusing.current = true;
-      await cameraRef.focus(point);
-    } catch (error) {
-      console.warn('Focus failed:', error);
-    } finally {
-      isFocusing.current = false;
-    }
-  }, []);
 
   // const gestureFocus = Gesture.Tap()
-  //   .onEnd(({ x, y }) => {
-  //     runOnJS(focus)({ x, y })
-  //   })
-  const gestureFocus = Gesture.Tap()
-    .onEnd((event) => {
-      if (event.x != null && event.y != null) {
-        runOnJS(focus)({ x: event.x, y: event.y });
-      }
-    });
+  //   .onEnd((event) => {
+  //     if (event.x != null && event.y != null) {
+  //       runOnJS(focus)({ x: event.x, y: event.y });
+  //     }
+  //   });
 
-  const combinedGesture = Gesture.Simultaneous(gestureFocus, gestureZoom);
+  // const combinedGesture = Gesture.Simultaneous(gestureFocus, gestureZoom);
 
   useEffect(() => {
     const requestCameraPermission = async () => {
@@ -101,11 +93,11 @@ const ScanAndRecognizeScreen = () => {
     requestCameraPermission();
   }, []);
 
-  useEffect(() => {
-    if (photoCamera.current) {
-      photoCamera.current.focus({ x: width/2, y: height/2 });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (photoCamera.current) {
+  //     photoCamera.current.focus({ x: width/2, y: height/2 });
+  //   }
+  // }, []);
 
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
@@ -301,7 +293,7 @@ const ScanAndRecognizeScreen = () => {
     <GestureHandlerRootView style={styles.container}>
       <Spinner visible={!okBtnStatus} />
       {isScanning && !!device && (
-        <GestureDetector gesture={combinedGesture}>
+        <GestureDetector gesture={gestureZoom}>
           <ReanimatedCamera
             style={StyleSheet.absoluteFill}
             device={device}
