@@ -29,7 +29,10 @@ const ScanAndRecognizeScreen = () => {
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
 
-  const device = useCameraDevice('back');
+  // const device = useCameraDevice('back');
+  const device = useCameraDevice('back', {
+    physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
+  });
   const zoom = useSharedValue(device?.neutralZoom || 1);
   const zoomOffset = useSharedValue(0);
   const isFocusing = useRef(false);
