@@ -300,6 +300,7 @@ const ScanAndRecognizeScreen = () => {
             ref={photoCamera}
             isActive={true}
             photo={true}
+            video={true}
             animatedProps={animatedProps}
             // mode={'translate'}
           />
