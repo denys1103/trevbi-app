@@ -146,14 +146,13 @@ const ScanAndRecognizeScreen = () => {
           quality: 100
         })
         await RNFS.copyFile(photo.path, photoPath);
-        // const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
-        const photoURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
-        photo.photoURI = photoURI;
+        const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
+        const photoCopyURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
+        photo.photoURI = photoCopyURI;
         setCapturedPhoto(photo);
         const result = await PhotoRecognizer({
           uri:photoURI,
-          width:photo.width,
-          height:photo.height
+          orientation: "landscapeLeft"
         })
         if(!isObjectEmpty(result)){
           let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
