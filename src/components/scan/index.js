@@ -31,7 +31,7 @@ const ScanAndRecognizeScreen = () => {
 
   // const device = useCameraDevice('back');
   const device = useCameraDevice('back', {
-    physicalDevices: ['ultra-wide-angle-camera']
+    physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
   });
   const zoom = useSharedValue(device?.neutralZoom || 1);
   const zoomOffset = useSharedValue(0);
@@ -145,9 +145,11 @@ const ScanAndRecognizeScreen = () => {
         const photo = await photoCamera.current.takeSnapshot({
           quality: 100
         })
-        setCapturedPhoto(photo);
-        const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
         await RNFS.copyFile(photo.path, photoPath);
+        // const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
+        const photoURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
+        photo.photoURI = photoURI;
+        setCapturedPhoto(photo);
         const result = await PhotoRecognizer({
           uri:photoURI,
           width:photo.width,
@@ -314,7 +316,7 @@ const ScanAndRecognizeScreen = () => {
           }}
           activeOpacity={0.9}
         >
-          <Image source={{ uri: Platform.OS === 'ios' ? capturedPhoto.path : `file://${capturedPhoto.path}` }} style={StyleSheet.absoluteFill} />
+          <Image source={{ uri: capturedPhoto.photoURI }} style={StyleSheet.absoluteFill} />
           <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
           </View>
         </TouchableOpacity>
@@ -401,6 +403,13 @@ const ScanAndRecognizeScreen = () => {
               );
             })}
           </TouchableOpacity>
+        </View>
+      )}
+
+      {capturedPhoto && (
+        <View style={styles.previewStyle}>
+          <Image source={{ uri: Platform.OS === 'ios' ? capturedPhoto.path : `file://${capturedPhoto.path}` }} style={{height: heightPixel(200), width: heightPixel(100)}} />
+          <Image source={{ uri: capturedPhoto.photoURI }} style={{height: heightPixel(200), width: heightPixel(100)}} />
         </View>
       )}
 
@@ -504,7 +513,14 @@ const styles = StyleSheet.create({
   modalImageStyle: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-  }
+  },
+  previewStyle: {
+    position: 'absolute',
+    bottom: heightPixel(10),
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+  },
 });
 
 export default ScanAndRecognizeScreen;
