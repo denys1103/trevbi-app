@@ -61,7 +61,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
           }}
           activeOpacity={0.9}
         >
-          {textBlocks.map((block, index) => {
+          {/* {textBlocks.map((block, index) => {
             const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
             const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
             
@@ -132,7 +132,42 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 </Text>
               </TouchableOpacity>
             );
-          })}
+          })} */}
+          <View style={styles.scanPanelStyle}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize : heightPixel(22),
+              }}
+            >
+              {avoidIngredients.length > 0 ? 'These are the ingredients you might want to more about':''}
+            </Text>
+            {avoidIngredients.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setModalData(item);
+                    setModalVisibleStatus(true);
+                  }}
+                  activeOpacity={0.9}
+                  disabled={item.name === ''}
+                  style={{
+                    marginTop: heightPixel(20),
+                  }}
+                  >
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontSize : heightPixel(20),
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              )
+            })}
+          </View>
         </TouchableOpacity>
       </View>
 
@@ -228,7 +263,12 @@ const styles = StyleSheet.create({
   modalImageStyle: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-  }
+  },
+  scanPanelStyle: {
+    padding: heightPixel(20),
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
 });
 
 export default ViewDetailsScreen;
