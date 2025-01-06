@@ -42,7 +42,7 @@ function CustomTabs() {
     >
       <Tab.Screen
         name="Scan"
-        component={ScanComponent}
+        component={Home}
         options={{
           tabBarLabel: 'SCAN',
           tabBarIcon: ({focused, color, size}) =>
