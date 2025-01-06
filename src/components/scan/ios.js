@@ -131,7 +131,7 @@ const ScanAndRecognizeScreen = () => {
   };
 
   const captureAndRecognizeText = async () => {
-    // if (device) {
+    if (device) {
       try {
         await createAppDir();
         setOkBtnStatus(false);
@@ -142,14 +142,11 @@ const ScanAndRecognizeScreen = () => {
         const blockPath = `${appDir}/block_${Date.now()}.json`;
 
         // const photo = await photoCamera.current.takePhoto()
-        // const photo = await photoCamera.current.takeSnapshot({
-        //   quality: 100
-        // })
-        const sourcePath = `${RNFS.MainBundlePath}/scanTest01.jpg`;
-        const photo = {}
-        console.log(sourcePath)
-        await RNFS.copyFile(sourcePath, photoPath);
-        const photoURI = Platform.OS === 'ios' ? sourcePath : `file://${sourcePath}`;
+        const photo = await photoCamera.current.takeSnapshot({
+            quality: 100
+        })
+        await RNFS.copyFile(photo.path, photoPath);
+        const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
         const photoCopyURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
         photo.photoURI = photoCopyURI;
         setCapturedPhoto(photo);
@@ -228,7 +225,7 @@ const ScanAndRecognizeScreen = () => {
             });
       
             if (data.success) {
-              console.log(JSON.stringify(data.results, null, 2))
+            //   console.log(JSON.stringify(data.results, null, 2))
               if(data.results.length == ocrResults.length){
                 ocrResults.forEach((item, index) => {
                   item.elementText = data.results[index];
@@ -263,7 +260,7 @@ const ScanAndRecognizeScreen = () => {
         console.log(error)
         Alert.alert('Error', 'Failed to capture the photo.');
       }
-    // }
+    }
   };
 
   const resetScan = () => {
