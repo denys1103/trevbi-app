@@ -16,12 +16,14 @@ export function Home() {
         }
 
         const photoFilePath = `${appDir}/photo_${Date.now()}.jpg`;
-
-        await RNFS.copyFileAssets('scanTest01.jpg', photoFilePath);
+        const sourcePath = `${RNFS.MainBundlePath}/scanTest01.jpg`;
+    
+        await RNFS.copyFile(sourcePath, photoFilePath);
         const photoCopyURI = Platform.OS === 'ios' ? photoFilePath : `file://${photoFilePath}`;
         console.log('photoFilePath:', photoFilePath)
 
         setPhotoPath(photoCopyURI);
+
       } catch (error) {
         console.error('Error copying file:', error);
       }
