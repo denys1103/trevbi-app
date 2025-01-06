@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Platform } from 'react-native';
 import RNFS from 'react-native-fs';
+import { PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 const appDir = `${RNFS.DocumentDirectoryPath}/ScanHistory`;
 const myJpg = require('../../../assets/scanTest01.jpg');
 
@@ -21,6 +22,11 @@ export function Home() {
         await RNFS.copyFile(sourcePath, photoFilePath);
         const photoCopyURI = Platform.OS === 'ios' ? photoFilePath : `file://${photoFilePath}`;
         console.log('photoFilePath:', photoFilePath)
+        const result = await PhotoRecognizer({
+          uri:photoCopyURI,
+          orientation: "landscapeLeft"
+        })
+        console.log(JSON.stringify(result, null, 2))
 
         setPhotoPath(photoCopyURI);
 
