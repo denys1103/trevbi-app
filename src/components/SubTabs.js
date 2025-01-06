@@ -3,8 +3,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {getHeaderTitle} from '@react-navigation/elements';
 import {Home} from './home';
 import ScanComponent from './scan/index';
+import IosScanComponent from './scan/ios';
 import HistoryComponent from './scan/History';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {Text, View, Image, StyleSheet, Platform} from 'react-native';
 
 import {
   widthPixel,
@@ -42,7 +43,7 @@ function CustomTabs() {
     >
       <Tab.Screen
         name="Scan"
-        component={Home}
+        component={Platform.OS === 'ios' ? IosScanComponent : ScanComponent}
         options={{
           tabBarLabel: 'SCAN',
           tabBarIcon: ({focused, color, size}) =>

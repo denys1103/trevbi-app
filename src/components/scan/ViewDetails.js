@@ -61,7 +61,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
           }}
           activeOpacity={0.9}
         >
-          {/* {textBlocks.map((block, index) => {
+          {textBlocks.map((block, index) => {
             const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
             const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
             
@@ -132,8 +132,8 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 </Text>
               </TouchableOpacity>
             );
-          })} */}
-          <View style={styles.scanPanelStyle}>
+          })}
+          {/* <View style={styles.scanPanelStyle}>
             <Text
               style={{
                 color: 'black',
@@ -167,7 +167,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 </TouchableOpacity>
               )
             })}
-          </View>
+          </View> */}
         </TouchableOpacity>
       </View>
 

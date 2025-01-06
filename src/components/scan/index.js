@@ -219,24 +219,25 @@ const ScanAndRecognizeScreen = () => {
           
             return { elementText:current.elementText, elementFrame: updatedFrame};
           });
-          // try {
-          //   const { data } = await client.post('/getCorrectWords', {
-          //     ocrWords,
-          //   });
+          try {
+            const { data } = await client.post('/getCorrectWords', {
+              ocrWords,
+            });
       
-          //   if (data.success) {
-          //     if(data.results.length == ocrResults.length){
-          //       ocrResults.forEach((item, index) => {
-          //         item.elementText = data.results[index];
-          //       });
-          //     }
-          //   } else {
-          //     console.log('server error!');
-          //   }
-          // } catch (e) {
-          //   console.log('new error:', e);
-          //   Alert.alert('Get Correct Words Data', e);
-          // } finally {
+            if (data.success) {
+              console.log(JSON.stringify(data.results, null, 2))
+              if(data.results.length == ocrResults.length){
+                ocrResults.forEach((item, index) => {
+                  item.elementText = data.results[index];
+                });
+              }
+            } else {
+              console.log('server error!');
+            }
+          } catch (e) {
+            console.log('new error:', e);
+            Alert.alert('Get Correct Words Data', e);
+          } finally {
             setTextBlocks(ocrResults);
             await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
             const newEntry = { photoPath, avoidPath, blockPath };
@@ -245,7 +246,7 @@ const ScanAndRecognizeScreen = () => {
             setCheckEvent(!checkEvent);
             setIsScanning(false);
             setOkBtnStatus(true);
-          // }
+          }
           // console.log(JSON.stringify(result, null, 2))
         } else {
           setModalData({'name':'', 'description': 'There is no captured text.\nPlease try again.'});
@@ -331,7 +332,7 @@ const ScanAndRecognizeScreen = () => {
             }}
             activeOpacity={0.9}
           >
-            {/* {textBlocks.map((block, index) => {
+            {textBlocks.map((block, index) => {
               const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
               const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
               
@@ -402,8 +403,8 @@ const ScanAndRecognizeScreen = () => {
                   </Text>
                 </TouchableOpacity>
               );
-            })} */}
-            <View style={styles.scanPanelStyle}>
+            })}
+            {/* <View style={styles.scanPanelStyle}>
               <Text
                 style={{
                   color: 'black',
@@ -437,7 +438,7 @@ const ScanAndRecognizeScreen = () => {
                   </TouchableOpacity>
                 )
               })}
-            </View>
+            </View> */}
           </TouchableOpacity>
         </View>
       )}
