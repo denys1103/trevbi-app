@@ -4,6 +4,7 @@ import {getHeaderTitle} from '@react-navigation/elements';
 import {Home} from './home';
 import ScanComponent from './scan/index';
 import IosScanComponent from './scan/ios';
+import IosScanTestComponent from './scan/test';
 import HistoryComponent from './scan/History';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
 
