@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
@@ -296,6 +296,9 @@ const ScanAndRecognizeScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <TouchableWithoutFeedback
+        onPress={() => setModalVisibleStatus(false)}
+      >
       <GestureHandlerRootView style={styles.container}>
         <Spinner visible={!okBtnStatus} />
         {isScanning && !!device && (
@@ -382,7 +385,7 @@ const ScanAndRecognizeScreen = () => {
                     style={{
                       position: 'absolute',
                       left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
-                      top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0) + heightPixel(30))/scale,
+                      top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
                       // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
                       // backgroundColor: 'rgba(255,255,255,0)',
                       padding: 0,
@@ -475,6 +478,7 @@ const ScanAndRecognizeScreen = () => {
           </View>
         )}
       </GestureHandlerRootView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
