@@ -221,25 +221,25 @@ const ScanAndRecognizeScreen = () => {
           
             return { elementText:current.elementText, elementFrame: updatedFrame};
           });
-          try {
-            const { data } = await client.post('/getCorrectWords', {
-              ocrWords,
-            });
+          // try {
+          //   const { data } = await client.post('/getCorrectWords', {
+          //     ocrWords,
+          //   });
       
-            if (data.success) {
-            //   console.log(JSON.stringify(data.results, null, 2))
-              if(data.results.length == ocrResults.length){
-                ocrResults.forEach((item, index) => {
-                  item.elementText = data.results[index];
-                });
-              }
-            } else {
-              console.log('server error!');
-            }
-          } catch (e) {
-            console.log('new error:', e);
-            Alert.alert('Get Correct Words Data', e);
-          } finally {
+          //   if (data.success) {
+          //   //   console.log(JSON.stringify(data.results, null, 2))
+          //     if(data.results.length == ocrResults.length){
+          //       ocrResults.forEach((item, index) => {
+          //         item.elementText = data.results[index];
+          //       });
+          //     }
+          //   } else {
+          //     console.log('server error!');
+          //   }
+          // } catch (e) {
+          //   console.log('new error:', e);
+          //   Alert.alert('Get Correct Words Data', e);
+          // } finally {
             setTextBlocks(ocrResults);
             await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
             const newEntry = { photoPath, avoidPath, blockPath };
@@ -248,7 +248,7 @@ const ScanAndRecognizeScreen = () => {
             setCheckEvent(!checkEvent);
             setIsScanning(false);
             setOkBtnStatus(true);
-          }
+          // }
           // console.log(JSON.stringify(result, null, 2))
         } else {
           setModalData({'name':'', 'description': 'There is no captured text.\nPlease try again.'});
@@ -299,185 +299,185 @@ const ScanAndRecognizeScreen = () => {
       <TouchableWithoutFeedback
         onPress={() => setModalVisibleStatus(false)}
       >
-      <GestureHandlerRootView style={styles.container}>
-        <Spinner visible={!okBtnStatus} />
-        {isScanning && !!device && (
-          <GestureDetector gesture={gestureZoom}>
-            <ReanimatedCamera
-              style={StyleSheet.absoluteFill}
-              device={device}
-              ref={photoCamera}
-              isActive={true}
-              photo={true}
-              video={true}
-              animatedProps={animatedProps}
-              // mode={'translate'}
-            />
-          </GestureDetector>
-        )}
+        <GestureHandlerRootView style={styles.container}>
+          <Spinner visible={!okBtnStatus} />
+          {isScanning && !!device && (
+            <GestureDetector gesture={gestureZoom}>
+              <ReanimatedCamera
+                style={StyleSheet.absoluteFill}
+                device={device}
+                ref={photoCamera}
+                isActive={true}
+                photo={true}
+                video={true}
+                animatedProps={animatedProps}
+                // mode={'translate'}
+              />
+            </GestureDetector>
+          )}
 
-        {capturedPhoto && (
-          <TouchableOpacity
-            onPress={() => {
-              setModalVisibleStatus(false);
-            }}
-            style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,0,1)', width:width, height:height})}
-            activeOpacity={0.9}
-          >
-            {/* <Image source={{ uri: capturedPhoto.photoURI }} style={StyleSheet.absoluteFill} />
-            <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
-            </View> */}
-          </TouchableOpacity>
-        )}
-
-        {!isScanning && (
-          <View style={StyleSheet.absoluteFill}>
+          {capturedPhoto && (
             <TouchableOpacity
               onPress={() => {
                 setModalVisibleStatus(false);
               }}
+              style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
               activeOpacity={0.9}
             >
-              {textBlocks.map((block, index) => {
-                const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
-                const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
-                
-                let matchName = '';
-                if (singleMatch) {
-                  matchName = singleMatch;
-                }
+              {/* <Image source={{ uri: capturedPhoto.photoURI }} style={StyleSheet.absoluteFill} />
+              <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
+              </View> */}
+            </TouchableOpacity>
+          )}
 
-                if (singleMatch == undefined && !block.elementText.includes(',') && index < textBlocks.length - 1) {
-                  const nextBlockText = textBlocks[index + 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
-                  const combinedText = `${cleanedBlockText} ${nextBlockText}`;
+          {!isScanning && (
+            <View style={StyleSheet.absoluteFill}>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisibleStatus(false);
+                }}
+                activeOpacity={0.9}
+              >
+                {/* {textBlocks.map((block, index) => {
+                  const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
+                  const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
                   
-                  const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
-                  if (matchInNameList) {
-                    matchName = matchInNameList;
+                  let matchName = '';
+                  if (singleMatch) {
+                    matchName = singleMatch;
                   }
-                }
 
-                if (singleMatch == undefined && index > 0) {
-                  const beforeBlockText = textBlocks[index - 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
-                  const combinedText = `${beforeBlockText} ${cleanedBlockText}`;
-                  
-                  const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
-                  if (matchInNameList) {
-                    matchName = matchInNameList;
+                  if (singleMatch == undefined && !block.elementText.includes(',') && index < textBlocks.length - 1) {
+                    const nextBlockText = textBlocks[index + 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
+                    const combinedText = `${cleanedBlockText} ${nextBlockText}`;
+                    
+                    const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
+                    if (matchInNameList) {
+                      matchName = matchInNameList;
+                    }
                   }
-                }
-                //control font width
-                const textLength = block.elementText.length;
-                const characterWidth = 0.6 * block.elementFrame.height;
-                const textWidth = characterWidth * textLength;
-                const targetScaleX = block.elementFrame.width / textWidth;
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      // console.log('matchName:', matchName);
-                      const record = avoidIngredients.find(item => item.name === matchName);
-                      setModalData(record);
-                      setModalVisibleStatus(true);
-                    }}
-                    activeOpacity={0.9}
-                    disabled={matchName === ''}
-                    style={{
-                      position: 'absolute',
-                      left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
-                      top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
-                      // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
-                      // backgroundColor: 'rgba(255,255,255,0)',
-                      padding: 0,
-                      margin: 0,
-                      // width : block.elementFrame.width/scale,
-                      height : block.elementFrame.height/scale,
-                    }}
-                    >
-                    <Text
-                      style={{
-                        color: matchName!='' ? 'red' : 'black',
-                        fontSize : block.elementFrame.height/scale*0.95,
-                        lineHeight : block.elementFrame.height/scale,
-                        transform: [{ scaleX: targetScaleX }],
-                        transformOrigin: '0% 50% 0',
-                        letterSpacing: 0,
-                        // includeFontPadding: false,
-                      }}
-                    >
-                      {block.elementText}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-              {/* <View style={styles.scanPanelStyle}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize : heightPixel(22),
-                  }}
-                >
-                  {avoidIngredients.length > 0 ? 'These are the ingredients you might want to more about':''}
-                </Text>
-                {avoidIngredients.map((item, index) => {
+
+                  if (singleMatch == undefined && index > 0) {
+                    const beforeBlockText = textBlocks[index - 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
+                    const combinedText = `${beforeBlockText} ${cleanedBlockText}`;
+                    
+                    const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
+                    if (matchInNameList) {
+                      matchName = matchInNameList;
+                    }
+                  }
+                  //control font width
+                  const textLength = block.elementText.length;
+                  const characterWidth = 0.6 * block.elementFrame.height;
+                  const textWidth = characterWidth * textLength;
+                  const targetScaleX = block.elementFrame.width / textWidth;
                   return (
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        setModalData(item);
+                        // console.log('matchName:', matchName);
+                        const record = avoidIngredients.find(item => item.name === matchName);
+                        setModalData(record);
                         setModalVisibleStatus(true);
                       }}
                       activeOpacity={0.9}
-                      disabled={item.name === ''}
+                      disabled={matchName === ''}
                       style={{
-                        marginTop: heightPixel(20),
+                        position: 'absolute',
+                        left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
+                        top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
+                        // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
+                        // backgroundColor: 'rgba(255,255,255,0)',
+                        padding: 0,
+                        margin: 0,
+                        // width : block.elementFrame.width/scale,
+                        height : block.elementFrame.height/scale,
                       }}
                       >
                       <Text
                         style={{
-                          color: 'red',
-                          fontSize : heightPixel(20),
+                          color: matchName!='' ? 'red' : 'black',
+                          fontSize : block.elementFrame.height/scale*0.95,
+                          lineHeight : block.elementFrame.height/scale,
+                          transform: [{ scaleX: targetScaleX }],
+                          transformOrigin: '0% 50% 0',
+                          letterSpacing: 0,
+                          // includeFontPadding: false,
                         }}
                       >
-                        {item.name}
+                        {block.elementText}
                       </Text>
                     </TouchableOpacity>
-                  )
-                })}
-              </View> */}
-            </TouchableOpacity>
-          </View>
-        )}
-
-        <View style={styles.buttonContainer}>
-          {isScanning ? (
-            okBtnStatus ? (<TouchableOpacity style={styles.okButton} onPress={captureAndRecognizeText}>
-              <Text style={styles.buttonText}>Scan</Text>
-            </TouchableOpacity>) : <></>
-          ) : (
-            <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
-              <Text style={styles.buttonText}>Reset</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        {modalVisibleStatus && (
-          <View style={styles.modalStyle}>
-            {modalData.name != '' ? 
-              (<Text style={styles.modalTextStyle}>
-                <Text style={styles.modalTitleStyle}>{modalData.name}: </Text>
-                <Text style={styles.modalContentsStyle}>{modalData.description}</Text>
-              </Text>)
-              : 
-              (<View style={styles.modalEmptyStyle}>
-                <Text style={styles.modalContentsStyle}>{modalData.description} </Text>
-              </View>)
-            }
-            <View style={styles.modalImageStyle}>
-              <Image source={require('../../../assets/images/Logo.png')} style={{width:heightPixel(116.8), height:heightPixel(80)}} />
+                  );
+                })} */}
+                <View style={styles.scanPanelStyle}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize : heightPixel(22),
+                    }}
+                  >
+                    {avoidIngredients.length > 0 ? 'These are the ingredients you might want to more about':''}
+                  </Text>
+                  {avoidIngredients.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setModalData(item);
+                          setModalVisibleStatus(true);
+                        }}
+                        activeOpacity={0.9}
+                        disabled={item.name === ''}
+                        style={{
+                          marginTop: heightPixel(18),
+                        }}
+                        >
+                        <Text
+                          style={{
+                            color: 'red',
+                            fontSize : heightPixel(20),
+                          }}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </View>
+              </TouchableOpacity>
             </View>
+          )}
+
+          <View style={styles.buttonContainer}>
+            {isScanning ? (
+              okBtnStatus ? (<TouchableOpacity style={styles.okButton} onPress={captureAndRecognizeText}>
+                <Text style={styles.buttonText}>Scan</Text>
+              </TouchableOpacity>) : <></>
+            ) : (
+              <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
+                <Text style={styles.buttonText}>Reset</Text>
+              </TouchableOpacity>
+            )}
           </View>
-        )}
-      </GestureHandlerRootView>
+          {modalVisibleStatus && (
+            <View style={styles.modalStyle}>
+              {modalData.name != '' ? 
+                (<Text style={styles.modalTextStyle}>
+                  <Text style={styles.modalTitleStyle}>{modalData.name}: </Text>
+                  <Text style={styles.modalContentsStyle}>{modalData.description}</Text>
+                </Text>)
+                : 
+                (<View style={styles.modalEmptyStyle}>
+                  <Text style={styles.modalContentsStyle}>{modalData.description} </Text>
+                </View>)
+              }
+              <View style={styles.modalImageStyle}>
+                <Image source={require('../../../assets/images/Logo.png')} style={{width:heightPixel(116.8), height:heightPixel(80)}} />
+              </View>
+            </View>
+          )}
+        </GestureHandlerRootView>
       </TouchableWithoutFeedback>
     </SafeAreaView>
   );
