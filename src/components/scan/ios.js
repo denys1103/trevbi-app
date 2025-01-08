@@ -409,41 +409,6 @@ const ScanAndRecognizeScreen = () => {
                     </TouchableOpacity>
                   );
                 })}
-                {/* <View style={styles.scanPanelStyle}>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize : heightPixel(22),
-                    }}
-                  >
-                    {avoidIngredients.length > 0 ? 'These are the ingredients you might want to more about':''}
-                  </Text>
-                  {avoidIngredients.map((item, index) => {
-                    return (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => {
-                          setModalData(item);
-                          setModalVisibleStatus(true);
-                        }}
-                        activeOpacity={0.9}
-                        disabled={item.name === ''}
-                        style={{
-                          marginTop: heightPixel(20),
-                        }}
-                        >
-                        <Text
-                          style={{
-                            color: 'red',
-                            fontSize : heightPixel(20),
-                          }}
-                        >
-                          {item.name}
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                  })}
-                </View> */}
               </TouchableOpacity>
             </View>
           )}
