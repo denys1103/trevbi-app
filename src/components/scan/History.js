@@ -7,7 +7,8 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
-  Platform
+  Platform,
+  Alert,
 } from 'react-native';
 import {
   fontPixel,
@@ -24,6 +25,7 @@ import { SearchBar } from '@rneui/themed';
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
+  const [validEntriesData, setValidEntriesData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const { checkEvent } = useContext(GlobalContext);
   const [search, setSearch] = useState('');
@@ -54,7 +56,7 @@ const ScanHistory = ({ navigation }) => {
         );
 
         const validEntries = validatedHistory.filter(Boolean);
-
+        setValidEntriesData(validEntries);
         await RNFS.writeFile(indexFilePath, JSON.stringify(validEntries));
 
         const historyEntries = await Promise.all(
@@ -71,6 +73,7 @@ const ScanHistory = ({ navigation }) => {
           })
         );
 
+        historyEntries.reverse();
         setHistoryData(historyEntries);
         setSearchHistoryData(historyEntries);
       }
@@ -78,6 +81,33 @@ const ScanHistory = ({ navigation }) => {
       console.error('Error fetching history:', error);
     }
   };
+
+  const deleteHistoryItem = async (item) => {
+    try {
+      const updatedValidEntriesData = validEntriesData.filter((entry) => entry.photoPath !== item.photoPath);
+      setValidEntriesData(updatedValidEntriesData);
+      const updatedHistory = historyData.filter((entry) => entry.photoPath !== item.photoPath);
+      await RNFS.writeFile(indexFilePath, JSON.stringify(updatedValidEntriesData));
+      setHistoryData(updatedHistory);
+      const updatedSearchHistory = searchHistoryData.filter((entry) => entry.photoPath !== item.photoPath);
+      setSearchHistoryData(updatedSearchHistory);
+    } catch (error) {
+      console.error('Error deleting history item:', error);
+    }
+  };
+
+  const confirmDelete = (item) => {
+    Alert.alert(
+      'Delete History',
+      'Are you sure you want to delete this history item?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', onPress: () => deleteHistoryItem(item) },
+      ],
+      { cancelable: true }
+    );
+  };
+
   useEffect(() => {
     fetchScanHistory();
   }, [checkEvent]);
@@ -100,7 +130,9 @@ const ScanHistory = ({ navigation }) => {
         activeOpacity={0.7}
         onPress={() => {
           handleItemClick(item)
-        }}>
+        }}
+        onLongPress={() => confirmDelete(item)}
+      >
         <View style={styles.box}>
           <Image
             style={styles.image}
