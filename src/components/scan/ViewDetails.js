@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {fontPixel, heightPixel} from '../../config';
 import RNFS from 'react-native-fs';
@@ -147,31 +147,40 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 >
                   {avoidIngredients.length > 0 ? 'These are the ingredients you might want to more about':''}
                 </Text>
-                {avoidIngredients.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        setModalData(item);
-                        setModalVisibleStatus(true);
-                      }}
-                      activeOpacity={0.9}
-                      disabled={item.name === ''}
-                      style={{
-                        marginTop: heightPixel(20),
-                      }}
-                      >
-                      <Text
-                        style={{
-                          color: 'red',
-                          fontSize : heightPixel(20),
+                <ScrollView
+                  contentContainerStyle={{
+                    paddingVertical: heightPixel(5),
+                  }}
+                  style={{
+                    maxHeight: (height - heightPixel(100)),
+                  }}
+                >
+                  {avoidIngredients.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setModalData(item);
+                          setModalVisibleStatus(true);
                         }}
-                      >
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                })}
+                        activeOpacity={0.9}
+                        disabled={item.name === ''}
+                        style={{
+                          marginTop: heightPixel(20),
+                        }}
+                        >
+                        <Text
+                          style={{
+                            color: 'red',
+                            fontSize : heightPixel(20),
+                          }}
+                        >
+                          {item.name}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </ScrollView>
               </View>
             </TouchableOpacity>
           </View>
