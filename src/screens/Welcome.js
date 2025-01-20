@@ -128,6 +128,7 @@ const WelcomeScreen = ({ navigation }) => {
                 value={toggleCheckBox}
                 onValueChange={(newValue) => setToggleCheckBox(newValue)}
                 style={styles.checkbox}
+                boxType={'square'}
               />
               <Text style={[
                   styles.label,
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     alignSelf: 'center',
-    transform: [{ scale: 1.5 }],
+    // transform: [{ scale: 1.5 }],
   },
   label: {
     fontSize: fontPixel(18),

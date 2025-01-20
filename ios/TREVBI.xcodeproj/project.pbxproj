@@ -12,16 +12,17 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		40077852AC63403483C103A7 /* LEMONMILK-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 79D99A18AC30498D97CE742B /* LEMONMILK-Regular.otf */; };
+		54FD12EA8D84D5D6FAF47BC0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CABA894860CFAF85FE0B04D3 /* PrivacyInfo.xcprivacy */; };
+		60903B631E2647AB88398D33 /* LEMONMILK-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 52A00DF91DE2477B86087B97 /* LEMONMILK-BoldItalic.otf */; };
 		7699B88040F8A987B510C191 /* libPods-TREVBI-TREVBITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-TREVBI-TREVBITests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8794287570454AFDB3FAD602 /* LEMONMILK-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 573F495D0A2F4C78A23E67FF /* LEMONMILK-Bold.otf */; };
-		60903B631E2647AB88398D33 /* LEMONMILK-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 52A00DF91DE2477B86087B97 /* LEMONMILK-BoldItalic.otf */; };
-		C1296C3E03DF477AA4A0A81D /* LEMONMILK-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */; };
-		EB32059745CD48C7A96B0A05 /* LEMONMILK-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */; };
-		C5FD8277FF3D44F0A1D28758 /* LEMONMILK-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */; };
 		AA8683AB044B49F99687F27E /* LEMONMILK-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 76A8F33CEABF4AD89288D195 /* LEMONMILK-MediumItalic.otf */; };
-		40077852AC63403483C103A7 /* LEMONMILK-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 79D99A18AC30498D97CE742B /* LEMONMILK-Regular.otf */; };
+		C1296C3E03DF477AA4A0A81D /* LEMONMILK-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */; };
+		C5FD8277FF3D44F0A1D28758 /* LEMONMILK-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */; };
 		E692F5A189D6404FB027C7DF /* LEMONMILK-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 15844FE2C5A444438A32536B /* LEMONMILK-RegularItalic.otf */; };
+		EB32059745CD48C7A96B0A05 /* LEMONMILK-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,22 +46,23 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = TREVBI/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = TREVBI/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = TREVBI/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		15844FE2C5A444438A32536B /* LEMONMILK-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-RegularItalic.otf"; path = "../assets/fonts/LEMONMILK-RegularItalic.otf"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-TREVBI-TREVBITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TREVBI-TREVBITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-TREVBI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TREVBI.debug.xcconfig"; path = "Target Support Files/Pods-TREVBI/Pods-TREVBI.debug.xcconfig"; sourceTree = "<group>"; };
+		4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-Medium.otf"; path = "../assets/fonts/LEMONMILK-Medium.otf"; sourceTree = "<group>"; };
+		52A00DF91DE2477B86087B97 /* LEMONMILK-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-BoldItalic.otf"; path = "../assets/fonts/LEMONMILK-BoldItalic.otf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-TREVBI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TREVBI.release.xcconfig"; path = "Target Support Files/Pods-TREVBI/Pods-TREVBI.release.xcconfig"; sourceTree = "<group>"; };
+		573F495D0A2F4C78A23E67FF /* LEMONMILK-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-Bold.otf"; path = "../assets/fonts/LEMONMILK-Bold.otf"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-TREVBI-TREVBITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TREVBI-TREVBITests.debug.xcconfig"; path = "Target Support Files/Pods-TREVBI-TREVBITests/Pods-TREVBI-TREVBITests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-TREVBI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TREVBI.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		76A8F33CEABF4AD89288D195 /* LEMONMILK-MediumItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-MediumItalic.otf"; path = "../assets/fonts/LEMONMILK-MediumItalic.otf"; sourceTree = "<group>"; };
+		79D99A18AC30498D97CE742B /* LEMONMILK-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-Regular.otf"; path = "../assets/fonts/LEMONMILK-Regular.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TREVBI/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-LightItalic.otf"; path = "../assets/fonts/LEMONMILK-LightItalic.otf"; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-TREVBI-TREVBITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TREVBI-TREVBITests.release.xcconfig"; path = "Target Support Files/Pods-TREVBI-TREVBITests/Pods-TREVBI-TREVBITests.release.xcconfig"; sourceTree = "<group>"; };
+		92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-Light.otf"; path = "../assets/fonts/LEMONMILK-Light.otf"; sourceTree = "<group>"; };
+		CABA894860CFAF85FE0B04D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = TREVBI/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		573F495D0A2F4C78A23E67FF /* LEMONMILK-Bold.otf */ = {isa = PBXFileReference; name = "LEMONMILK-Bold.otf"; path = "../assets/fonts/LEMONMILK-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		52A00DF91DE2477B86087B97 /* LEMONMILK-BoldItalic.otf */ = {isa = PBXFileReference; name = "LEMONMILK-BoldItalic.otf"; path = "../assets/fonts/LEMONMILK-BoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */ = {isa = PBXFileReference; name = "LEMONMILK-Light.otf"; path = "../assets/fonts/LEMONMILK-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */ = {isa = PBXFileReference; name = "LEMONMILK-LightItalic.otf"; path = "../assets/fonts/LEMONMILK-LightItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */ = {isa = PBXFileReference; name = "LEMONMILK-Medium.otf"; path = "../assets/fonts/LEMONMILK-Medium.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		76A8F33CEABF4AD89288D195 /* LEMONMILK-MediumItalic.otf */ = {isa = PBXFileReference; name = "LEMONMILK-MediumItalic.otf"; path = "../assets/fonts/LEMONMILK-MediumItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		79D99A18AC30498D97CE742B /* LEMONMILK-Regular.otf */ = {isa = PBXFileReference; name = "LEMONMILK-Regular.otf"; path = "../assets/fonts/LEMONMILK-Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		15844FE2C5A444438A32536B /* LEMONMILK-RegularItalic.otf */ = {isa = PBXFileReference; name = "LEMONMILK-RegularItalic.otf"; path = "../assets/fonts/LEMONMILK-RegularItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				CABA894860CFAF85FE0B04D3 /* PrivacyInfo.xcprivacy */,
 			);
 			name = TREVBI;
 			sourceTree = "<group>";
@@ -122,6 +125,21 @@
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-TREVBI-TREVBITests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32A7477636254B61ACD7804C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				573F495D0A2F4C78A23E67FF /* LEMONMILK-Bold.otf */,
+				52A00DF91DE2477B86087B97 /* LEMONMILK-BoldItalic.otf */,
+				92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */,
+				861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */,
+				4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */,
+				76A8F33CEABF4AD89288D195 /* LEMONMILK-MediumItalic.otf */,
+				79D99A18AC30498D97CE742B /* LEMONMILK-Regular.otf */,
+				15844FE2C5A444438A32536B /* LEMONMILK-RegularItalic.otf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -166,22 +184,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		32A7477636254B61ACD7804C /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				573F495D0A2F4C78A23E67FF /* LEMONMILK-Bold.otf */,
-				52A00DF91DE2477B86087B97 /* LEMONMILK-BoldItalic.otf */,
-				92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */,
-				861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */,
-				4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */,
-				76A8F33CEABF4AD89288D195 /* LEMONMILK-MediumItalic.otf */,
-				79D99A18AC30498D97CE742B /* LEMONMILK-Regular.otf */,
-				15844FE2C5A444438A32536B /* LEMONMILK-RegularItalic.otf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -286,6 +288,7 @@
 				AA8683AB044B49F99687F27E /* LEMONMILK-MediumItalic.otf in Resources */,
 				40077852AC63403483C103A7 /* LEMONMILK-Regular.otf in Resources */,
 				E692F5A189D6404FB027C7DF /* LEMONMILK-RegularItalic.otf in Resources */,
+				54FD12EA8D84D5D6FAF47BC0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,9 +511,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = G52X4Y7ZY9;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TREVBI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TREVBI;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -521,8 +530,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ingredients.trevbi;
 				PRODUCT_NAME = TREVBI;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = TREVBI_Distribution_Profile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -535,8 +546,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = G52X4Y7ZY9;
 				INFOPLIST_FILE = TREVBI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TREVBI;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -547,8 +564,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ingredients.trevbi;
 				PRODUCT_NAME = TREVBI;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = TREVBI_Distribution_Profile;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -558,6 +577,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -585,6 +605,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CXX = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
@@ -604,6 +625,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD = "";
+				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -623,7 +646,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				OTHER_LDFLAGS = "$(inherited)  ";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -631,6 +657,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -658,6 +685,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				CXX = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
@@ -670,6 +698,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD = "";
+				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -688,7 +718,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				OTHER_LDFLAGS = "$(inherited)  ";
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
