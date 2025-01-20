@@ -27,103 +27,101 @@ const WelcomeScreen = ({ navigation }) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={{ flex: 1 }} >
-          <Spinner visible={isLoading} />
-          <ImageBackground
-            source={require('../../assets/images/vegetables.jpg')}
-            resizeMode="cover"
-            style={styles.vegetablesStyle}>
-            <View style={styles.overlay}>
-              <Image
-                style={styles.logoStyle}
-                source={require('../../assets/images/TREVBI_Logo.jpg')}
-              />
-            </View>
-          </ImageBackground>
-          <View style={styles.wrapper}>
-            <View style={styles.descriptionView}>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                DISCOVER A SMARTER WAY TO
-              </Text>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                UNDERSTAND FOOD LABELS WITH
-              </Text>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                TREVBI TECHNOLOGY.
-              </Text>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                    paddingTop: heightPixel(20)
-                  },
-                ]}>
-                SCAN REAL INGREDIENTS, NOT
-              </Text>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                {`BARCODES\u2014FOR INSTANT`}
-              </Text>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                INSIGHTS, HELPING YOU CHOOSE
-              </Text>
-              <Text
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                HEALTHIER OPTIONS WITH EASE!
-              </Text>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity
-                style={styles.button}
-                activeOpacity={0.7}
-                onPress={async () => {
-                  // login(email, password, fcmToken);
-                }}>
-                <Text style={[
-                  styles.text_button,
-                  {
-                    fontFamily: 'LEMONMILK-Bold',
-                  },
-                ]}>GIVE IT A WHIRL</Text>
-              </TouchableOpacity>
-            </View>
+    <View style={styles.container}>
+      <View style={{ flex: 1 }} >
+        <Spinner visible={isLoading} />
+        <ImageBackground
+          source={require('../../assets/images/vegetables.jpg')}
+          resizeMode="cover"
+          style={styles.vegetablesStyle}>
+          <View style={styles.overlay}>
+            <Image
+              style={styles.logoStyle}
+              source={require('../../assets/images/TREVBI_Logo.jpg')}
+            />
+          </View>
+        </ImageBackground>
+        <View style={styles.wrapper}>
+          <View style={styles.descriptionView}>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              DISCOVER A SMARTER WAY TO
+            </Text>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              UNDERSTAND FOOD LABELS WITH
+            </Text>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              TREVBI TECHNOLOGY.
+            </Text>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                  paddingTop: heightPixel(20)
+                },
+              ]}>
+              SCAN REAL INGREDIENTS, NOT
+            </Text>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              {`BARCODES\u2014FOR INSTANT`}
+            </Text>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              INSIGHTS, HELPING YOU CHOOSE
+            </Text>
+            <Text
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              HEALTHIER OPTIONS WITH EASE!
+            </Text>
+          </View>
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.7}
+              onPress={async () => {
+                navigation.navigate('SplashSecond');
+              }}>
+              <Text style={[
+                styles.text_button,
+                {
+                  fontFamily: 'LEMONMILK-Bold',
+                },
+              ]}>GIVE IT A WHIRL</Text>
+            </TouchableOpacity>
             <View style={styles.checkboxContainer}>
               <CheckBox
                 disabled={false}
@@ -138,11 +136,10 @@ const WelcomeScreen = ({ navigation }) => {
                   },
                 ]}>DON'T SHOW THIS SCREEN AGAIN</Text>
             </View>
-            <View style={{ height: '5%' }} />
           </View>
-        </View>
+          </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -181,7 +178,7 @@ const styles = StyleSheet.create({
   },
   descriptionStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(20),
     color: 'black',
     padding: heightPixel(5),
   },
@@ -193,8 +190,8 @@ const styles = StyleSheet.create({
     marginTop: heightPixel(20),
     backgroundColor: '#063225',
     borderRadius: heightPixel(20),
-    paddingVertical: widthPixel(15),
-    paddingHorizontal: heightPixel(20),
+    paddingVertical: heightPixel(15),
+    paddingHorizontal: widthPixel(20),
     marginBottom: heightPixel(20),
     alignItems: 'center',
     justifyContent: 'center',
@@ -202,7 +199,7 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginBottom: heightPixel(20),
+    marginVertical: heightPixel(18),
   },
   checkbox: {
     alignSelf: 'center',

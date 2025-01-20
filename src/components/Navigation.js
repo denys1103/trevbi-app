@@ -2,6 +2,8 @@ import React, {useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {default as Tabs} from './Tabs';
 import Welcome from '../screens/Welcome';
+import WelcomeSecond from '../screens/WelcomeSecond';
+import WelcomeThird from '../screens/WelcomeThird';
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -29,6 +31,16 @@ const Navigation = () => {
           <Stack.Screen
             name="Splash"
             component={Welcome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SplashSecond"
+            component={WelcomeSecond}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SplashThird"
+            component={WelcomeThird}
             options={{headerShown: false}}
           />
           <Stack.Screen
