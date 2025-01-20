@@ -1,0 +1,37 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/LEMONMILK-Bold.otf",
+      "sha1": "91cef6e742a3816c1f01f41ad039dc401bf6c968"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-BoldItalic.otf",
+      "sha1": "0afd7b901fff4603896c33935a5b7aaab5da8635"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-Light.otf",
+      "sha1": "9a56b6f3519f38b20e62973de1634cf10a636023"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-LightItalic.otf",
+      "sha1": "e8902730a911b0f7f1937c49b806a9d0b066e961"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-Medium.otf",
+      "sha1": "13e900f65b1351a8568cdbca55f72ed38ffae2a7"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-MediumItalic.otf",
+      "sha1": "3e5e9eb1360b5dc00d8f8182e588d4b864fed44a"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-Regular.otf",
+      "sha1": "1f660845f7fe40ee482aa7ccda7d101d20d870fa"
+    },
+    {
+      "path": "assets/fonts/LEMONMILK-RegularItalic.otf",
+      "sha1": "0a9551423cf7bd907e4907716bbbd9f4a2c70de1"
+    }
+  ]
+}
