@@ -371,7 +371,7 @@ const ScanAndRecognizeScreen = () => {
                 </View>)
               }
               <View style={styles.modalImageStyle}>
-                <Image source={require('../../../assets/images/Logo.png')} style={{width:heightPixel(116.8), height:heightPixel(80)}} />
+                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
               </View>
             </View>
           )}

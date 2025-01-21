@@ -197,7 +197,7 @@ const LoginScreen = ({ navigation }) => {
               <View style={styles.logo_view}>
                 <Image
                   style={styles.logo}
-                  source={require('../../assets/images/Logo.png')}
+                  source={require('../../assets/images/TREVBI_Transparent_Logo.png')}
                 />
                 <Text
                   style={[
