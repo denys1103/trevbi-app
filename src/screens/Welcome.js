@@ -8,10 +8,19 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { GlobalContext } from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CheckBox from '@react-native-community/checkbox';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
+import Svg, { Image as SvgImage } from 'react-native-svg';
 import {
   fontPixel,
   heightPixel,
@@ -23,8 +32,57 @@ const WelcomeScreen = ({ navigation }) => {
   const {
     isLoading,
   } = useContext(GlobalContext);
- 
+
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [buzzStatus, setBuzzStatus] = useState(true)
+
+  const x = useSharedValue(SCREEN_WIDTH - heightPixel(100));
+  const y = useSharedValue(heightPixel(50));
+
+  useEffect(() => {
+    if(buzzStatus) {
+      x.value = withRepeat(
+        withSequence(
+          withTiming(SCREEN_WIDTH - heightPixel(100), { duration: 1500 }),
+          withTiming(heightPixel(50), { duration: 1500 })
+        ),
+        -1,
+        true
+      );
+  
+      y.value = withRepeat(
+        withSequence(
+          withTiming(SCREEN_HEIGHT / 4, { duration: 1000 }),
+          withTiming((3 * SCREEN_HEIGHT) / 4 - heightPixel(200), { duration: 1000 })
+        ),
+        -1,
+        true
+      );
+    } else {
+      x.value = withRepeat(
+        withSequence(
+          withTiming(SCREEN_WIDTH - heightPixel(100), { duration: 1500 }),
+        ),
+        1,
+        false
+      );
+  
+      y.value = withRepeat(
+        withSequence(
+          withTiming(heightPixel(50), { duration: 1000 }),
+        ),
+        1,
+        false
+      );
+    }
+  }, [buzzStatus]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: x.value },
+      { translateY: y.value },
+    ],
+  }));
 
   return (
     <View style={styles.container}>
@@ -107,6 +165,19 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               HEALTHIER OPTIONS WITH EASE!
             </Text>
+            <TouchableOpacity
+              style={styles.buzzButton}
+              activeOpacity={0.7}
+              onPress={() => {
+                setBuzzStatus(!buzzStatus)
+              }}>
+              <Text style={[
+                styles.buzz_text_button,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>{buzzStatus ? 'BUZZ OFF' : 'BUZZ ON'}</Text>
+            </TouchableOpacity>
           </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
@@ -127,7 +198,7 @@ const WelcomeScreen = ({ navigation }) => {
                 disabled={false}
                 value={toggleCheckBox}
                 onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                style={styles.checkbox}
+                style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
                 boxType={'square'}
               />
               <Text style={[
@@ -140,6 +211,16 @@ const WelcomeScreen = ({ navigation }) => {
           </View>
           </View>
       </View>
+      <Animated.View style={[styles.beeContainer, animatedStyle]}>
+        <Svg width={heightPixel(100)} height={heightPixel(90)}>
+          <SvgImage
+            href={require('../../assets/images/buzz1.png')}
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMid slice"
+          />
+        </Svg>
+      </Animated.View>
     </View>
   );
 };
@@ -181,14 +262,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(20),
     color: 'black',
-    padding: heightPixel(5),
+    padding: heightPixel(4),
+  },
+  buzz_text_button: {
+    fontSize: fontPixel(18),
+    color: 'white',
+  },
+  buzzButton: {
+    marginTop: heightPixel(20),
+    backgroundColor: '#ebb113',
+    borderRadius: heightPixel(20),
+    paddingVertical: heightPixel(15),
+    paddingHorizontal: widthPixel(20),
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
   },
   text_button: {
     fontSize: fontPixel(20),
     color: 'white',
   },
   button: {
-    marginTop: heightPixel(20),
+    marginTop: heightPixel(10),
     backgroundColor: '#063225',
     borderRadius: heightPixel(20),
     paddingVertical: heightPixel(15),
@@ -204,13 +299,19 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     alignSelf: 'center',
-    // transform: [{ scale: 1.5 }],
+  },
+  checkboxAndroid: {
+    alignSelf: 'center',
+    transform: [{ scale: 1.5 }],
   },
   label: {
     fontSize: fontPixel(18),
     color: 'black',
     alignSelf: 'center',
     paddingLeft: widthPixel(5),
+  },
+  beeContainer: {
+    position: 'absolute',
   },
 });
 

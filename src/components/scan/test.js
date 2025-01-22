@@ -415,9 +415,11 @@ const ScanAndRecognizeScreen = () => {
                     style={{
                       color: 'black',
                       fontSize : heightPixel(22),
+                      fontFamily: 'LEMONMILK-Medium',
+                      textAlign: 'center',
                     }}
                   >
-                    {avoidIngredients.length > 0 ? 'These are the ingredients you might want to more about':''}
+                    {avoidIngredients.length > 0 ? 'Click on the ingredient you want to learn more about':''}
                   </Text>
                   {avoidIngredients.map((item, index) => {
                     return (
@@ -429,14 +431,13 @@ const ScanAndRecognizeScreen = () => {
                         }}
                         activeOpacity={0.9}
                         disabled={item.name === ''}
-                        style={{
-                          marginTop: heightPixel(18),
-                        }}
                         >
                         <Text
                           style={{
                             color: 'red',
                             fontSize : heightPixel(20),
+                            fontFamily: 'LEMONMILK-Regular',
+                            paddingVertical: heightPixel(10),
                           }}
                         >
                           {item.name}

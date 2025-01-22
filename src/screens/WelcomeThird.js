@@ -11,6 +11,11 @@ import {
 } from 'react-native';
 import { GlobalContext } from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
+import Svg, { Image as SvgImage } from 'react-native-svg';
 import {
   fontPixel,
   heightPixel,
@@ -22,6 +27,16 @@ const WelcomeSecondScreen = ({ navigation }) => {
   const {
     isLoading,
   } = useContext(GlobalContext);
+
+  const x = useSharedValue(SCREEN_WIDTH - heightPixel(120));
+  const y = useSharedValue(heightPixel(8));
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: x.value },
+      { translateY: y.value },
+    ],
+  }));
  
   return (
     <View style={styles.container}>
@@ -175,6 +190,16 @@ const WelcomeSecondScreen = ({ navigation }) => {
             </View>
           </View>
         </ImageBackground>
+        <Animated.View style={[styles.beeContainer, animatedStyle]}>
+          <Svg width={heightPixel(90)} height={heightPixel(100)}>
+            <SvgImage
+              href={require('../../assets/images/buzz.png')}
+              width="100%"
+              height="100%"
+              preserveAspectRatio="xMidYMid slice"
+            />
+          </Svg>
+        </Animated.View>
         </View>
     </View>
   );
@@ -235,6 +260,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+  },
+  beeContainer: {
+    position: 'absolute',
   },
 });
 
