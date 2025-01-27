@@ -121,10 +121,11 @@ const ScanAndRecognizeScreen = () => {
           orientation: "landscapeLeft"
         })
         if(!isObjectEmpty(result)){
-          let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+          // let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+          let IngredientsList = result.resultText.toLowerCase().replace(/\n/g, ' ');
           if(IngredientsList.length>0){
             try {
-              const { data } = await client.post('/getAvoidData', {
+              const { data } = await client.post('/getAvoidListData', {
                 IngredientsList,
               });
         
