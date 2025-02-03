@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
-  buttonText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
+  buttonText: { color: 'white', fontWeight: 'bold', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Regular' },
   modalStyle: {
     flex: 1,
     justifyContent: 'center',

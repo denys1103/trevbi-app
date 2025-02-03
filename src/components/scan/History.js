@@ -139,10 +139,10 @@ const ScanHistory = ({ navigation }) => {
             source={{ uri: Platform.OS === 'ios' ? item.photoPath : `file://${item.photoPath}` }}
           />
           <View style={styles.boxContent}>
-            <Text style={item.nameArray?styles.title:styles.noAvoidStyle} numberOfLines={1}>
+            <Text allowFontScaling={false} style={item.nameArray?styles.title:styles.noAvoidStyle} numberOfLines={1}>
               {item.nameArray?item.nameArray:'No ingredients to avoid'}
             </Text>
-            <Text style={styles.description} numberOfLines={1}>
+            <Text allowFontScaling={false} style={styles.description} numberOfLines={1}>
               {item.txtArray}
             </Text>
           </View>
@@ -194,7 +194,7 @@ const ScanHistory = ({ navigation }) => {
         renderItem={renderItem}
         // contentContainerStyle={styles.list}
         ListEmptyComponent={
-          <Text style={styles.emptyMessage}>No history available</Text>
+          <Text allowFontScaling={false} style={styles.emptyMessage}>No history available</Text>
         }
       />
     </SafeAreaView>

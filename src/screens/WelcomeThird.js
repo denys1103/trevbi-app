@@ -145,7 +145,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={{ alignItems: 'center' }}>
-            <Text allowFontScaling={false}
+              <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
                   {
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(20),
     color: 'black',
-    padding: heightPixel(5),
+    padding: heightPixel(6),
   },
   text_button: {
     fontSize: fontPixel(20),
@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(20),
     paddingVertical: heightPixel(15),
     paddingHorizontal: widthPixel(30),
+    marginTop: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',

@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(20),
     color: 'black',
-    padding: heightPixel(4),
+    padding: heightPixel(8),
   },
   buzz_text_button: {
     fontSize: fontPixel(18),
