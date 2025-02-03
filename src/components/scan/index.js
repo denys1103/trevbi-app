@@ -244,7 +244,7 @@ const ScanAndRecognizeScreen = () => {
   if (!hasPermission) {
     return (
       <View style={[styles.permissionContainer, StyleSheet.absoluteFill]}>
-        <Text style={styles.permissionText}></Text>
+        <Text allowFontScaling={false} style={styles.permissionText}></Text>
         <View style={styles.permissionButtonView}>
           <TouchableOpacity
             style={styles.okButton}
@@ -253,7 +253,7 @@ const ScanAndRecognizeScreen = () => {
               setHasPermission(newStatus === 'granted');
             }}
           >
-            <Text style={styles.buttonText}>Grant Permission</Text>
+            <Text allowFontScaling={false} style={styles.buttonText}>Grant Permission</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -301,7 +301,7 @@ const ScanAndRecognizeScreen = () => {
                 activeOpacity={0.9}
               >
                 <View style={styles.scanPanelStyle}>
-                  <Text
+                  <Text allowFontScaling={false}
                     style={{
                       color: 'black',
                       fontSize : heightPixel(22),
@@ -330,7 +330,7 @@ const ScanAndRecognizeScreen = () => {
                           activeOpacity={0.9}
                           disabled={item.name === ''}
                           >
-                          <Text
+                          <Text allowFontScaling={false}
                             style={{
                               color: 'red',
                               fontSize : heightPixel(20),
@@ -352,24 +352,24 @@ const ScanAndRecognizeScreen = () => {
           <View style={styles.buttonContainer}>
             {isScanning ? (
               okBtnStatus ? (<TouchableOpacity style={styles.okButton} onPress={captureAndRecognizeText}>
-                <Text style={styles.buttonText}>Scan</Text>
+                <Text allowFontScaling={false} style={styles.buttonText}>Scan</Text>
               </TouchableOpacity>) : <></>
             ) : (
               <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
-                <Text style={styles.buttonText}>Reset</Text>
+                <Text allowFontScaling={false} style={styles.buttonText}>Reset</Text>
               </TouchableOpacity>
             )}
           </View>
           {modalVisibleStatus && (
             <View style={styles.modalStyle}>
               {modalData.name != '' ? 
-                (<Text style={styles.modalTextStyle}>
-                  <Text style={styles.modalTitleStyle}>{modalData.name}: </Text>
-                  <Text style={styles.modalContentsStyle}>{modalData.description}</Text>
+                (<Text allowFontScaling={false} style={styles.modalTextStyle}>
+                  <Text allowFontScaling={false} style={styles.modalTitleStyle}>{modalData.name}: </Text>
+                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description}</Text>
                 </Text>)
                 : 
                 (<View style={styles.modalEmptyStyle}>
-                  <Text style={styles.modalContentsStyle}>{modalData.description} </Text>
+                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description} </Text>
                 </View>)
               }
               <View style={styles.modalImageStyle}>

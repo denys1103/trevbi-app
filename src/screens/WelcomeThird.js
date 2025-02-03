@@ -11,11 +11,6 @@ import {
 } from 'react-native';
 import { GlobalContext } from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
-import Svg, { Image as SvgImage } from 'react-native-svg';
 import {
   fontPixel,
   heightPixel,
@@ -28,16 +23,6 @@ const WelcomeSecondScreen = ({ navigation }) => {
     isLoading,
   } = useContext(GlobalContext);
 
-  const x = useSharedValue(SCREEN_WIDTH - heightPixel(120));
-  const y = useSharedValue(heightPixel(8));
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: x.value },
-      { translateY: y.value },
-    ],
-  }));
- 
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }} >
@@ -49,7 +34,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
           style={styles.backgroundImageStyle}>
           <View style={styles.wrapper}>
             <View style={styles.descriptionView}>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
                   {
@@ -58,7 +43,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   HOW IT WORKS
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -68,7 +53,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   SCAN INGREDIENTS WITH THE
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -77,7 +62,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   IN APP CAMERA. INSTANTLY
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -86,7 +71,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   DISCOVER IF THAT JAR OF
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -95,7 +80,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   PEANUT BUTTER, PACK OF
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -104,7 +89,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   CHIPS, OR BOX OF CEREAL IS
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -113,7 +98,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   MADE WITH THE BEST
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -122,7 +107,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   {`INGREDIENTS\u2014OR IF YOU`}
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -131,7 +116,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   SHOULD DISCOVER A
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -140,7 +125,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   HEALITHER OPTION. MAKE
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -149,7 +134,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   SMARTER CHOICES WITH EASE
               </Text>
-              <Text
+              <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
@@ -160,7 +145,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={{ alignItems: 'center' }}>
-            <Text
+            <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
                   {
@@ -176,7 +161,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                 onPress={async () => {
                   navigation.navigate('Dashboard');
                 }}>
-                  <Text style={[
+                  <Text allowFontScaling={false} style={[
                     styles.text_button,
                     {
                       fontFamily: 'LEMONMILK-Bold',
@@ -190,16 +175,6 @@ const WelcomeSecondScreen = ({ navigation }) => {
             </View>
           </View>
         </ImageBackground>
-        <Animated.View style={[styles.beeContainer, animatedStyle]}>
-          <Svg width={heightPixel(90)} height={heightPixel(100)}>
-            <SvgImage
-              href={require('../../assets/images/buzz.png')}
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid slice"
-            />
-          </Svg>
-        </Animated.View>
         </View>
     </View>
   );

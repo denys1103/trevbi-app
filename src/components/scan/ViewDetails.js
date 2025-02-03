@@ -122,7 +122,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                       height : block.elementFrame.height/scale,
                     }}
                     >
-                    <Text
+                    <Text allowFontScaling={false}
                       style={{
                         color: matchName!='' ? 'red' : 'black',
                         fontSize : block.elementFrame.height/scale*0.95,
@@ -139,7 +139,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 );
               })} */}
               <View style={styles.scanPanelStyle}>
-                <Text
+                <Text allowFontScaling={false}
                   style={{
                     color: 'black',
                     fontSize : heightPixel(22),
@@ -168,7 +168,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                         activeOpacity={0.9}
                         disabled={item.name === ''}
                         >
-                        <Text
+                        <Text allowFontScaling={false}
                           style={{
                             color: 'red',
                             fontSize : heightPixel(20),
@@ -188,19 +188,19 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.okButton} onPress={onGoBack}>
-              <Text style={styles.buttonText}>Back</Text>
+              <Text allowFontScaling={false} style={styles.buttonText}>Back</Text>
             </TouchableOpacity>
           </View>
           {modalVisibleStatus && (
             <View style={styles.modalStyle}>
               {modalData.name != '' ? 
-                (<Text style={styles.modalTextStyle}>
-                  <Text style={styles.modalTitleStyle}>{modalData.name}: </Text>
-                  <Text style={styles.modalContentsStyle}>{modalData.description}</Text>
+                (<Text allowFontScaling={false} style={styles.modalTextStyle}>
+                  <Text allowFontScaling={false} style={styles.modalTitleStyle}>{modalData.name}: </Text>
+                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description}</Text>
                 </Text>)
                 : 
                 (<View style={styles.modalEmptyStyle}>
-                  <Text style={styles.modalContentsStyle}>{modalData.description} </Text>
+                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description} </Text>
                 </View>)
               }
               <View style={styles.modalImageStyle}>

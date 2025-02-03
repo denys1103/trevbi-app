@@ -13,14 +13,6 @@ import {
 import { GlobalContext } from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CheckBox from '@react-native-community/checkbox';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
-import Svg, { Image as SvgImage } from 'react-native-svg';
 import {
   fontPixel,
   heightPixel,
@@ -34,55 +26,6 @@ const WelcomeScreen = ({ navigation }) => {
   } = useContext(GlobalContext);
 
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  const [buzzStatus, setBuzzStatus] = useState(true)
-
-  const x = useSharedValue(SCREEN_WIDTH - heightPixel(100));
-  const y = useSharedValue(heightPixel(50));
-
-  useEffect(() => {
-    if(buzzStatus) {
-      x.value = withRepeat(
-        withSequence(
-          withTiming(SCREEN_WIDTH - heightPixel(100), { duration: 1500 }),
-          withTiming(heightPixel(50), { duration: 1500 })
-        ),
-        -1,
-        true
-      );
-  
-      y.value = withRepeat(
-        withSequence(
-          withTiming(SCREEN_HEIGHT / 4, { duration: 1000 }),
-          withTiming((3 * SCREEN_HEIGHT) / 4 - heightPixel(200), { duration: 1000 })
-        ),
-        -1,
-        true
-      );
-    } else {
-      x.value = withRepeat(
-        withSequence(
-          withTiming(SCREEN_WIDTH - heightPixel(100), { duration: 1500 }),
-        ),
-        1,
-        false
-      );
-  
-      y.value = withRepeat(
-        withSequence(
-          withTiming(heightPixel(50), { duration: 1000 }),
-        ),
-        1,
-        false
-      );
-    }
-  }, [buzzStatus]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: x.value },
-      { translateY: y.value },
-    ],
-  }));
 
   return (
     <View style={styles.container}>
@@ -101,7 +44,7 @@ const WelcomeScreen = ({ navigation }) => {
         </ImageBackground>
         <View style={styles.wrapper}>
           <View style={styles.descriptionView}>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -110,7 +53,7 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               DISCOVER A SMARTER WAY TO
             </Text>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -119,7 +62,7 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               UNDERSTAND FOOD LABELS WITH
             </Text>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -128,7 +71,7 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               TREVBI TECHNOLOGY.
             </Text>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -138,7 +81,7 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               SCAN REAL INGREDIENTS, NOT
             </Text>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -147,7 +90,7 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               {`BARCODES\u2014FOR INSTANT`}
             </Text>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -156,7 +99,7 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               INSIGHTS, HELPING YOU CHOOSE
             </Text>
-            <Text
+            <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -165,19 +108,6 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               HEALTHIER OPTIONS WITH EASE!
             </Text>
-            <TouchableOpacity
-              style={styles.buzzButton}
-              activeOpacity={0.7}
-              onPress={() => {
-                setBuzzStatus(!buzzStatus)
-              }}>
-              <Text style={[
-                styles.buzz_text_button,
-                {
-                  fontFamily: 'LEMONMILK-Regular',
-                },
-              ]}>{buzzStatus ? 'BUZZ OFF' : 'BUZZ ON'}</Text>
-            </TouchableOpacity>
           </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
@@ -186,7 +116,7 @@ const WelcomeScreen = ({ navigation }) => {
               onPress={async () => {
                 navigation.navigate('SplashSecond');
               }}>
-              <Text style={[
+              <Text allowFontScaling={false} style={[
                 styles.text_button,
                 {
                   fontFamily: 'LEMONMILK-Bold',
@@ -201,7 +131,7 @@ const WelcomeScreen = ({ navigation }) => {
                 style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
                 boxType={'square'}
               />
-              <Text style={[
+              <Text allowFontScaling={false} style={[
                   styles.label,
                   {
                     fontFamily: 'LEMONMILK-Light',
@@ -211,16 +141,6 @@ const WelcomeScreen = ({ navigation }) => {
           </View>
           </View>
       </View>
-      <Animated.View style={[styles.beeContainer, animatedStyle]}>
-        <Svg width={heightPixel(100)} height={heightPixel(90)}>
-          <SvgImage
-            href={require('../../assets/images/buzz1.png')}
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMid slice"
-          />
-        </Svg>
-      </Animated.View>
     </View>
   );
 };
