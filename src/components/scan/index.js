@@ -27,6 +27,8 @@ const ScanAndRecognizeScreen = () => {
   const [avoidIngredientsName, setAvoidIngredientsName] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
+  const [answerModalVisibleStatus, setAnswerModalVisibleStatus] = useState(false);
+  const [answerTxt, setAnswerTxt] = useState('');
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
 
   const device = useCameraDevice('back', {
@@ -241,6 +243,28 @@ const ScanAndRecognizeScreen = () => {
     setModalVisibleStatus(false);
   };
 
+  const askAI = async () => {
+    try {
+      const { data } = await client.post('/getAskAi', {
+        modalData,
+      });
+
+      if (data.success) {
+        // console.log(data.results)
+        if(data.results.length > 0) {
+          setAnswerTxt(data.results);
+          setAnswerModalVisibleStatus(true);
+          setModalVisibleStatus(false);
+        }
+      } else {
+        console.log('server error!');
+      }
+    } catch (e) {
+      console.log('new error:', e);
+      Alert.alert('Get Ask AI', e);
+    }
+  };
+
   if (!hasPermission) {
     return (
       <View style={[styles.permissionContainer, StyleSheet.absoluteFill]}>
@@ -263,7 +287,7 @@ const ScanAndRecognizeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TouchableWithoutFeedback
-        onPress={() => setModalVisibleStatus(false)}
+        onPress={() => {setModalVisibleStatus(false); setAnswerModalVisibleStatus(false)}}
       >
         <GestureHandlerRootView style={styles.container}>
           <Spinner visible={!okBtnStatus} />
@@ -285,6 +309,7 @@ const ScanAndRecognizeScreen = () => {
             <TouchableOpacity
               onPress={() => {
                 setModalVisibleStatus(false);
+                setAnswerModalVisibleStatus(false);
               }}
               style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
               activeOpacity={0.9}
@@ -297,6 +322,7 @@ const ScanAndRecognizeScreen = () => {
               <TouchableOpacity
                 onPress={() => {
                   setModalVisibleStatus(false);
+                  setAnswerModalVisibleStatus(false);
                 }}
                 activeOpacity={0.9}
               >
@@ -372,6 +398,22 @@ const ScanAndRecognizeScreen = () => {
                   <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description} </Text>
                 </View>)
               }
+              <View style={styles.modalImageStyle}>
+                {modalData.description != 'There is no the bad ingredients'?
+                <TouchableOpacity style={styles.askButton} onPress={askAI}>
+                  <Image source={require('../../../assets/images/ASK_TREVBI.png')} style={{width:heightPixel(155), height:heightPixel(80)}} />
+                </TouchableOpacity>
+                :
+                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+                }
+              </View>
+            </View>
+          )}
+          {answerModalVisibleStatus && (
+            <View style={styles.modalStyle}>
+              <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
+              </Text>
               <View style={styles.modalImageStyle}>
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
               </View>
@@ -456,6 +498,9 @@ const styles = StyleSheet.create({
     padding: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'flex-end',
+  },
+  askButton: {
+    padding: heightPixel(10),
   },
 });
 

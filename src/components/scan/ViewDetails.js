@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {fontPixel, heightPixel} from '../../config';
+import client, {fontPixel, heightPixel} from '../../config';
 import RNFS from 'react-native-fs';
 
 const ViewDetailsScreen = ({ item, onGoBack }) => {
@@ -12,6 +12,8 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
   const [avoidIngredientsName, setAvoidIngredientsName] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
+  const [answerModalVisibleStatus, setAnswerModalVisibleStatus] = useState(false);
+  const [answerTxt, setAnswerTxt] = useState('');
 
   const loadData = async () => {
     try {
@@ -40,16 +42,39 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
     loadData();
   }, []);
 
+  const askAI = async () => {
+    try {
+      const { data } = await client.post('/getAskAi', {
+        modalData,
+      });
+
+      if (data.success) {
+        // console.log(data.results)
+        if(data.results.length > 0) {
+          setAnswerTxt(data.results);
+          setAnswerModalVisibleStatus(true);
+          setModalVisibleStatus(false);
+        }
+      } else {
+        console.log('server error!');
+      }
+    } catch (e) {
+      console.log('new error:', e);
+      Alert.alert('Get Ask AI', e);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TouchableWithoutFeedback
-        onPress={() => setModalVisibleStatus(false)}
+        onPress={() => {setModalVisibleStatus(false); setAnswerModalVisibleStatus(false)}}
       >
         <View style={styles.container}>
           <Spinner visible={!loading} />
           <TouchableOpacity
             onPress={() => {
             setModalVisibleStatus(false);
+            setAnswerModalVisibleStatus(false);
             }}
             style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
             activeOpacity={0.9}
@@ -63,6 +88,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
             <TouchableOpacity
               onPress={() => {
                 setModalVisibleStatus(false);
+                setAnswerModalVisibleStatus(false);
               }}
               activeOpacity={0.9}
             >
@@ -204,6 +230,22 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 </View>)
               }
               <View style={styles.modalImageStyle}>
+                {modalData.description != 'There is no the bad ingredients'?
+                <TouchableOpacity style={styles.askButton} onPress={askAI}>
+                  <Image source={require('../../../assets/images/ASK_TREVBI.png')} style={{width:heightPixel(155), height:heightPixel(80)}} />
+                </TouchableOpacity>
+                :
+                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+                }
+              </View>
+            </View>
+          )}
+          {answerModalVisibleStatus && (
+            <View style={styles.modalStyle}>
+              <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
+              </Text>
+              <View style={styles.modalImageStyle}>
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
               </View>
             </View>
@@ -285,6 +327,9 @@ const styles = StyleSheet.create({
     padding: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'flex-end',
+  },
+  askButton: {
+    padding: heightPixel(10),
   },
 });
 
