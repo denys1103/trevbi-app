@@ -150,7 +150,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingBottom: heightPixel(20)
+                      paddingBottom: heightPixel(10)
                   },
                   ]}>
                   SEE WHAT'S REALLY IN IT
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
     paddingTop: heightPixel(20)
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(20),
     color: 'black',
-    padding: heightPixel(6),
+    padding: heightPixel(8),
   },
   text_button: {
     fontSize: fontPixel(20),

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import {heightPixel} from '../../config';
 
 const BlackCross = () => {
   return (
@@ -13,20 +14,20 @@ const BlackCross = () => {
 
 const styles = StyleSheet.create({
   background: {
-    height: 60,
-    width: 60,
+    height: heightPixel(50),
+    width: heightPixel(50),
     justifyContent: 'center',
     alignItems: 'center',
   },
   left: {
-    height: 25,
-    width: 2,
+    height: heightPixel(25),
+    width: heightPixel(3),
     backgroundColor: 'black',
     transform: [{rotate: '40deg'}],
   },
   right: {
-    height: 25,
-    width: 2,
+    height: heightPixel(25),
+    width: heightPixel(3),
     backgroundColor: 'black',
     transform: [{rotate: '100deg'}],
   },

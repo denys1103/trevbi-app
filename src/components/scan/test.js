@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, Linking } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
@@ -8,6 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
 import {GlobalContext} from '../../context';
+import BlackCross from './BlackCross';
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
@@ -299,6 +300,28 @@ const ScanAndRecognizeScreen = () => {
     }
   };
 
+  const getBarcodeAI = async () => {
+    // try {
+    //   const { data } = await client.post('/getBarcodeAi', {
+    //     modalData,
+    //   });
+
+    //   if (data.success) {
+    //     console.log(data.results)
+    //     if(data.results.length > 0) {
+    //       // setAnswerTxt(data.results);
+    //       // setAnswerModalVisibleStatus(true);
+    //       // setModalVisibleStatus(false);
+    //     }
+    //   } else {
+    //     console.log('server error!');
+    //   }
+    // } catch (e) {
+    //   console.log('new error:', e);
+    //   Alert.alert('Get Ask AI', e);
+    // }
+  };
+
   if (!hasPermission) {
     return (
       <View style={[styles.permissionContainer, StyleSheet.absoluteFill]}>
@@ -322,6 +345,7 @@ const ScanAndRecognizeScreen = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <TouchableWithoutFeedback
         onPress={() => {setModalVisibleStatus(false); setAnswerModalVisibleStatus(false)}}
+        disabled={true}
       >
         <GestureHandlerRootView style={styles.container}>
           <Spinner visible={!okBtnStatus} />
@@ -343,8 +367,8 @@ const ScanAndRecognizeScreen = () => {
           {capturedPhoto && (
             <TouchableOpacity
               onPress={() => {
-                setModalVisibleStatus(false);
-                setAnswerModalVisibleStatus(false);
+                // setModalVisibleStatus(false);
+                // setAnswerModalVisibleStatus(false);
               }}
               style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
               activeOpacity={0.9}
@@ -489,10 +513,29 @@ const ScanAndRecognizeScreen = () => {
           </View>
           {modalVisibleStatus && (
             <View style={styles.modalStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeButtonStyle}
+                onPress={() => {
+                  setModalVisibleStatus(false);
+                  setAnswerModalVisibleStatus(false);
+                }}>
+                <BlackCross />
+              </TouchableOpacity>
               {modalData.name != '' ? 
                 (<Text allowFontScaling={false} style={styles.modalTextStyle}>
                   <Text allowFontScaling={false} style={styles.modalTitleStyle}>{modalData.name}: </Text>
                   <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description}</Text>
+                  {modalData.source && (
+                    <TouchableOpacity
+                      onPress={() =>
+                        Linking.openURL(
+                          modalData.source,
+                        )
+                      }>
+                      <Text allowFontScaling={false} style={styles.link_blue}>Source</Text>
+                    </TouchableOpacity>
+                  )}
                 </Text>)
                 : 
                 (<View style={styles.modalEmptyStyle}>
@@ -501,9 +544,47 @@ const ScanAndRecognizeScreen = () => {
               }
               <View style={styles.modalImageStyle}>
                 {modalData.description != 'There is no the bad ingredients'?
-                <TouchableOpacity style={styles.askButton} onPress={askAI}>
-                  <Image source={require('../../../assets/images/ASK_TREVBI.png')} style={{width:heightPixel(155), height:heightPixel(80)}} />
-                </TouchableOpacity>
+                (
+                  <>
+                    <Text allowFontScaling={false}
+                      style={{
+                        fontSize : heightPixel(18),
+                        fontFamily: 'LEMONMILK-Medium',
+                        color: 'black',
+                        paddingTop: heightPixel(10),
+                        paddingBottom: heightPixel(5),
+                      }}
+                    >
+                      "WANT HEALTHIER, ASK TREVBI"
+                    </Text>
+                    <TouchableOpacity style={styles.AIButton} onPress={askAI}>
+                      {/* <Image source={require('../../../assets/images/ASK_TREVBI.jpg')} style={{width:heightPixel(155), height:heightPixel(80)}} /> */}
+                      <Text allowFontScaling={false}
+                        style={{
+                          fontSize : heightPixel(16),
+                          fontFamily: 'LEMONMILK-Light',
+                          color: 'black',
+                          paddingVertical: heightPixel(5),
+                        }}
+                      >
+                        SEE BETTER INGREDIENTS
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.AIButton} onPress={getBarcodeAI}>
+                      <Text allowFontScaling={false}
+                        style={{
+                          fontSize : heightPixel(16),
+                          fontFamily: 'LEMONMILK-Light',
+                          color: 'black',
+                          paddingVertical: heightPixel(5),
+                          textAlign: 'center',
+                        }}
+                      >
+                        SCAN A BARCODE FOR A HEALTHIER PRODUCT
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )
                 :
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
                 }
@@ -512,6 +593,15 @@ const ScanAndRecognizeScreen = () => {
           )}
           {answerModalVisibleStatus && (
             <View style={styles.modalStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeButtonStyle}
+                onPress={() => {
+                  setModalVisibleStatus(false);
+                  setAnswerModalVisibleStatus(false);
+                }}>
+                <BlackCross />
+              </TouchableOpacity>
               <Text allowFontScaling={false} style={styles.modalTextStyle}>
                 <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
               </Text>
@@ -592,8 +682,9 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   modalImageStyle: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scanPanelStyle: {
     padding: heightPixel(20),
@@ -602,6 +693,29 @@ const styles = StyleSheet.create({
   },
   askButton: {
     padding: heightPixel(16),
+  },
+  AIButton: {
+    backgroundColor: 'translate',
+    padding: heightPixel(2),
+    borderRadius: heightPixel(8),
+    paddingHorizontal: heightPixel(10),
+    marginVertical: heightPixel(8),
+    // borderWidth: heightPixel(1),
+  },
+  closeButtonStyle: {
+    width: heightPixel(25),
+    height: heightPixel(25),
+    top: heightPixel(5),
+    right: heightPixel(5),
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+  },
+  link_blue: {
+    fontSize: fontPixel(16),
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
 
