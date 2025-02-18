@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking } from 'react-native';
-import { useCameraDevice, Camera } from 'react-native-vision-camera';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList } from 'react-native';
+import { useCameraDevice, Camera, useCodeScanner } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -9,6 +9,7 @@ import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from 
 import RNFS from 'react-native-fs';
 import {GlobalContext} from '../../context';
 import BlackCross from './BlackCross';
+import WhiteCross from './WhiteCross';
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
@@ -31,6 +32,93 @@ const ScanAndRecognizeScreen = () => {
   const [answerModalVisibleStatus, setAnswerModalVisibleStatus] = useState(false);
   const [answerTxt, setAnswerTxt] = useState('');
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
+  const [barcodeScanModalVisibleStatus, setBarcodeScanModalVisibleStatus] = useState(false);
+  const [recommendationsModalVisibleStatus, setRecommendationsModalVisibleStatus] = useState(false);
+  const [enableOnCodeScanned, setEnableOnCodeScanned] = useState(false);
+  const [product, setProduct] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
+  const codeScanner = useCodeScanner({
+    codeTypes: ['ean-13'],
+    onCodeScanned: (codes) => {
+      if (enableOnCodeScanned) {
+        let barcode = codes[0]?.value;
+        if(barcode){
+          fetchProductDetails(barcode);
+          setEnableOnCodeScanned(false);
+          setBarcodeScanModalVisibleStatus(false);
+        }
+      }
+    },
+  });
+
+  const fetchProductDetails = async (barcode) => {
+    try {
+      const foodFactsUrl = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
+  
+      const [foodFactsResponse] = await Promise.all([
+        fetch(foodFactsUrl),
+      ]);
+  
+      const foodFactsData = await foodFactsResponse.json();
+  
+      let category = "unknown";
+  
+      if (foodFactsData.status === 1 && foodFactsData.product.categories_tags?.length > 0) {
+        category = foodFactsData.product.categories_tags[0]; 
+      } 
+  
+      const productInfo = {
+        name: foodFactsData.product.product_name,
+        brand: foodFactsData.product.brands,
+        image: foodFactsData.product.image_url,
+        url: `https://world.openfoodfacts.org/product/${barcode}`,
+        nutriscore: foodFactsData.product?.nutriscore_grade || "unknown",
+        novaGroup: foodFactsData.product?.nova_group || "unknown",
+        category: category,
+      };
+  
+      setProduct(productInfo);
+      fetchHealthierAlternatives(category);
+    } catch (error) {
+      Alert.alert("Alert", "Could not fetch product details.");
+    }
+  };
+
+  const fetchHealthierAlternatives = async (category) => {
+    try {
+      if (!category || category === "unknown") {
+        setRecommendations([]);
+        return;
+      }
+      setOkBtnStatus(false);
+      const openFoodFactsUrl = `https://world.openfoodfacts.org/category/${category}.json`;
+      const openFoodFactsResponse = await fetch(openFoodFactsUrl);
+      const openFoodFactsData = await openFoodFactsResponse.json();
+
+      let healthierProducts = [];
+
+      if (openFoodFactsData.products && openFoodFactsData.products.length > 0) {
+        healthierProducts = openFoodFactsData.products
+          .filter((item) => item.nutriscore_grade && item.nutriscore_grade < "c")
+          .slice(0, 5)
+          .map((item) => ({
+            name: item.product_name,
+            brand: item.brands,
+            image: item.image_url,
+            url: `https://world.openfoodfacts.org/product/${item.code}`,
+            nutriscore: item.nutriscore_grade,
+            source: "OpenFoodFacts",
+          }));
+      }
+
+      setRecommendations(healthierProducts);
+      setRecommendationsModalVisibleStatus(true);
+      setOkBtnStatus(true);
+    } catch (error) {
+      console.error("Error fetching alternatives", error);
+      setOkBtnStatus(true);
+    }
+  };
 
   const device = useCameraDevice('back', {
     physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
@@ -246,6 +334,7 @@ const ScanAndRecognizeScreen = () => {
 
   const askAI = async () => {
     try {
+      setOkBtnStatus(false);
       const { data } = await client.post('/getAskAi', {
         modalData,
       });
@@ -260,32 +349,17 @@ const ScanAndRecognizeScreen = () => {
       } else {
         console.log('server error!');
       }
+      setOkBtnStatus(true);
     } catch (e) {
+      setOkBtnStatus(true);
       console.log('new error:', e);
       Alert.alert('Get Ask AI', e);
     }
   };
 
   const getBarcodeAI = async () => {
-    // try {
-    //   const { data } = await client.post('/getBarcodeAi', {
-    //     modalData,
-    //   });
-
-    //   if (data.success) {
-    //     console.log(data.results)
-    //     if(data.results.length > 0) {
-    //       // setAnswerTxt(data.results);
-    //       // setAnswerModalVisibleStatus(true);
-    //       // setModalVisibleStatus(false);
-    //     }
-    //   } else {
-    //     console.log('server error!');
-    //   }
-    // } catch (e) {
-    //   console.log('new error:', e);
-    //   Alert.alert('Get Ask AI', e);
-    // }
+    setEnableOnCodeScanned(true);
+    setBarcodeScanModalVisibleStatus(true);
   };
 
   if (!hasPermission) {
@@ -490,6 +564,25 @@ const ScanAndRecognizeScreen = () => {
               </View>
             </View>
           )}
+          {barcodeScanModalVisibleStatus && (
+            <View style={styles.barcodeScanmodalStyle}>
+              <Camera
+                codeScanner={codeScanner}
+                style={StyleSheet.absoluteFill}
+                device={device}
+                isActive={true}
+              />
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeScannerBtnStyle}
+                onPress={() => {
+                  setEnableOnCodeScanned(false);
+                  setBarcodeScanModalVisibleStatus(false);
+                }}>
+                <WhiteCross />
+              </TouchableOpacity>
+            </View>
+          )}
           {answerModalVisibleStatus && (
             <View style={styles.modalStyle}>
               <TouchableOpacity
@@ -504,6 +597,62 @@ const ScanAndRecognizeScreen = () => {
               <Text allowFontScaling={false} style={styles.modalTextStyle}>
                 <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
               </Text>
+              <View style={styles.modalImageStyle}>
+                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+              </View>
+            </View>
+          )}
+          {recommendationsModalVisibleStatus && (
+            <View style={styles.recommendationsModalStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeButtonStyle}
+                onPress={() => {
+                  // setModalVisibleStatus(false);
+                  setRecommendationsModalVisibleStatus(false);
+                }}>
+                <BlackCross />
+              </TouchableOpacity>
+              {product && (
+                <View style={styles.recommendationsProductStyle}>
+                  <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{product.name}</Text>
+                  <View style={styles.recommendationsDescriptionBoxStyle}>
+                    <Image source={{ uri: product.image }} style={styles.recommendationsProductImgStyle} />
+                    <View>
+                      <Text allowFontScaling={false}>Brand: {product.brand}</Text>
+                      <Text allowFontScaling={false}>Nutri-Score: {product.nutriscore}</Text>
+                      <TouchableOpacity onPress={() => Linking.openURL(product.url)}>
+                        <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              <FlatList
+                data={recommendations}
+                keyExtractor={(item, index) => index.toString()}
+                ListHeaderComponent={() =>
+                  recommendations.length > 0 ? (
+                    <Text allowFontScaling={false} style={styles.recommendationsHealthierStyle}>
+                      Healthier Alternatives:
+                    </Text>
+                  ) : null
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => Linking.openURL(item.url)} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
+                    <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{item.name}</Text>
+                    <View style={styles.recommendationsDescriptionBoxStyle}>
+                      <Image source={{ uri: item.image }} style={styles.recommendationsProductImgStyle} />
+                      <View>
+                        <Text allowFontScaling={false}>Brand: {item.brand}</Text>
+                        <Text allowFontScaling={false}>Nutri-Score: {item.nutriscore}</Text>
+                        <Text allowFontScaling={false} style={{ color: "blue" }}>{item.source}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
               <View style={styles.modalImageStyle}>
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
               </View>
@@ -615,6 +764,66 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(16),
     color: 'blue',
     textDecorationLine: 'underline',
+  },
+  barcodeScanmodalStyle: {
+    flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    width: '95%',
+    height: '50%',
+    paddingTop: '5%',
+    paddingRight: '2%',
+    paddingLeft: '2%',
+    borderRadius: fontPixel(8),
+    borderColor: 'rgba(102,123,104, 1)',
+    borderWidth: heightPixel(2),
+    // height: '50%',
+  },
+  recommendationsModalStyle: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    width: '95%',
+    height: '80%',
+    paddingTop: '5%',
+    paddingRight: '2%',
+    paddingLeft: '2%',
+    borderRadius: fontPixel(8),
+    borderColor: 'rgba(102,123,104, 1)',
+    borderWidth: heightPixel(2),
+  },
+  closeScannerBtnStyle: {
+    width: heightPixel(25),
+    height: heightPixel(25),
+    top: heightPixel(5),
+    right: heightPixel(5),
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recommendationsProductStyle: {
+    padding: heightPixel(10), 
+    borderBottomWidth: heightPixel(2), 
+    borderColor: 'rgba(102,123,104, 1)',
+  },
+  recommendationsProductNameStyle: {
+    fontSize: fontPixel(14), 
+    fontFamily: 'LEMONMILK-Medium',
+  },
+  recommendationsProductImgStyle: {
+    width: heightPixel(100), 
+    height: heightPixel(100),
+    marginRight: heightPixel(20),
+  },
+  recommendationsDescriptionBoxStyle: {
+    flexDirection: 'row',
+  },
+  recommendationsHealthierStyle: {
+    fontSize: fontPixel(16), 
+    fontFamily: 'LEMONMILK-Bold',
+    padding: heightPixel(10),
   },
 });
 

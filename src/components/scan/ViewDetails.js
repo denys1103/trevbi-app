@@ -294,23 +294,10 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                           fontSize : heightPixel(16),
                           fontFamily: 'LEMONMILK-Light',
                           color: 'black',
-                          paddingVertical: heightPixel(5),
+                          paddingVertical: heightPixel(10),
                         }}
                       >
                         SEE BETTER INGREDIENTS
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.AIButton} onPress={getBarcodeAI}>
-                      <Text allowFontScaling={false}
-                        style={{
-                          fontSize : heightPixel(16),
-                          fontFamily: 'LEMONMILK-Light',
-                          color: 'black',
-                          paddingVertical: heightPixel(5),
-                          textAlign: 'center',
-                        }}
-                      >
-                        SCAN A BARCODE FOR A HEALTHIER PRODUCT
                       </Text>
                     </TouchableOpacity>
                   </>
