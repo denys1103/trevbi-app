@@ -64,7 +64,7 @@ const ScanAndRecognizeScreen = () => {
       let category = "unknown";
   
       if (foodFactsData.status === 1 && foodFactsData.product.categories_tags?.length > 0) {
-        category = foodFactsData.product.categories_tags[0]; 
+        category = foodFactsData.product.categories_tags[foodFactsData.product.categories_tags.length-1]; 
       } 
   
       const productInfo = {
@@ -392,8 +392,11 @@ const ScanAndRecognizeScreen = () => {
   };
 
   const getBarcodeAI = async () => {
-    setEnableOnCodeScanned(true);
-    setBarcodeScanModalVisibleStatus(true);
+    // setEnableOnCodeScanned(true);
+    // setBarcodeScanModalVisibleStatus(true);
+    fetchProductDetails('073731071090');
+    setEnableOnCodeScanned(false);
+    setBarcodeScanModalVisibleStatus(false);
   };
 
   if (!hasPermission) {
