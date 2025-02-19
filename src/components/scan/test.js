@@ -394,7 +394,7 @@ const ScanAndRecognizeScreen = () => {
   const getBarcodeAI = async () => {
     // setEnableOnCodeScanned(true);
     // setBarcodeScanModalVisibleStatus(true);
-    fetchProductDetails('073731071090');
+    fetchProductDetails('0071072013038');
     setEnableOnCodeScanned(false);
     setBarcodeScanModalVisibleStatus(false);
   };
@@ -610,7 +610,7 @@ const ScanAndRecognizeScreen = () => {
                           modalData.source,
                         )
                       }>
-                      <Text allowFontScaling={false} style={styles.link_blue}>Source</Text>
+                      <Text allowFontScaling={false} style={styles.link_blue}>SOURCE</Text>
                     </TouchableOpacity>
                   )}
                 </Text>)
@@ -867,6 +867,7 @@ const styles = StyleSheet.create({
   link_blue: {
     fontSize: fontPixel(16),
     color: 'blue',
+    paddingLeft: heightPixel(8),
     textDecorationLine: 'underline',
   },
   barcodeScanmodalStyle: {
