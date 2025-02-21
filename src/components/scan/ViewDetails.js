@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions, P
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, heightPixel} from '../../config';
 import RNFS from 'react-native-fs';
-import BlackCross from './BlackCross';
 
 const ViewDetailsScreen = ({ item, onGoBack }) => {
   const [textBlocks, setTextBlocks] = useState([]); 
@@ -250,7 +249,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <BlackCross />
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
               </TouchableOpacity>
               {modalData.name != '' ? 
                 (<Text allowFontScaling={false} style={styles.modalTextStyle}>
@@ -317,7 +316,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <BlackCross />
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
               </TouchableOpacity>
               <Text allowFontScaling={false} style={styles.modalTextStyle}>
                 <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
@@ -353,7 +352,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   okButton: {
-    backgroundColor: '#428242',
+    backgroundColor: '#063225',
     padding: heightPixel(16),
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
@@ -364,14 +363,14 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
-  buttonText: { color: 'white', fontWeight: 'bold', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Regular' },
+  buttonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Regular' },
   modalStyle: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,1)',
     position: 'absolute',
     width: '95%',
-    paddingTop: '5%',
+    paddingTop: '10%',
     paddingRight: '2%',
     paddingLeft: '2%',
     borderRadius: fontPixel(8),
@@ -418,8 +417,8 @@ const styles = StyleSheet.create({
     // borderWidth: heightPixel(1),
   },
   closeButtonStyle: {
-    width: heightPixel(25),
-    height: heightPixel(25),
+    width: heightPixel(40),
+    height: heightPixel(40),
     top: heightPixel(5),
     right: heightPixel(5),
     alignSelf: 'center',

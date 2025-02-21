@@ -8,7 +8,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
 import {GlobalContext} from '../../context';
-import BlackCross from './BlackCross';
 import WhiteCross from './WhiteCross';
 
 Reanimated.addWhitelistedNativeProps({
@@ -53,12 +52,9 @@ const ScanAndRecognizeScreen = () => {
 
   const fetchProductDetails = async (barcode) => {
     try {
-      const foodFactsUrl = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
+      const foodFactsUrl = `https://world.openfoodfacts.net/api/v2/product/${barcode}?fields=product_name,brands,image_url,nutriscore_grade,nova_group,categories_tags`;
   
-      const [foodFactsResponse] = await Promise.all([
-        fetch(foodFactsUrl),
-      ]);
-  
+      const foodFactsResponse = await fetch(foodFactsUrl);
       const foodFactsData = await foodFactsResponse.json();
   
       let category = "unknown";
@@ -91,16 +87,14 @@ const ScanAndRecognizeScreen = () => {
         return;
       }
       setOkBtnStatus(false);
-      const openFoodFactsUrl = `https://world.openfoodfacts.org/category/${category}.json`;
+      const openFoodFactsUrl = `https://us.openfoodfacts.net/api/v2/search?categories_tags=${category}&fields=code,nutriscore_grade,product_name,brands,image_url&sort_by=nutriscore_score`;
       const openFoodFactsResponse = await fetch(openFoodFactsUrl);
       const openFoodFactsData = await openFoodFactsResponse.json();
 
       let healthierProducts = [];
-
       if (openFoodFactsData.products && openFoodFactsData.products.length > 0) {
         healthierProducts = openFoodFactsData.products
-          .filter((item) => item.nutriscore_grade && item.nutriscore_grade < "c")
-          .slice(0, 5)
+          .slice(0, 20)
           .map((item) => ({
             name: item.product_name,
             brand: item.brands,
@@ -577,11 +571,46 @@ const ScanAndRecognizeScreen = () => {
             </View>
           )}
 
+          <View style={styles.descriptionPanel}>
+            {isScanning ? (
+              okBtnStatus ? (<>
+                <Text allowFontScaling={false} style={
+                  {
+                      fontFamily: 'LEMONMILK-Bold',
+                      paddingTop: heightPixel(10),
+                      color: 'black', 
+                      fontSize: fontPixel(22)
+                  }}>See Beyond the Label—But
+                </Text>
+                <Text allowFontScaling={false} style={
+                  {
+                      fontFamily: 'LEMONMILK-Bold',
+                      paddingTop: heightPixel(10),
+                      color: 'black', 
+                      fontSize: fontPixel(22)
+                  }}>First, Focus Your Lens
+                </Text>
+              </>) : <></>
+            ) : (
+              <></>
+            )}
+          </View>
+
           <View style={styles.buttonContainer}>
             {isScanning ? (
-              okBtnStatus ? (<TouchableOpacity style={styles.okButton} onPress={captureAndRecognizeText}>
-                <Text allowFontScaling={false} style={styles.buttonText}>Scan</Text>
-              </TouchableOpacity>) : <></>
+              okBtnStatus ? (<>
+                <TouchableOpacity style={styles.okButton} onPress={captureAndRecognizeText}>
+                  <Text allowFontScaling={false} style={styles.buttonText}>Scan</Text>
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                      paddingTop: heightPixel(10),
+                      color: 'black', 
+                      fontSize: fontPixel(18)
+                  }}>App camera
+                </Text>
+              </>) : <></>
             ) : (
               <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
                 <Text allowFontScaling={false} style={styles.buttonText}>Reset</Text>
@@ -597,22 +626,12 @@ const ScanAndRecognizeScreen = () => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <BlackCross />
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
               </TouchableOpacity>
               {modalData.name != '' ? 
                 (<Text allowFontScaling={false} style={styles.modalTextStyle}>
                   <Text allowFontScaling={false} style={styles.modalTitleStyle}>{modalData.name}: </Text>
                   <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description}</Text>
-                  {modalData.source && (
-                    <TouchableOpacity
-                      onPress={() =>
-                        Linking.openURL(
-                          modalData.source,
-                        )
-                      }>
-                      <Text allowFontScaling={false} style={styles.link_blue}>SOURCE</Text>
-                    </TouchableOpacity>
-                  )}
                 </Text>)
                 : 
                 (<View style={styles.modalEmptyStyle}>
@@ -632,7 +651,7 @@ const ScanAndRecognizeScreen = () => {
                         paddingBottom: heightPixel(5),
                       }}
                     >
-                      "WANT HEALTHIER, ASK TREVBI"
+                      "WANT HEALTHY, ASK TREVBI"
                     </Text>
                     <TouchableOpacity style={styles.AIButton} onPress={askAI}>
                       {/* <Image source={require('../../../assets/images/ASK_TREVBI.jpg')} style={{width:heightPixel(155), height:heightPixel(80)}} /> */}
@@ -647,19 +666,20 @@ const ScanAndRecognizeScreen = () => {
                         SEE BETTER INGREDIENTS
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.AIButton} onPress={getBarcodeAI}>
-                      <Text allowFontScaling={false}
-                        style={{
-                          fontSize : heightPixel(16),
-                          fontFamily: 'LEMONMILK-Light',
-                          color: 'black',
-                          paddingVertical: heightPixel(5),
-                          textAlign: 'center',
-                        }}
-                      >
-                        SCAN A BARCODE FOR A HEALTHIER PRODUCT
-                      </Text>
-                    </TouchableOpacity>
+                    {modalData.source && (
+                      <TouchableOpacity
+                        style={{paddingBottom: heightPixel(10)}}
+                        onPress={() =>
+                          Linking.openURL(
+                            modalData.source,
+                          )
+                        }>
+                        <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                          <Text allowFontScaling={false} style={{fontSize:fontPixel(18), color:'black'}}>SOURCE: </Text>
+                          <Text allowFontScaling={false} style={styles.link_blue}>CLICK HERE</Text>
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </>
                 )
                 :
@@ -696,7 +716,7 @@ const ScanAndRecognizeScreen = () => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <BlackCross />
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
               </TouchableOpacity>
               <Text allowFontScaling={false} style={styles.modalTextStyle}>
                 <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
@@ -715,13 +735,17 @@ const ScanAndRecognizeScreen = () => {
                   // setModalVisibleStatus(false);
                   setRecommendationsModalVisibleStatus(false);
                 }}>
-                <BlackCross />
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
               </TouchableOpacity>
               {product && (
                 <View style={styles.recommendationsProductStyle}>
                   <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{product.name}</Text>
                   <View style={styles.recommendationsDescriptionBoxStyle}>
-                    <Image source={{ uri: product.image }} style={styles.recommendationsProductImgStyle} />
+                    {product.image ?
+                      <Image source={{ uri: product.image }} style={styles.recommendationsProductImgStyle} />
+                      :
+                      <Image source={require('../../../assets/images/no_img.jpg')} style={styles.recommendationsProductImgStyle} />
+                    }
                     <View>
                       <Text allowFontScaling={false}>Brand: {product.brand}</Text>
                       <Text allowFontScaling={false}>Nutri-Score: {product.nutriscore}</Text>
@@ -739,7 +763,7 @@ const ScanAndRecognizeScreen = () => {
                 ListHeaderComponent={() =>
                   recommendations.length > 0 ? (
                     <Text allowFontScaling={false} style={styles.recommendationsHealthierStyle}>
-                      Healthier Alternatives:
+                      Healthy Alternatives:
                     </Text>
                   ) : null
                 }
@@ -747,7 +771,11 @@ const ScanAndRecognizeScreen = () => {
                   <TouchableOpacity onPress={() => Linking.openURL(item.url)} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
                     <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{item.name}</Text>
                     <View style={styles.recommendationsDescriptionBoxStyle}>
-                      <Image source={{ uri: item.image }} style={styles.recommendationsProductImgStyle} />
+                      {item.image ?
+                        <Image source={{ uri: item.image }} style={styles.recommendationsProductImgStyle} />
+                        :
+                        <Image source={require('../../../assets/images/no_img.jpg')} style={styles.recommendationsProductImgStyle} />
+                      }
                       <View>
                         <Text allowFontScaling={false}>Brand: {item.brand}</Text>
                         <Text allowFontScaling={false}>Nutri-Score: {item.nutriscore}</Text>
@@ -783,13 +811,15 @@ const styles = StyleSheet.create({
   buttonContainer: {
     position: 'absolute',
     bottom: heightPixel(40),
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
   },
   okButton: {
-    backgroundColor: '#428242',
-    padding: heightPixel(16),
+    backgroundColor: '#063225',
+    paddingVertical: heightPixel(10),
+    paddingHorizontal: heightPixel(16),
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
@@ -799,7 +829,7 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
-  buttonText: { color: 'white', fontWeight: 'bold', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Regular' },
+  buttonText: { color: 'white', fontSize: fontPixel(18), fontFamily: 'LEMONMILK-Bold' },
   modalStyle: {
     flex: 1,
     justifyContent: 'center',
@@ -807,7 +837,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,1)',
     position: 'absolute',
     width: '95%',
-    paddingTop: '5%',
+    paddingTop: '10%',
     paddingRight: '2%',
     paddingLeft: '2%',
     borderRadius: fontPixel(8),
@@ -844,7 +874,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   askButton: {
-    padding: heightPixel(16),
+    padding: heightPixel(10),
   },
   AIButton: {
     backgroundColor: 'translate',
@@ -855,8 +885,8 @@ const styles = StyleSheet.create({
     // borderWidth: heightPixel(1),
   },
   closeButtonStyle: {
-    width: heightPixel(25),
-    height: heightPixel(25),
+    width: heightPixel(40),
+    height: heightPixel(40),
     top: heightPixel(5),
     right: heightPixel(5),
     alignSelf: 'center',
@@ -865,7 +895,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   link_blue: {
-    fontSize: fontPixel(16),
+    fontSize: fontPixel(18),
     color: 'blue',
     paddingLeft: heightPixel(8),
     textDecorationLine: 'underline',
@@ -892,7 +922,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '95%',
     height: '80%',
-    paddingTop: '5%',
+    paddingTop: '10%',
     paddingRight: '2%',
     paddingLeft: '2%',
     borderRadius: fontPixel(8),
@@ -929,6 +959,15 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(16), 
     fontFamily: 'LEMONMILK-Bold',
     padding: heightPixel(10),
+  },
+  descriptionPanel: {
+    position: 'absolute',
+    top: heightPixel(50),
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#e5e5e5',
   },
 });
 

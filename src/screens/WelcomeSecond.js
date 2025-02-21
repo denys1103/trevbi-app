@@ -39,37 +39,29 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
+                      paddingTop: heightPixel(50),
                   },
                   ]}>
-                  INSTANT FOOD INSIGHTS
+                  Is Your Food
+              </Text>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.titleStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Bold',
+                  },
+                  ]}>
+                  Helping or Hurting?
               </Text>
               <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
                       fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(30)
+                      paddingTop: heightPixel(50)
                   },
                   ]}>
-                  SAY GOODBYE TO BARCODE
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  HEADACHES! WITH TREVBI,
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  YOUR FOOD'S MYSTERIES
+                  Get instant insights
               </Text>
               <Text allowFontScaling={false}
                   style={[
@@ -78,17 +70,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                       fontFamily: 'LEMONMILK-Regular',
                   },
                   ]}>
-                  ARE JUST A TAP AWAY.
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(30)
-                  },
-                  ]}>
-                  WANT TO KNOW IF THAT
+                  and find out if your
               </Text>
               <Text allowFontScaling={false}
                   style={[
@@ -97,7 +79,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                       fontFamily: 'LEMONMILK-Regular',
                   },
                   ]}>
-                  SNACK IS A FRIEND OR A FOE?
+                  food is a win or a sin
               </Text>
               <Text allowFontScaling={false}
                   style={[
@@ -106,37 +88,20 @@ const WelcomeSecondScreen = ({ navigation }) => {
                       fontFamily: 'LEMONMILK-Regular',
                   },
                   ]}>
-                  TREVBI'S GOT YOU COVERED
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  WITH INSTANT, NO-FUSS
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  FOOD INSIGHTS THAT MAKE
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  EATING SMARTER FUN AND EASY.
+                  with TREVBI!
               </Text>
             </View>
             <View style={{ alignItems: 'center' }}>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.titleStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Bold',
+                      paddingBottom: heightPixel(20)
+                  },
+                  ]}>
+                  Find Out Now
+              </Text>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
@@ -188,10 +153,9 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(22),
+    fontSize: fontPixel(26),
     color: 'black',
     padding: heightPixel(5),
-    paddingTop: heightPixel(40),
   },
   descriptionView: {
     flexDirection: 'column',
@@ -201,7 +165,7 @@ const styles = StyleSheet.create({
   },
   descriptionStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(20),
+    fontSize: fontPixel(26),
     color: 'black',
     padding: heightPixel(8),
   },

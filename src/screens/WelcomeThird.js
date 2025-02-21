@@ -39,110 +39,74 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
+                      paddingTop: heightPixel(50)
                   },
                   ]}>
-                  HOW IT WORKS
+                  How It Works
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(30)
-                  },
-                  ]}>
-                  SCAN INGREDIENTS WITH THE
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  IN APP CAMERA. INSTANTLY
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  DISCOVER IF THAT JAR OF
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  PEANUT BUTTER, PACK OF
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  CHIPS, OR BOX OF CEREAL IS
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  MADE WITH THE BEST
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  {`INGREDIENTS\u2014OR IF YOU`}
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  SHOULD DISCOVER A
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  HEALITHER OPTION. MAKE
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  SMARTER CHOICES WITH EASE
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  AND CONFIDENCE.
-              </Text>
+              <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '96%'}}>
+                <Text allowFontScaling={false}
+                    style={[
+                    styles.descriptionStyle,
+                    {
+                        fontFamily: 'LEMONMILK-Regular',
+                        paddingTop: heightPixel(30)
+                    },
+                    ]}>
+                    1. SCAN INGREDIENTS WITH
+                </Text>
+                <Text allowFontScaling={false}
+                    style={[
+                    styles.descriptionStyle,
+                    {
+                        fontFamily: 'LEMONMILK-Regular',
+                        paddingLeft: heightPixel(30),
+                    },
+                    ]}>
+                    THE IN-APP CAMERA
+                </Text>
+                <Text allowFontScaling={false}
+                    style={[
+                    styles.descriptionStyle,
+                    {
+                        fontFamily: 'LEMONMILK-Regular',
+                        paddingTop: heightPixel(24)
+                    },
+                    ]}>
+                    2. scan barcode to see
+                </Text>
+                <Text allowFontScaling={false}
+                    style={[
+                    styles.descriptionStyle,
+                    {
+                        fontFamily: 'LEMONMILK-Regular',
+                        paddingLeft: heightPixel(30),
+                    },
+                    ]}>
+                    better brand choices
+                </Text>
+                <Text allowFontScaling={false}
+                    style={[
+                    styles.descriptionStyle,
+                    {
+                        fontFamily: 'LEMONMILK-Regular',
+                        paddingTop: heightPixel(24)
+                    },
+                    ]}>
+                    3. easily build healthy
+                </Text>
+                <Text allowFontScaling={false}
+                    style={[
+                    styles.descriptionStyle,
+                    {
+                        fontFamily: 'LEMONMILK-Regular',
+                        paddingLeft: heightPixel(30),
+                    },
+                    ]}>
+                    recipes with trevbi ai
+                </Text>
+              </View>
+              
             </View>
             <View style={{ alignItems: 'center' }}>
               <Text allowFontScaling={false}
@@ -150,10 +114,10 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingBottom: heightPixel(10)
+                      paddingBottom: heightPixel(16)
                   },
                   ]}>
-                  SEE WHAT'S REALLY IN IT
+                  See Beyond the Label
               </Text>
               <TouchableOpacity
                 style={styles.button}
@@ -206,7 +170,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(22),
+    fontSize: fontPixel(26),
     color: 'black',
     padding: heightPixel(5),
     paddingTop: heightPixel(40),
@@ -219,9 +183,9 @@ const styles = StyleSheet.create({
   },
   descriptionStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(20),
+    fontSize: fontPixel(25),
     color: 'black',
-    padding: heightPixel(8),
+    padding: heightPixel(6),
   },
   text_button: {
     fontSize: fontPixel(20),

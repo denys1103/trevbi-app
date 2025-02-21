@@ -45,69 +45,65 @@ const WelcomeScreen = ({ navigation }) => {
         <View style={styles.wrapper}>
           <View style={styles.descriptionView}>
             <Text allowFontScaling={false}
-              style={[
-                styles.descriptionStyle,
+                style={[
+                styles.titleStyle,
                 {
-                  fontFamily: 'LEMONMILK-Regular',
+                    fontFamily: 'LEMONMILK-Bold',
+                    paddingTop: heightPixel(10)
                 },
-              ]}>
-              DISCOVER A SMARTER WAY TO
+                ]}>
+                Discover a smarter 
+            </Text>
+            <Text allowFontScaling={false}
+                style={[
+                styles.titleStyle,
+                {
+                    fontFamily: 'LEMONMILK-Bold',
+                },
+                ]}>
+                way to shop!
             </Text>
             <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
                   fontFamily: 'LEMONMILK-Regular',
+                  fontSize: fontPixel(28),
+                  paddingTop: heightPixel(30)
                 },
               ]}>
-              UNDERSTAND FOOD LABELS WITH
+              Scan ingredients
             </Text>
-            <Text allowFontScaling={false}
-              style={[
-                styles.descriptionStyle,
-                {
-                  fontFamily: 'LEMONMILK-Regular',
-                },
-              ]}>
-              TREVBI TECHNOLOGY.
-            </Text>
-            <Text allowFontScaling={false}
-              style={[
-                styles.descriptionStyle,
-                {
-                  fontFamily: 'LEMONMILK-Regular',
-                  paddingTop: heightPixel(20)
-                },
-              ]}>
-              SCAN REAL INGREDIENTS, NOT
-            </Text>
-            <Text allowFontScaling={false}
-              style={[
-                styles.descriptionStyle,
-                {
-                  fontFamily: 'LEMONMILK-Regular',
-                },
-              ]}>
-              {`BARCODES\u2014FOR INSTANT`}
-            </Text>
-            <Text allowFontScaling={false}
-              style={[
-                styles.descriptionStyle,
-                {
-                  fontFamily: 'LEMONMILK-Regular',
-                },
-              ]}>
-              INSIGHTS, HELPING YOU CHOOSE
-            </Text>
-            <Text allowFontScaling={false}
-              style={[
-                styles.descriptionStyle,
-                {
-                  fontFamily: 'LEMONMILK-Regular',
-                },
-              ]}>
-              HEALTHIER OPTIONS WITH EASE!
-            </Text>
+            <View style={{alignItems: 'flex-start', width: '80%'}}>
+              <Text allowFontScaling={false}
+                style={[
+                  styles.descriptionStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Regular',
+                  },
+                ]}>
+                &#8226; instant insights
+              </Text>
+              <Text allowFontScaling={false}
+                style={[
+                  styles.descriptionStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Regular',
+                  },
+                ]}>
+                &#8226; healthier choices
+              </Text>
+              <Text allowFontScaling={false}
+                style={[
+                  styles.descriptionStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Regular',
+                  },
+                ]}>
+                &#8226; quick and easy! 
+              </Text>
+            </View>
+            
           </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
@@ -180,7 +176,7 @@ const styles = StyleSheet.create({
   },
   descriptionStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(20),
+    fontSize: fontPixel(26),
     color: 'black',
     padding: heightPixel(8),
   },
@@ -232,6 +228,12 @@ const styles = StyleSheet.create({
   },
   beeContainer: {
     position: 'absolute',
+  },
+  titleStyle: {
+    textAlign: 'center',
+    fontSize: fontPixel(26),
+    color: 'black',
+    padding: heightPixel(5),
   },
 });
 
