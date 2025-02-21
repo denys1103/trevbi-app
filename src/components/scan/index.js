@@ -549,17 +549,17 @@ const ScanAndRecognizeScreen = () => {
                     >
                       "WANT HEALTHY, ASK TREVBI"
                     </Text>
-                    <TouchableOpacity style={styles.AIButton} onPress={askAI}>
-                      {/* <Image source={require('../../../assets/images/ASK_TREVBI.jpg')} style={{width:heightPixel(155), height:heightPixel(80)}} /> */}
+                    <TouchableOpacity style={styles.AIButton} onPress={getBarcodeAI}>
                       <Text allowFontScaling={false}
                         style={{
-                          fontSize : heightPixel(16),
+                          fontSize : heightPixel(14),
                           fontFamily: 'LEMONMILK-Light',
                           color: 'black',
                           paddingVertical: heightPixel(5),
+                          textAlign: 'center',
                         }}
                       >
-                        SEE BETTER INGREDIENTS
+                        SCAN A BARCODE FOR A HEALTHIER PRODUCT
                       </Text>
                     </TouchableOpacity>
                     {modalData.source && (
