@@ -663,7 +663,7 @@ const ScanAndRecognizeScreen = () => {
                           textAlign: 'center',
                         }}
                       >
-                        SCAN A BARCODE FOR A HEALTHIER PRODUCT
+                        SCAN A BARCODE FOR A HEALTHY PRODUCT
                       </Text>
                     </TouchableOpacity>
                     {modalData.source && (
