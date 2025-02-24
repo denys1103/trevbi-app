@@ -75,7 +75,7 @@ const WelcomeScreen = ({ navigation }) => {
               Scan ingredients
             </Text>
           </View>
-          <View style={{alignItems: 'flex-start', width: '80%'}}>
+          <View style={{alignItems: 'flex-start'}}>
             <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,

@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(26),
     color: 'black',
-    padding: heightPixel(8),
+    padding: heightPixel(10),
   },
   text_button: {
     fontSize: fontPixel(20),

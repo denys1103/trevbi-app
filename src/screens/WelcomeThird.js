@@ -53,14 +53,14 @@ const WelcomeSecondScreen = ({ navigation }) => {
                       paddingTop: heightPixel(20)
                   },
                   ]}>
-                  1. SCAN INGREDIENTS WITH
+                  1.  SCAN INGREDIENTS WITH
               </Text>
               <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
                       fontFamily: 'LEMONMILK-Regular',
-                      paddingLeft: heightPixel(30),
+                      paddingLeft: heightPixel(36),
                   },
                   ]}>
                   THE IN-APP CAMERA
@@ -81,7 +81,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.descriptionStyle,
                   {
                       fontFamily: 'LEMONMILK-Regular',
-                      paddingLeft: heightPixel(30),
+                      paddingLeft: heightPixel(36),
                   },
                   ]}>
                   better brand choices
@@ -102,7 +102,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.descriptionStyle,
                   {
                       fontFamily: 'LEMONMILK-Regular',
-                      paddingLeft: heightPixel(30),
+                      paddingLeft: heightPixel(36),
                   },
                   ]}>
                   recipes with trevbi ai
