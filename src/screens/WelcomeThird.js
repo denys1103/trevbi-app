@@ -30,7 +30,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
         <ImageBackground
           source={require('../../assets/images/background_screen2.jpg')}
           resizeMode="cover"
-          imageStyle={{opacity: 0.3}}
+          imageStyle={{opacity: 0.2}}
           style={styles.backgroundImageStyle}>
           <View style={styles.wrapper}>
             <View style={styles.descriptionView}>
@@ -39,86 +39,88 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(50)
                   },
                   ]}>
                   How It Works
               </Text>
-              <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '96%'}}>
-                <Text allowFontScaling={false}
-                    style={[
-                    styles.descriptionStyle,
-                    {
-                        fontFamily: 'LEMONMILK-Regular',
-                        paddingTop: heightPixel(30)
-                    },
-                    ]}>
-                    1. SCAN INGREDIENTS WITH
-                </Text>
-                <Text allowFontScaling={false}
-                    style={[
-                    styles.descriptionStyle,
-                    {
-                        fontFamily: 'LEMONMILK-Regular',
-                        paddingLeft: heightPixel(30),
-                    },
-                    ]}>
-                    THE IN-APP CAMERA
-                </Text>
-                <Text allowFontScaling={false}
-                    style={[
-                    styles.descriptionStyle,
-                    {
-                        fontFamily: 'LEMONMILK-Regular',
-                        paddingTop: heightPixel(24)
-                    },
-                    ]}>
-                    2. scan barcode to see
-                </Text>
-                <Text allowFontScaling={false}
-                    style={[
-                    styles.descriptionStyle,
-                    {
-                        fontFamily: 'LEMONMILK-Regular',
-                        paddingLeft: heightPixel(30),
-                    },
-                    ]}>
-                    better brand choices
-                </Text>
-                <Text allowFontScaling={false}
-                    style={[
-                    styles.descriptionStyle,
-                    {
-                        fontFamily: 'LEMONMILK-Regular',
-                        paddingTop: heightPixel(24)
-                    },
-                    ]}>
-                    3. easily build healthy
-                </Text>
-                <Text allowFontScaling={false}
-                    style={[
-                    styles.descriptionStyle,
-                    {
-                        fontFamily: 'LEMONMILK-Regular',
-                        paddingLeft: heightPixel(30),
-                    },
-                    ]}>
-                    recipes with trevbi ai
-                </Text>
-              </View>
-              
             </View>
-            <View style={{ alignItems: 'center' }}>
+            <View style={styles.descriptionTxtView}>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.descriptionStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                      paddingTop: heightPixel(20)
+                  },
+                  ]}>
+                  1. SCAN INGREDIENTS WITH
+              </Text>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.descriptionStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                      paddingLeft: heightPixel(30),
+                  },
+                  ]}>
+                  THE IN-APP CAMERA
+              </Text>
+            </View>
+            <View style={styles.descriptionTxtView}>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.descriptionStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                  },
+                  ]}>
+                  2. scan barcode to see
+              </Text>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.descriptionStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                      paddingLeft: heightPixel(30),
+                  },
+                  ]}>
+                  better brand choices
+              </Text>
+            </View>
+            <View style={styles.descriptionTxtView}>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.descriptionStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                  },
+                  ]}>
+                  3. easily build healthy
+              </Text>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.descriptionStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Regular',
+                      paddingLeft: heightPixel(30),
+                  },
+                  ]}>
+                  recipes with trevbi ai
+              </Text>
+            </View>
+            <View>
               <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingBottom: heightPixel(16)
+                      paddingTop: heightPixel(10)
                   },
                   ]}>
                   See Beyond the Label
               </Text>
+            </View>
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
@@ -166,7 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(20)
+    paddingTop: heightPixel(50)
   },
   titleStyle: {
     textAlign: 'center',
@@ -180,6 +182,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+  },
+  descriptionTxtView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    width: '96%'
   },
   descriptionStyle: {
     textAlign: 'center',
@@ -196,7 +204,6 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(20),
     paddingVertical: heightPixel(15),
     paddingHorizontal: widthPixel(30),
-    marginTop: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',

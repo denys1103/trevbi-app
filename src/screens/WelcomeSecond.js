@@ -30,16 +30,15 @@ const WelcomeSecondScreen = ({ navigation }) => {
         <ImageBackground
           source={require('../../assets/images/background_screen1.jpg')}
           resizeMode="cover"
-          imageStyle={{opacity: 0.3}}
+          imageStyle={{opacity: 0.2}}
           style={styles.backgroundImageStyle}>
           <View style={styles.wrapper}>
-            <View style={styles.descriptionView}>
+            <View style={styles.titleView}>
               <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(50),
                   },
                   ]}>
                   Is Your Food
@@ -53,12 +52,13 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   ]}>
                   Helping or Hurting?
               </Text>
+            </View>
+            <View style={styles.descriptionView}>
               <Text allowFontScaling={false}
                   style={[
                   styles.descriptionStyle,
                   {
                       fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(50)
                   },
                   ]}>
                   Get instant insights
@@ -91,17 +91,19 @@ const WelcomeSecondScreen = ({ navigation }) => {
                   with TREVBI!
               </Text>
             </View>
-            <View style={{ alignItems: 'center' }}>
+            <View>
               <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingBottom: heightPixel(20)
+                      paddingTop: heightPixel(10)
                   },
                   ]}>
                   Find Out Now
               </Text>
+            </View>
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
@@ -146,10 +148,10 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(20)
+    paddingTop: heightPixel(90)
   },
   titleStyle: {
     textAlign: 'center',
@@ -157,11 +159,18 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: heightPixel(5),
   },
+  titleView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
   descriptionView: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    paddingVertical: heightPixel(20),
   },
   descriptionStyle: {
     textAlign: 'center',

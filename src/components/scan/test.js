@@ -635,7 +635,16 @@ const ScanAndRecognizeScreen = () => {
                 </Text>)
                 : 
                 (<View style={styles.modalEmptyStyle}>
+                  {modalData.description.includes('There is no captured text') ? 
+                  <Text allowFontScaling={false} style={[
+                    styles.modalContentsStyle,
+                    {
+                      textAlign: 'center',
+                    },
+                  ]}>{modalData.description} </Text>
+                  :
                   <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description} </Text>
+                  }
                 </View>)
               }
               <View style={styles.modalImageStyle}>

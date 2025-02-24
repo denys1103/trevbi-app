@@ -49,10 +49,9 @@ const WelcomeScreen = ({ navigation }) => {
                 styles.titleStyle,
                 {
                     fontFamily: 'LEMONMILK-Bold',
-                    paddingTop: heightPixel(10)
                 },
                 ]}>
-                Discover a smarter 
+                Food Labels Can Be Tricky 
             </Text>
             <Text allowFontScaling={false}
                 style={[
@@ -61,49 +60,50 @@ const WelcomeScreen = ({ navigation }) => {
                     fontFamily: 'LEMONMILK-Bold',
                 },
                 ]}>
-                way to shop!
+                We Make Them Easy!
+            </Text>
+          </View>
+          <View style={styles.descriptionView}>
+            <Text allowFontScaling={false}
+              style={{
+                  fontFamily: 'LEMONMILK-Regular',
+                  fontSize: fontPixel(26),
+                  textAlign: 'center',
+                  color: 'black',
+                  paddingTop: heightPixel(10),
+                }}>
+              Scan ingredients
+            </Text>
+          </View>
+          <View style={{alignItems: 'flex-start', width: '80%'}}>
+            <Text allowFontScaling={false}
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                  paddingTop: 0,
+                },
+              ]}>
+              &#8226; instant insights
             </Text>
             <Text allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
                   fontFamily: 'LEMONMILK-Regular',
-                  fontSize: fontPixel(28),
-                  paddingTop: heightPixel(30)
                 },
               ]}>
-              Scan ingredients
+              &#8226; healthier choices
             </Text>
-            <View style={{alignItems: 'flex-start', width: '80%'}}>
-              <Text allowFontScaling={false}
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                &#8226; instant insights
-              </Text>
-              <Text allowFontScaling={false}
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                &#8226; healthier choices
-              </Text>
-              <Text allowFontScaling={false}
-                style={[
-                  styles.descriptionStyle,
-                  {
-                    fontFamily: 'LEMONMILK-Regular',
-                  },
-                ]}>
-                &#8226; quick and easy! 
-              </Text>
-            </View>
-            
+            <Text allowFontScaling={false}
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
+                },
+              ]}>
+              &#8226; quick and easy! 
+            </Text>
           </View>
           <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
@@ -135,7 +135,7 @@ const WelcomeScreen = ({ navigation }) => {
                 ]}>DON'T SHOW THIS SCREEN AGAIN</Text>
             </View>
           </View>
-          </View>
+        </View>
       </View>
     </View>
   );
@@ -163,10 +163,10 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(20)
+    paddingTop: heightPixel(10)
   },
   descriptionView: {
     flexDirection: 'column',
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   descriptionStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(26),
+    fontSize: fontPixel(24),
     color: 'black',
     padding: heightPixel(8),
   },
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginVertical: heightPixel(18),
+    marginVertical: heightPixel(10),
   },
   checkbox: {
     alignSelf: 'center',
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(26),
+    fontSize: fontPixel(24),
     color: 'black',
     padding: heightPixel(5),
   },
