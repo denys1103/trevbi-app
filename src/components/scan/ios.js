@@ -473,7 +473,7 @@ const ScanAndRecognizeScreen = () => {
                 <Text allowFontScaling={false} style={
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(10),
+                      paddingTop: heightPixel(16),
                       color: 'black', 
                       fontSize: fontPixel(22)
                   }}>See Beyond the Label—But
@@ -481,7 +481,8 @@ const ScanAndRecognizeScreen = () => {
                 <Text allowFontScaling={false} style={
                   {
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(10),
+                      paddingTop: heightPixel(5),
+                      paddingBottom: heightPixel(16),
                       color: 'black', 
                       fontSize: fontPixel(22)
                   }}>First, Focus Your Lens
@@ -508,9 +509,12 @@ const ScanAndRecognizeScreen = () => {
                 </Text>
               </>) : <></>
             ) : (
+              !modalVisibleStatus ?
               <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
                 <Text allowFontScaling={false} style={styles.buttonText}>Reset</Text>
               </TouchableOpacity>
+              :
+              <></>
             )}
           </View>
           {modalVisibleStatus && (
@@ -543,6 +547,20 @@ const ScanAndRecognizeScreen = () => {
                   }
                 </View>)
               }
+              {modalData.source && (
+                <TouchableOpacity
+                  style={{paddingBottom: heightPixel(10)}}
+                  onPress={() =>
+                    Linking.openURL(
+                      modalData.source,
+                    )
+                  }>
+                  <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                    <Text allowFontScaling={false} style={{fontSize:fontPixel(18), color:'black', fontFamily: 'LEMONMILK-Medium'}}>CLICK HERE: </Text>
+                    <Text allowFontScaling={false} style={styles.link_blue}>SOURCE</Text>
+                  </Text>
+                </TouchableOpacity>
+              )}
               <View style={styles.modalImageStyle}>
                 {modalData.description != 'There is no the bad ingredients'?
                 (
@@ -556,35 +574,12 @@ const ScanAndRecognizeScreen = () => {
                         paddingBottom: heightPixel(5),
                       }}
                     >
-                      "WANT HEALTHY, ASK TREVBI"
+                      Scan & score a healthier choice!
                     </Text>
-                    <TouchableOpacity style={styles.AIButton} onPress={getBarcodeAI}>
-                      <Text allowFontScaling={false}
-                        style={{
-                          fontSize : heightPixel(14),
-                          fontFamily: 'LEMONMILK-Light',
-                          color: 'black',
-                          paddingVertical: heightPixel(5),
-                          textAlign: 'center',
-                        }}
-                      >
-                        SCAN A BARCODE FOR A HEALTHY PRODUCT
-                      </Text>
+                    <TouchableOpacity style={styles.barcodeButton} onPress={getBarcodeAI}>
+                      <Text allowFontScaling={false} style={styles.barcodeButtonText}>Scan</Text>
+                      <Text allowFontScaling={false} style={styles.barcodeButtonText}>barcode</Text>
                     </TouchableOpacity>
-                    {modalData.source && (
-                      <TouchableOpacity
-                        style={{paddingBottom: heightPixel(10)}}
-                        onPress={() =>
-                          Linking.openURL(
-                            modalData.source,
-                          )
-                        }>
-                        <Text allowFontScaling={false} style={styles.modalTextStyle}>
-                          <Text allowFontScaling={false} style={{fontSize:fontPixel(18), color:'black'}}>SOURCE: </Text>
-                          <Text allowFontScaling={false} style={styles.link_blue}>CLICK HERE</Text>
-                        </Text>
-                      </TouchableOpacity>
-                    )}
                   </>
                 )
                 :
@@ -803,7 +798,7 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
     color: 'blue',
     paddingLeft: heightPixel(8),
-    textDecorationLine: 'underline',
+    fontFamily: 'LEMONMILK-Medium',
   },
   barcodeScanmodalStyle: {
     flex: 1,
@@ -872,8 +867,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: '#e5e5e5',
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
+  barcodeButton: {
+    backgroundColor: '#063225',
+    paddingVertical: heightPixel(5),
+    paddingHorizontal: heightPixel(20),
+    borderRadius: heightPixel(14),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: heightPixel(10),
+  },
+  barcodeButtonText: { color: 'white', fontSize: fontPixel(14), fontFamily: 'LEMONMILK-Medium' },
 });
 
 export default ScanAndRecognizeScreen;
