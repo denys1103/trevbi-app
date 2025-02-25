@@ -600,13 +600,28 @@ const ScanAndRecognizeScreen = () => {
           <View style={styles.buttonContainer}>
             {isScanning ? (
               okBtnStatus ? (<>
-                <TouchableOpacity style={styles.okButton} onPress={captureAndRecognizeText}>
-                  <Text allowFontScaling={false} style={styles.buttonText}>Scan</Text>
-                </TouchableOpacity>
+                <View style={styles.scanGroupStyle}>
+                  <View style={{marginHorizontal: '3%', width: '40%'}}>
+                    <Text allowFontScaling={false}></Text>
+                  </View>
+                  <View style={{alignItems: 'center', justifyContent: 'center', marginHorizontal: '3%', width: '40%'}}>
+                    <Text allowFontScaling={false} style={{ color: 'black', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' }}>Comming soon</Text>
+                  </View>
+                </View>
+                <View style={styles.scanGroupStyle}>
+                  <TouchableOpacity style={styles.scanButton} onPress={captureAndRecognizeText}>
+                    <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
+                    <Text allowFontScaling={false} style={styles.scanButtonText}>Ingredients</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity activeOpacity={0.9} style={styles.scanButton} onPress={() => console.log('click recipes')}>
+                    <Text allowFontScaling={false} style={styles.scanButtonText}>Trevbi ai</Text>
+                    <Text allowFontScaling={false} style={styles.scanButtonText}>recipes</Text>
+                  </TouchableOpacity>
+                </View>
                 <Text allowFontScaling={false} style={
                   {
                       fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(10),
+                      paddingTop: heightPixel(8),
                       color: 'black', 
                       fontSize: fontPixel(18)
                   }}>App camera
@@ -660,7 +675,7 @@ const ScanAndRecognizeScreen = () => {
                     )
                   }>
                   <Text allowFontScaling={false} style={styles.modalTextStyle}>
-                    <Text allowFontScaling={false} style={{fontSize:fontPixel(18), color:'black', fontFamily: 'LEMONMILK-Medium'}}>CLICK HERE: </Text>
+                    <Text allowFontScaling={false} style={{fontSize:fontPixel(16), color:'black', fontFamily: 'LEMONMILK-Medium'}}>CLICK HERE: </Text>
                     <Text allowFontScaling={false} style={styles.link_blue}>SOURCE</Text>
                   </Text>
                 </TouchableOpacity>
@@ -680,10 +695,16 @@ const ScanAndRecognizeScreen = () => {
                     >
                       Scan & score a healthier choice!
                     </Text>
-                    <TouchableOpacity style={styles.barcodeButton} onPress={getBarcodeAI}>
-                      <Text allowFontScaling={false} style={styles.barcodeButtonText}>Scan</Text>
-                      <Text allowFontScaling={false} style={styles.barcodeButtonText}>barcode</Text>
-                    </TouchableOpacity>
+                    <View style={styles.scanGroupStyle}>
+                      <TouchableOpacity style={styles.barcodeButton} onPress={getBarcodeAI}>
+                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>Scan</Text>
+                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>barcode</Text>
+                      </TouchableOpacity>
+                      {/* <TouchableOpacity style={styles.barcodeButton} onPress={() => console.log('click recipes')}>
+                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>Trevbi ai</Text>
+                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>recipes</Text>
+                      </TouchableOpacity> */}
+                    </View>
                   </>
                 )
                 :
@@ -899,7 +920,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   link_blue: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(16),
     color: 'blue',
     paddingLeft: heightPixel(8),
     fontFamily: 'LEMONMILK-Medium',
@@ -981,8 +1002,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: heightPixel(10),
+    marginHorizontal: '3%',
+    width: '40%',
   },
   barcodeButtonText: { color: 'white', fontSize: fontPixel(14), fontFamily: 'LEMONMILK-Medium' },
+  scanButton: {
+    backgroundColor: '#063225',
+    paddingVertical: heightPixel(5),
+    paddingHorizontal: heightPixel(20),
+    borderRadius: heightPixel(14),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: heightPixel(10),
+    marginHorizontal: '3%',
+    width: '40%',
+  },
+  scanButtonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' },
+  scanGroupStyle: {
+    flexDirection: 'row',
+  },
 });
 
 export default ScanAndRecognizeScreen;
