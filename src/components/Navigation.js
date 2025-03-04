@@ -5,6 +5,9 @@ import Welcome from '../screens/Welcome';
 import BuzzAnimation from '../screens/BuzzAnimation';
 import WelcomeSecond from '../screens/WelcomeSecond';
 import WelcomeThird from '../screens/WelcomeThird';
+import RecipeWelcome from './recipe/Welcome';
+import Diets from './recipe/Diets';
+import RecipeScan from './recipe/RecipeScan';
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -32,7 +35,6 @@ const Navigation = () => {
           <Stack.Screen
             name="Splash"
             component={Welcome}
-            // component={BuzzAnimation}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -43,6 +45,21 @@ const Navigation = () => {
           <Stack.Screen
             name="SplashThird"
             component={WelcomeThird}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="RecipeWelcome"
+            component={RecipeWelcome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Diets"
+            component={Diets}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="RecipeScan"
+            component={RecipeScan}
             options={{headerShown: false}}
           />
           <Stack.Screen
