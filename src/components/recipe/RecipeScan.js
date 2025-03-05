@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera } from 'react-native-vision-camera-text-recognition';
@@ -6,6 +6,8 @@ import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolatio
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, heightPixel} from '../../config';
+import { GlobalContext } from '../../context';
+import WhiteCross from '../scan/WhiteCross';
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
@@ -21,8 +23,10 @@ const RecipeScanScreen = ({ navigation }) => {
   const [okBtnStatus, setOkBtnStatus] = useState(true);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
-  const [diets, setDiets] = useState('Vegetarian, Gluten-free');
   const [recipeIngredients, setRecipeIngredients] = useState(null);
+  const {
+    selectedDiets,
+  } = useContext(GlobalContext);
 
   const device = useCameraDevice('back', {
     physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
@@ -80,7 +84,7 @@ const RecipeScanScreen = ({ navigation }) => {
               type: 'image/jpeg',
               name: 'food.jpg',
             });
-            formData.append('diets', diets);
+            formData.append('diets', selectedDiets);
       
             const response = await client.post('/recipe', formData, {
               headers: {
@@ -218,6 +222,22 @@ const RecipeScanScreen = ({ navigation }) => {
               <></>
             )}
           </View>
+          <View style={styles.goToHomePanel}>
+            {isScanning ? (
+              okBtnStatus ? (<>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.goToBackBtnStyle}
+                  onPress={() => {
+                    navigation.navigate('Dashboard');
+                  }}>
+                  <WhiteCross />
+                </TouchableOpacity>
+              </>) : <></>
+            ) : (
+              <></>
+            )}
+          </View>
 
           <View style={styles.buttonContainer}>
             {isScanning ? (
@@ -320,7 +340,25 @@ const styles = StyleSheet.create({
   },
   ingredientItem: {
     fontSize: fontPixel(18),
+    color: '#2e2e34',
     marginBottom: heightPixel(3),
+  },
+  goToHomePanel: {
+    position: 'absolute',
+    top: heightPixel(30),
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  goToBackBtnStyle: {
+    width: heightPixel(25),
+    height: heightPixel(25),
+    top: heightPixel(5),
+    right: heightPixel(5),
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

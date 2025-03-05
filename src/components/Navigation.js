@@ -8,6 +8,7 @@ import WelcomeThird from '../screens/WelcomeThird';
 import RecipeWelcome from './recipe/Welcome';
 import Diets from './recipe/Diets';
 import RecipeScan from './recipe/RecipeScan';
+import TestRecipe from './recipe/TestRecipe';
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
 import RegisterScreen from '../screens/RegisterScreen';

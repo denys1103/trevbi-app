@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   Text,
   TouchableOpacity,
-  ImageBackground,
-  Image,
   View,
   StyleSheet,
-  ScrollView,
-  Dimensions,
   SafeAreaView,
-  Platform,
+  Dimensions,
 } from 'react-native';
 import { GlobalContext } from '../../context';
 import Spinner from 'react-native-loading-spinner-overlay';
-import CheckBox from '@react-native-community/checkbox';
+import CheckboxTree from 'react-native-tree-checkbox';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   fontPixel,
   heightPixel,
@@ -24,12 +22,87 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const DietsScreen = ({ navigation }) => {
   const {
     isLoading,
+    selectedDiets,
+    setSelectedDiets,
   } = useContext(GlobalContext);
-  const [toggleCheckBox1, setToggleCheckBox1] = useState(false)
-  const [toggleCheckBox2, setToggleCheckBox2] = useState(false)
-  const [toggleCheckBox3, setToggleCheckBox3] = useState(false)
-  const [toggleCheckBox4, setToggleCheckBox4] = useState(false)
-  const [toggleCheckBox5, setToggleCheckBox5] = useState(false)
+  const recursiveData = [
+    {
+      name: 'Keto Diet',
+      icon: '',
+      childs: [
+        {
+          name: 'Low-carb, high-fat, moderate protein diet',
+          icon: '',
+        },
+        {
+          name: 'Focuses on fats like avocado, olive oil, meat, and cheese',
+          icon: '',
+        },
+        {
+          name: 'Avoids grains, sugar, and high-carb foods',
+          icon: '',
+        },
+        {
+          name: 'Supports fat burning and metabolic flexibility',
+          icon: '',
+        },
+        {
+          name: 'Weight loss, blood sugar control, energy levels',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Mediterranean Diet',
+      icon: '',
+    },
+    {
+      name: 'Plant-Based / Vegan',
+      icon: '',
+    },
+    {
+      name: 'Paleo Diet',
+      icon: '',
+    },
+    {
+      name: 'Carnivore Diet',
+      icon: '',
+    },
+    {
+      name: 'Pegan Diet',
+      icon: '',
+    },
+    {
+      name: 'Low-FODMAP Diet',
+      icon: '',
+    },
+    {
+      name: 'Whole30',
+      icon: '',
+    },
+    {
+      name: 'Biohacker Diets',
+      icon: '',
+    },
+    {
+      name: 'DASH Diet',
+      icon: '',
+    },
+    {
+      name: 'Autoimmune Protocol',
+      icon: '',
+    },
+    {
+      name: 'Gluten-Free Diet',
+      icon: '',
+    },
+  ];
+  
+  const ref = useRef(null);
+
+  // useEffect(() => {
+  //   console.log('selectedDiets:', selectedDiets)
+  // }, [selectedDiets]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,118 +123,44 @@ const DietsScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.descriptionView}>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  disabled={false}
-                  value={toggleCheckBox1}
-                  onValueChange={(newValue) => setToggleCheckBox1(newValue)}
-                  style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
-                  boxType={'square'}
-                />
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                    },
-                  ]}>Keto diet</Text>
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingBottom:heightPixel(5)
-                    },
-                  ]}>&#9013;</Text>
-              </View>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  disabled={false}
-                  value={toggleCheckBox2}
-                  onValueChange={(newValue) => setToggleCheckBox2(newValue)}
-                  style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
-                  boxType={'square'}
-                />
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                    },
-                  ]}>Mediterranean diet</Text>
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingBottom:heightPixel(5)
-                    },
-                  ]}>&#9013;</Text>
-              </View>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  disabled={false}
-                  value={toggleCheckBox3}
-                  onValueChange={(newValue) => setToggleCheckBox3(newValue)}
-                  style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
-                  boxType={'square'}
-                />
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                    },
-                  ]}>Plant-based / vegan</Text>
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingBottom:heightPixel(5)
-                    },
-                  ]}>&#9013;</Text>
-              </View>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  disabled={false}
-                  value={toggleCheckBox4}
-                  onValueChange={(newValue) => setToggleCheckBox4(newValue)}
-                  style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
-                  boxType={'square'}
-                />
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                    },
-                  ]}>Paleo diet</Text>
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingBottom:heightPixel(5)
-                    },
-                  ]}>&#9013;</Text>
-              </View>
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  disabled={false}
-                  value={toggleCheckBox5}
-                  onValueChange={(newValue) => setToggleCheckBox5(newValue)}
-                  style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
-                  boxType={'square'}
-                />
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                    },
-                  ]}>Carnivore diet</Text>
-                <Text allowFontScaling={false} style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingBottom:heightPixel(5)
-                    },
-                  ]}>&#9013;</Text>
-              </View>
+              <CheckboxTree
+                ref={ref}
+                data={recursiveData}
+                keyField="name"
+                textField="name"
+                childField="childs"
+                textStyle={{ color: 'black' }}
+                iconColor="black"
+                iconSize={fontPixel(24)}
+                openIcon={<AntDesign name="down" size={fontPixel(24)} />}
+                closeIcon={<AntDesign name="right" size={fontPixel(24)} />}
+                renderItem={({ item, isSelect, isOpen, onOpen, onClose, onSelect }) => (
+                  <View style={styles.wrapItem}>
+                    
+                    <TouchableOpacity onPress={onSelect}>
+                      <Ionicons
+                        size={fontPixel(24)}
+                        name={isSelect ? 'checkbox-outline' : 'square-outline'}
+                      />
+                    </TouchableOpacity>
+                    <Text allowFontScaling={false} style={styles.name}>{item.name}</Text>
+                    {isOpen ? (
+                      <TouchableOpacity onPress={onClose}>
+                        <AntDesign size={fontPixel(24)} name="right" />
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity onPress={onOpen}>
+                        <AntDesign size={fontPixel(24)} name="down" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                )}
+                onSelect={item => {
+                  setSelectedDiets(item.join(', '));
+                }}
+              />
             </View>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{ alignItems: 'center', position: 'absolute', bottom: heightPixel(30), }}>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
@@ -193,12 +192,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logoStyle: {
-    width: SCREEN_WIDTH * 0.6,
-    height: SCREEN_WIDTH * 0.28 * 0.6,
-    resizeMode: 'cover',
-    marginTop: heightPixel(10)
-  },
   wrapper: {
     flex: 1,
     flexDirection: 'column',
@@ -219,19 +212,17 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   descriptionView: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
     width: '100%',
     paddingVertical: heightPixel(20),
     paddingHorizontal: heightPixel(10),
+    height: '80%',
   },
   text_button: {
     fontSize: fontPixel(20),
     color: 'white',
   },
   button: {
-    backgroundColor: '#063225',
+    backgroundColor: '#063225aa',
     borderRadius: heightPixel(20),
     paddingVertical: heightPixel(15),
     paddingHorizontal: widthPixel(30),
@@ -239,21 +230,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
-  checkboxContainer: {
+  wrapItem: {
     flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: heightPixel(8),
   },
-  checkbox: {
-    alignSelf: 'center',
+  icon: {
+    marginHorizontal: heightPixel(8),
   },
-  checkboxAndroid: {
-    alignSelf: 'center',
-    // transform: [{ scale: 1 }],
-  },
-  label: {
+  name: {
     fontSize: fontPixel(18),
-    color: 'black',
-    alignSelf: 'center',
-    paddingLeft: widthPixel(5),
+    marginLeft: heightPixel(8),
   },
 });
 

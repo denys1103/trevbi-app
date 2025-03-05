@@ -3244,6 +3244,7 @@ __metadata:
     react-native-screens: ^3.27.0
     react-native-svg: ^13.4.0
     react-native-toast-message: ^2.2.1
+    react-native-tree-checkbox: ^1.1.1
     react-native-vector-icons: ^10.2.0
     react-native-vision-camera: ^4.3.2
     react-native-vision-camera-text-recognition: ^3.0.0
@@ -9257,6 +9258,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: c6b5d231b3b617b3d3d893023673534fe2cc0c5f32bb5fc4aecfe239e9de2fb9f0e9a4086d776e53daf3bc2376dce16dcec13e1b5cf1554dbf51808695fc2441
+  languageName: node
+  linkType: hard
+
+"react-native-tree-checkbox@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "react-native-tree-checkbox@npm:1.1.1"
+  peerDependencies:
+    "@expo/vector-icons": "*"
+    lodash: "*"
+    react: "*"
+    react-native: "*"
+    react-native-vector-icons: "*"
+  checksum: bcf9f09c33e82e9249a30d562a075f8b20ed59f50e05b7e20d35d9c418982ae84b31ba3fe8a0a0ee3bba93b9ff45f38ee9cf4b7bfadd5bd7685522cc4ee87b96
   languageName: node
   linkType: hard
 

@@ -15,6 +15,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [error, setError] = useState('');
   const [isConnected, setIsConnected] = useState(true);
   const [checkEvent, setCheckEvent] = useState(false);
+  const [selectedDiets, setSelectedDiets] = useState('');
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -60,6 +61,8 @@ export const GlobalContextProvider = ({ children }) => {
         isConnected,
         checkEvent,
         setCheckEvent,
+        selectedDiets,
+        setSelectedDiets,
       }}>
       {children}
     </GlobalContext.Provider>

@@ -15,7 +15,7 @@ Reanimated.addWhitelistedNativeProps({
 })
 const ReanimatedCamera = Reanimated.createAnimatedComponent(VisionCamera)
 
-const ScanAndRecognizeScreen = () => {
+const ScanAndRecognizeScreen = ({ navigation }) => {
   const [textBlocks, setTextBlocks] = useState([]); 
   const [selectedWords, setSelectedWords] = useState([]);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
@@ -600,20 +600,20 @@ const ScanAndRecognizeScreen = () => {
           <View style={styles.buttonContainer}>
             {isScanning ? (
               okBtnStatus ? (<>
-                <View style={styles.scanGroupStyle}>
+                {/* <View style={styles.scanGroupStyle}>
                   <View style={{marginHorizontal: '3%', width: '40%'}}>
                     <Text allowFontScaling={false}></Text>
                   </View>
                   <View style={{alignItems: 'center', justifyContent: 'center', marginHorizontal: '3%', width: '40%'}}>
                     <Text allowFontScaling={false} style={{ color: 'black', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' }}>Comming soon</Text>
                   </View>
-                </View>
+                </View> */}
                 <View style={styles.scanGroupStyle}>
                   <TouchableOpacity style={styles.scanButton} onPress={captureAndRecognizeText}>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Ingredients</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity activeOpacity={0.9} style={styles.scanButton} onPress={() => console.log('click recipes')}>
+                  <TouchableOpacity activeOpacity={0.9} style={styles.scanButton} onPress={() => navigation.navigate('RecipeWelcome')}>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Trevbi ai</Text>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>recipes</Text>
                   </TouchableOpacity>
