@@ -4,6 +4,7 @@ import {HOST_URL} from "@env"
 import RNFS from 'react-native-fs';
 const appDir = `${RNFS.DocumentDirectoryPath}/ScanHistory`;
 const indexFilePath = `${appDir}/index.json`;
+const indexRecipeFilePath = `${appDir}/recipeIndex.json`;
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const widthBaseScale = SCREEN_WIDTH / 414;
@@ -824,4 +825,5 @@ export {
   theme,
   appDir,
   indexFilePath,
+  indexRecipeFilePath,
 };

@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingTop: heightPixel(10),
+    paddingTop: heightPixel(50),
   },
   logoStyle: {
     width: SCREEN_WIDTH,

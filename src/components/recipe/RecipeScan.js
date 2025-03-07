@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList } from 'react-native';
 import { useCameraDevice, Camera } from 'react-native-vision-camera';
 import { Camera as VisionCamera } from 'react-native-vision-camera-text-recognition';
 import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation } from 'react-native-reanimated'
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
 import Spinner from 'react-native-loading-spinner-overlay';
-import client, {fontPixel, heightPixel} from '../../config';
+import client, {fontPixel, heightPixel, appDir, indexRecipeFilePath} from '../../config';
+import RNFS from 'react-native-fs';
 import { GlobalContext } from '../../context';
 import WhiteCross from '../scan/WhiteCross';
 
@@ -24,6 +25,7 @@ const RecipeScanScreen = ({ navigation }) => {
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const [recipeIngredients, setRecipeIngredients] = useState(null);
+  const [recipeResult, setRecipeResult] = useState(null);
   const {
     selectedDiets,
   } = useContext(GlobalContext);
@@ -65,16 +67,39 @@ const RecipeScanScreen = ({ navigation }) => {
     requestCameraPermission();
   }, []);
 
-  const captureAndRecipe = async () => {
+  const createAppDir = async () => {
+    if (!(await RNFS.exists(appDir))) {
+      await RNFS.mkdir(appDir);
+    }
+    if (!(await RNFS.exists(indexRecipeFilePath))) {
+      await RNFS.writeFile(indexRecipeFilePath, JSON.stringify([]));
+    }
+  };
+
+  const updateRecipeIndexFile = async (newEntry) => {
+    try {
+      const currentIndex = JSON.parse(await RNFS.readFile(indexRecipeFilePath));
+      currentIndex.push(newEntry);
+      await RNFS.writeFile(indexRecipeFilePath, JSON.stringify(currentIndex));
+    } catch (error) {
+      console.error('Failed to update recipe index file:', error);
+    }
+  };
+
+  const captureAndGetIngredients = async () => {
     if (device) {
       try {
+        await createAppDir();
         setOkBtnStatus(false);
         setModalVisibleStatus(false);
+
+        const photoPath = `${appDir}/recipePhoto_${Date.now()}.jpg`;
 
         const photo = await photoCamera.current.takeSnapshot({
           quality: 100
         })
-        const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
+        await RNFS.copyFile(photo.path, photoPath);
+        const photoURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
         setCapturedPhoto(photoURI);
         if(photoURI){
           try {
@@ -84,15 +109,63 @@ const RecipeScanScreen = ({ navigation }) => {
               type: 'image/jpeg',
               name: 'food.jpg',
             });
-            formData.append('diets', selectedDiets);
       
-            const response = await client.post('/recipe', formData, {
+            const response = await client.post('/getIngredientsForRecipe', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
             });
             if (response.data.success) {
               setRecipeIngredients(response.data.results);
+              setModalVisibleStatus(true);
+            } else {
+              console.log('server error!');
+            }
+          } catch (err) {
+            console.error('Error fetching recipe:', err);
+            setIsScanning(false);
+            setOkBtnStatus(true);
+          }
+        }
+        setIsScanning(false);
+        setOkBtnStatus(true);
+      } catch (error) {
+        setIsScanning(false);
+        setOkBtnStatus(true);
+        console.log(error)
+        Alert.alert('Error', 'Failed to capture the photo.');
+      }
+    }
+  };
+
+  const scanAndRecipe = async () => {
+    if (device) {
+      try {
+        setOkBtnStatus(false);
+        setModalVisibleStatus(false);
+
+        if(capturedPhoto){
+          try {
+            const formData = new FormData();
+            formData.append('image', {
+              uri: capturedPhoto,
+              type: 'image/jpeg',
+              name: 'food.jpg',
+            });
+            formData.append('diets', selectedDiets);
+            formData.append('ingredients', recipeIngredients);
+      
+            const response = await client.post('/makeRecipe', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+            if (response.data.success) {
+              setRecipeResult(response.data.results);
+              const recipePath = `${appDir}/recipe_${Date.now()}.json`;
+              await RNFS.writeFile(recipePath, JSON.stringify({ recipe: response.data.results }));
+              const newEntry = { photoPath: capturedPhoto, recipePath };
+              await updateRecipeIndexFile(newEntry);
             } else {
               console.log('server error!');
             }
@@ -119,6 +192,7 @@ const RecipeScanScreen = ({ navigation }) => {
     setModalData({});
     setModalVisibleStatus(false);
     setRecipeIngredients(null);
+    setRecipeResult(null);
   };
 
   if (!hasPermission) {
@@ -164,9 +238,6 @@ const RecipeScanScreen = ({ navigation }) => {
 
           {capturedPhoto && (
             <TouchableOpacity
-              onPress={() => {
-                // setModalVisibleStatus(false);
-              }}
               style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
               activeOpacity={0.9}
             >
@@ -177,7 +248,7 @@ const RecipeScanScreen = ({ navigation }) => {
             <View style={StyleSheet.absoluteFill}>
                 <View style={styles.scanPanelStyle}>
                   <Image source={{ uri: capturedPhoto }} style={styles.capturedImage} />
-                  {recipeIngredients && (
+                  {recipeResult && (
                     <ScrollView
                       contentContainerStyle={{
                         paddingVertical: heightPixel(5),
@@ -186,9 +257,9 @@ const RecipeScanScreen = ({ navigation }) => {
                         maxHeight: (height - heightPixel(100)),
                       }}
                     >
-                      {recipeIngredients.split('\n').map((ingredient, index) => (
-                        <Text allowFontScaling={false} key={index} style={styles.ingredientItem}>
-                          {ingredient}
+                      {recipeResult.split('\n').map((recipeItem, index) => (
+                        <Text allowFontScaling={false} key={index} style={styles.recipeItem}>
+                          {recipeItem}
                         </Text>
                       ))}
                     </ScrollView>
@@ -243,7 +314,7 @@ const RecipeScanScreen = ({ navigation }) => {
             {isScanning ? (
               okBtnStatus ? (<>
                 <View style={styles.scanGroupStyle}>
-                  <TouchableOpacity style={styles.scanButton} onPress={captureAndRecipe}>
+                  <TouchableOpacity style={styles.scanButton} onPress={captureAndGetIngredients}>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Foods</Text>
                   </TouchableOpacity>
@@ -266,6 +337,45 @@ const RecipeScanScreen = ({ navigation }) => {
               <></>
             )}
           </View>
+
+          {modalVisibleStatus && (
+            <View style={styles.modalStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeButtonStyle}
+                onPress={resetScan}>
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+              </TouchableOpacity>
+              <View style={styles.modalContentsViewStyle}>
+                <Text allowFontScaling={false} style={[
+                    styles.modalContentsStyle,
+                    {
+                      paddingBottom: heightPixel(10),
+                    },
+                  ]}>
+                  TREVBI AI recognizes whole foods and reads ingredient labels with precision—but it’s not perfect every time! If an ingredient looks off (like mistaking tuna for salmon), you can easily edit it to get the best recipe match.
+                </Text>
+                <Text allowFontScaling={false} style={styles.modalContentsStyle}>
+                  You can edit the following ingredients:
+                </Text>
+                <TextInput
+                  textAlignVertical="top"
+                  allowFontScaling={false}
+                  multiline={true}
+                  numberOfLines={20}
+                  style={styles.textInputStyle}
+                  value={recipeIngredients}
+                  onChangeText={setRecipeIngredients}
+                />
+              </View>
+              <View style={styles.modalBtnsStyle}>
+                <TouchableOpacity style={styles.makeRecipeButton} onPress={scanAndRecipe}>
+                  <Text allowFontScaling={false} style={styles.makeRecipeButtonText}>Looks</Text>
+                  <Text allowFontScaling={false} style={styles.makeRecipeButtonText}>Good</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </GestureHandlerRootView>
       </TouchableWithoutFeedback>
     </SafeAreaView>
@@ -338,7 +448,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: heightPixel(300),
   },
-  ingredientItem: {
+  recipeItem: {
     fontSize: fontPixel(18),
     color: '#2e2e34',
     marginBottom: heightPixel(3),
@@ -359,6 +469,68 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  modalStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    // alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    width: '95%',
+    paddingTop: '10%',
+    paddingRight: '2%',
+    paddingLeft: '2%',
+    borderRadius: fontPixel(8),
+    borderColor: 'rgba(102,123,104, 1)',
+    borderWidth: heightPixel(2),
+    // height: '50%',
+  },
+  closeButtonStyle: {
+    width: heightPixel(40),
+    height: heightPixel(40),
+    top: heightPixel(5),
+    right: heightPixel(5),
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+  },
+  modalContentsViewStyle: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  modalContentsStyle: {
+    fontSize: fontPixel(18),
+    color: 'black',
+  },
+  modalBtnsStyle: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  makeRecipeButton: {
+    backgroundColor: '#063225',
+    paddingVertical: heightPixel(5),
+    paddingHorizontal: heightPixel(20),
+    borderRadius: heightPixel(14),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: heightPixel(10),
+    marginHorizontal: '3%',
+    width: '40%',
+  },
+  makeRecipeButtonText: { color: 'white', fontSize: fontPixel(14), fontFamily: 'LEMONMILK-Medium' },
+  textInputStyle: {
+    borderColor: '#c0c0c0',
+    borderWidth: heightPixel(1),
+    borderRadius: heightPixel(5),
+    color: '#4b4b4b',
+    fontFamily: 'MyriadPro-Regular',
+    fontSize: fontPixel(18),
+    height: heightPixel(320),
+    padding: heightPixel(10),
   },
 });
 
