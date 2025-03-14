@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList, Dimensions } from 'react-native';
 import { useCameraDevice, Camera, useCodeScanner } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
@@ -7,8 +7,11 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-g
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { WebView } from 'react-native-webview';
 import {GlobalContext} from '../../context';
 import WhiteCross from './WhiteCross';
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
@@ -33,6 +36,8 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
   const [barcodeScanModalVisibleStatus, setBarcodeScanModalVisibleStatus] = useState(false);
   const [recommendationsModalVisibleStatus, setRecommendationsModalVisibleStatus] = useState(false);
+  const [webViewModalVisibleStatus, setWebViewModalVisibleStatus] = useState(false);
+  const [productUrl, setProductUrl] = useState(null);
   const [enableOnCodeScanned, setEnableOnCodeScanned] = useState(false);
   const [product, setProduct] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
@@ -194,7 +199,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
         const blockPath = `${appDir}/block_${Date.now()}.json`;
 
         const photo = await photoCamera.current.takeSnapshot({
-            quality: 100
+          quality: 100
         })
         await RNFS.copyFile(photo.path, photoPath);
         const photoURI = Platform.OS === 'ios' ? photo.path : `file://${photo.path}`;
@@ -330,6 +335,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     setAvoidIngredientsName([]);
     setModalData({});
     setModalVisibleStatus(false);
+    setRecommendationsModalVisibleStatus(false);
   };
 
   const askAI = async () => {
@@ -425,6 +431,19 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 activeOpacity={0.9}
               >
                 <View style={styles.scanPanelStyle}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                    onPress={resetScan}>
+                    <Ionicons
+                      size={fontPixel(18)}
+                      name={'caret-back'}
+                      style={{color: 'white'}}
+                    />
+                    <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                      Back
+                    </Text>
+                  </TouchableOpacity>
                   <Text allowFontScaling={false}
                     style={{
                       color: 'black',
@@ -433,14 +452,14 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {avoidIngredients.length > 0 ? 'Click on the ingredient you want to learn more about':''}
+                    {avoidIngredients.length > 0 ? 'Tap for insights &\nbetter choices':''}
                   </Text>
                   <ScrollView
                     contentContainerStyle={{
                       paddingVertical: heightPixel(5),
                     }}
                     style={{
-                      maxHeight: (height - heightPixel(100)),
+                      height: (height - heightPixel(350)),
                     }}
                   >
                     {avoidIngredients.map((item, index) => {
@@ -468,6 +487,30 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       )
                     })}
                   </ScrollView>
+                  <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
+                    <Text allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(40),
+                        textAlign: 'left',
+                        color: 'black',
+                        padding: heightPixel(0),
+                      }}>
+                        &#8595;
+                    </Text>
+                  </View>
+                  <View style={styles.scanGroupStyle}>
+                    <TouchableOpacity style={styles.scanButton} onPress={resetScan}>
+                      <Text allowFontScaling={false} style={styles.scanButtonText}>Reset</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.scanButton} onPress={getBarcodeAI}>
+                      <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
+                      <Text allowFontScaling={false} style={styles.scanButtonText}>Barcode</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Image
+                    style={styles.logoStyle}
+                    source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  />
                 </View>
               </TouchableOpacity>
             </View>
@@ -502,14 +545,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             {isScanning ? (
               okBtnStatus ? (<>
-                {/* <View style={styles.scanGroupStyle}>
-                  <View style={{marginHorizontal: '3%', width: '40%'}}>
-                    <Text allowFontScaling={false}></Text>
-                  </View>
-                  <View style={{alignItems: 'center', justifyContent: 'center', marginHorizontal: '3%', width: '40%'}}>
-                    <Text allowFontScaling={false} style={{ color: 'black', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' }}>Comming soon</Text>
-                  </View>
-                </View> */}
                 <View style={styles.scanGroupStyle}>
                   <TouchableOpacity style={styles.scanButton} onPress={captureAndRecognizeText}>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
@@ -530,11 +565,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 </Text>
               </>) : <></>
             ) : (
-              !modalVisibleStatus ?
-              <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
-                <Text allowFontScaling={false} style={styles.buttonText}>Reset</Text>
-              </TouchableOpacity>
-              :
               <></>
             )}
           </View>
@@ -583,35 +613,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 </TouchableOpacity>
               )}
               <View style={styles.modalImageStyle}>
-                {modalData.description != 'There is no the bad ingredients'?
-                (
-                  <>
-                    <Text allowFontScaling={false}
-                      style={{
-                        fontSize : heightPixel(18),
-                        fontFamily: 'LEMONMILK-Medium',
-                        color: 'black',
-                        paddingTop: heightPixel(10),
-                        paddingBottom: heightPixel(5),
-                      }}
-                    >
-                      Scan & score a healthier choice!
-                    </Text>
-                    <View style={styles.scanGroupStyle}>
-                      <TouchableOpacity style={styles.barcodeButton} onPress={getBarcodeAI}>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>Scan</Text>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>barcode</Text>
-                      </TouchableOpacity>
-                      {/* <TouchableOpacity style={styles.barcodeButton} onPress={() => console.log('click recipes')}>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>Trevbi ai</Text>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>recipes</Text>
-                      </TouchableOpacity> */}
-                    </View>
-                  </>
-                )
-                :
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
-                }
               </View>
             </View>
           )}
@@ -676,7 +678,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                     <View>
                       <Text allowFontScaling={false}>Brand: {product.brand}</Text>
                       <Text allowFontScaling={false}>Nutri-Score: {product.nutriscore}</Text>
-                      <TouchableOpacity onPress={() => Linking.openURL(product.url)}>
+                      <TouchableOpacity onPress={() => {setProductUrl(product.url); setWebViewModalVisibleStatus(true);}}>
                         <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
                       </TouchableOpacity>
                     </View>
@@ -695,7 +697,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   ) : null
                 }
                 renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => Linking.openURL(item.url)} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
+                  <TouchableOpacity onPress={() => {setProductUrl(item.url); setWebViewModalVisibleStatus(true);}} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
                     <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{item.name}</Text>
                     <View style={styles.recommendationsDescriptionBoxStyle}>
                       {item.image ?
@@ -715,6 +717,27 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
               <View style={styles.modalImageStyle}>
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
               </View>
+            </View>
+          )}
+          {webViewModalVisibleStatus && productUrl && (
+            <View style={styles.webViewModalStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeButtonStyle}
+                onPress={() => {
+                  setModalVisibleStatus(false);
+                  setWebViewModalVisibleStatus(false);
+                }}>
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+              </TouchableOpacity>
+              <WebView 
+                source={{ uri: productUrl }} 
+                style={{ flex: 1, width: '100%', height: heightPixel(400) }}
+                startInLoadingState={true}
+                onShouldStartLoadWithRequest={(request) => {
+                  return request.url.startsWith('https://world.openfoodfacts.org/product');
+                }} 
+              />
             </View>
           )}
         </GestureHandlerRootView>
@@ -894,7 +917,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.6)',
   },
   barcodeButton: {
     backgroundColor: '#063225',
@@ -922,6 +945,38 @@ const styles = StyleSheet.create({
   scanButtonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' },
   scanGroupStyle: {
     flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  goToBackBtnStyle: {
+    flexDirection: 'row',
+    backgroundColor: '#063225',
+    borderRadius: heightPixel(15),
+    paddingVertical: heightPixel(5),
+    paddingLeft: heightPixel(5),
+    paddingRight: heightPixel(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoStyle: {
+    width: SCREEN_WIDTH * 0.6,
+    height: SCREEN_WIDTH * 0.28 * 0.6,
+    resizeMode: 'cover',
+    marginTop: heightPixel(10),
+    alignSelf: 'center',
+  },
+  webViewModalStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    width: '95%',
+    paddingTop: '10%',
+    paddingRight: '2%',
+    paddingLeft: '2%',
+    borderRadius: fontPixel(8),
+    borderColor: 'rgba(102,123,104, 1)',
+    borderWidth: heightPixel(2),
+    height: '80%',
   },
 });
 

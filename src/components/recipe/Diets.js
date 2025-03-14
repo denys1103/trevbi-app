@@ -6,11 +6,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
+  Image,
 } from 'react-native';
 import { GlobalContext } from '../../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CheckboxTree from 'react-native-tree-checkbox';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   fontPixel,
@@ -328,8 +328,6 @@ const DietsScreen = ({ navigation }) => {
                 textField="name"
                 childField="childs"
                 textStyle={{ color: 'black' }}
-                // openIcon={<AntDesign name="down" size={fontPixel(24)} />}
-                closeIcon={<AntDesign name="right" size={fontPixel(24)} />}
                 renderItem={({ item, isSelect, isOpen, onOpen, onClose, onSelect }) => (
                   <View style={styles.wrapItem}>
                     {item.childs ?
@@ -368,8 +366,31 @@ const DietsScreen = ({ navigation }) => {
                   setSelectedDiets(item.join(', '));
                 }}
               />
+              <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
+                <Text allowFontScaling={false}
+                  style={{
+                    fontSize: fontPixel(40),
+                    textAlign: 'left',
+                    color: 'black',
+                    padding: heightPixel(0),
+                  }}>
+                    &#8595;
+                </Text>
+              </View>
             </View>
-            <View style={{ alignItems: 'center', bottom: heightPixel(20), }}>
+            <View style={{ alignItems: 'center' }}>
+              <Text allowFontScaling={false}
+                  style={[
+                  styles.titleStyle,
+                  {
+                      fontFamily: 'LEMONMILK-Bold',
+                      paddingBottom: heightPixel(10),
+                      paddingTop: heightPixel(0),
+                      fontSize: fontPixel(16),
+                  },
+                  ]}>
+                  Click "next" to skip and scan
+              </Text>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
@@ -381,8 +402,12 @@ const DietsScreen = ({ navigation }) => {
                     {
                       fontFamily: 'LEMONMILK-Medium',
                     },
-                  ]}>Find my recipe!</Text>
+                  ]}>Next</Text>
               </TouchableOpacity>
+              <Image
+                style={styles.logoStyle}
+                source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+              />
             </View>
           </View>
         </View>
@@ -424,7 +449,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: heightPixel(20),
     paddingHorizontal: heightPixel(10),
-    height: '70%',
+    height: '60%',
   },
   text_button: {
     fontSize: fontPixel(20),
@@ -442,7 +467,8 @@ const styles = StyleSheet.create({
   wrapItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: heightPixel(8),
+    paddingRight: heightPixel(20),
+    marginVertical: heightPixel(3),
   },
   icon: {
     marginHorizontal: heightPixel(8),
@@ -450,6 +476,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: fontPixel(18),
     marginLeft: heightPixel(8),
+  },
+  logoStyle: {
+    width: SCREEN_WIDTH * 0.6,
+    height: SCREEN_WIDTH * 0.28 * 0.6,
+    resizeMode: 'cover',
+    marginTop: heightPixel(10)
   },
 });
 

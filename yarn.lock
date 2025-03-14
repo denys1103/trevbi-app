@@ -3249,6 +3249,7 @@ __metadata:
     react-native-vision-camera: ^4.3.2
     react-native-vision-camera-text-recognition: ^3.0.0
     react-native-web: ^0.19.13
+    react-native-webview: ^13.13.4
     react-native-worklets-core: ^1.3.3
     react-test-renderer: 18.2.0
     typescript: 5.0.4
@@ -6272,7 +6273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.4":
+"invariant@npm:2.2.4, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -9337,6 +9338,19 @@ __metadata:
     react: ^18.0.0
     react-dom: ^18.0.0
   checksum: 15077f88204cb980203b8e3784c092c8c25c972bf281db43fd4ccc9696b603380a49f5289fb9a742daddd8e7599baab5798a1f1c857bdd634add827bc39fd8d8
+  languageName: node
+  linkType: hard
+
+"react-native-webview@npm:^13.13.4":
+  version: 13.13.4
+  resolution: "react-native-webview@npm:13.13.4"
+  dependencies:
+    escape-string-regexp: ^4.0.0
+    invariant: 2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 5dc6580a974c25c701f4e17027145c583574b3efc50a9d799328c82d169e0806fed6d1517652b9d1a4d877a0e8d7e70f98838e271399c763576a2cf6b60a8c29
   languageName: node
   linkType: hard
 

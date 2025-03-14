@@ -51,7 +51,7 @@ const WelcomeScreen = ({ navigation }) => {
                     fontFamily: 'LEMONMILK-Bold',
                 },
                 ]}>
-                Food Labels Can Be Tricky 
+                Know your food—scan
             </Text>
             <Text allowFontScaling={false}
                 style={[
@@ -60,19 +60,16 @@ const WelcomeScreen = ({ navigation }) => {
                     fontFamily: 'LEMONMILK-Bold',
                 },
                 ]}>
-                We Make Them Easy!
+                Ingredients, find better
             </Text>
-          </View>
-          <View style={styles.descriptionView}>
             <Text allowFontScaling={false}
-              style={{
-                  fontFamily: 'LEMONMILK-Regular',
-                  fontSize: fontPixel(26),
-                  textAlign: 'center',
-                  color: 'black',
-                  paddingTop: heightPixel(10),
-                }}>
-              Scan ingredients
+                style={[
+                styles.titleStyle,
+                {
+                    fontFamily: 'LEMONMILK-Bold',
+                },
+                ]}>
+                Choices, get ai recipes
             </Text>
           </View>
           <View style={{alignItems: 'flex-start'}}>
@@ -81,7 +78,16 @@ const WelcomeScreen = ({ navigation }) => {
                 styles.descriptionStyle,
                 {
                   fontFamily: 'LEMONMILK-Regular',
-                  paddingTop: 0,
+                  paddingTop: heightPixel(10),
+                },
+              ]}>
+              &#8226; Scan ingredients
+            </Text>
+            <Text allowFontScaling={false}
+              style={[
+                styles.descriptionStyle,
+                {
+                  fontFamily: 'LEMONMILK-Regular',
                 },
               ]}>
               &#8226; instant insights
@@ -102,7 +108,7 @@ const WelcomeScreen = ({ navigation }) => {
                   fontFamily: 'LEMONMILK-Regular',
                 },
               ]}>
-              &#8226; quick and easy! 
+              &#8226; AI powered recipe scan
             </Text>
           </View>
           <View style={{ alignItems: 'center' }}>
@@ -117,7 +123,7 @@ const WelcomeScreen = ({ navigation }) => {
                 {
                   fontFamily: 'LEMONMILK-Bold',
                 },
-              ]}>GIVE IT A WHIRL</Text>
+              ]}>Explore trevbi</Text>
             </TouchableOpacity>
             <View style={styles.checkboxContainer}>
               <CheckBox

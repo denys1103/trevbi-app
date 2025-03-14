@@ -53,7 +53,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                       paddingTop: heightPixel(20)
                   },
                   ]}>
-                  1.  SCAN INGREDIENTS WITH
+                  1.  SCAN INGREDIENTS
               </Text>
               <Text allowFontScaling={false}
                   style={[
@@ -63,7 +63,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
                       paddingLeft: heightPixel(36),
                   },
                   ]}>
-                  THE IN-APP CAMERA
+                  You might be shocked
               </Text>
             </View>
             <View style={styles.descriptionTxtView}>

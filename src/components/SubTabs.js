@@ -6,6 +6,7 @@ import ScanComponent from './scan/index';
 import IosScanComponent from './scan/ios';
 import IosScanTestComponent from './scan/test';
 import HistoryComponent from './scan/History';
+import RecipesComponent from './recipe/Recipes';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
 
 import {
@@ -65,6 +66,33 @@ function CustomTabs() {
                   resizeMode: 'contain',
                 }}
                 source={require('../../assets/images/scan.png')}
+              />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Recipes"
+        component={RecipesComponent}
+        options={{
+          tabBarLabel: 'RECIPES',
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/recipes_active.png')}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/recipes.png')}
               />
             ),
         }}
