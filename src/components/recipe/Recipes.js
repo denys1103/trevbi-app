@@ -63,7 +63,7 @@ const RecipesHistory = ({ navigation }) => {
             const recipeContent = await RNFS.readFile(entry.recipePath, 'utf8');
             const parsedRecipeData = JSON.parse(recipeContent);
             const extractedText = parsedRecipeData.recipe.split('the ingredients detected in your photo.')[1];
-            const textPart = extractedText ? extractedText.slice(0, 50) : '';
+            const textPart = extractedText ? extractedText.slice(0, 100) : '';
             let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
 
             return {...entry, textPart: cleanedTextPart};
@@ -136,8 +136,8 @@ const RecipesHistory = ({ navigation }) => {
             source={{ uri: Platform.OS === 'ios' ? item.photoPath : `file://${item.photoPath}` }}
           />
           <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={item.textPart?styles.title:styles.noAvoidStyle} numberOfLines={1}>
-              {item.textPart?item.textPart:'No ingredients to avoid'}
+            <Text allowFontScaling={false} style={item.textPart?styles.title:styles.noAvoidStyle} numberOfLines={2}>
+              {item.textPart?item.textPart:'No recipe'}
             </Text>
           </View>
         </View>
