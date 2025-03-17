@@ -18,6 +18,7 @@ import {
   indexRecipeFilePath,
 } from '../../config';
 import RNFS from 'react-native-fs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewDetailsComponent from './ViewDetails';
 import {GlobalContext} from '../../context';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -128,7 +129,6 @@ const RecipesHistory = ({ navigation }) => {
         onPress={() => {
           handleItemClick(item)
         }}
-        onLongPress={() => confirmDelete(item)}
       >
         <View style={styles.box}>
           <Image
@@ -136,10 +136,22 @@ const RecipesHistory = ({ navigation }) => {
             source={{ uri: Platform.OS === 'ios' ? item.photoPath : `file://${item.photoPath}` }}
           />
           <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={item.textPart?styles.title:styles.noAvoidStyle} numberOfLines={2}>
+            <Text allowFontScaling={false} style={styles.noAvoidStyle} numberOfLines={2}>
               {item.textPart?item.textPart:'No recipe'}
             </Text>
           </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              confirmDelete(item)
+            }}
+          >
+            <Ionicons
+              size={fontPixel(40)}
+              name={'trash'}
+              style={{color: 'red'}}
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>
@@ -174,6 +186,21 @@ const RecipesHistory = ({ navigation }) => {
           clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
           value={search}
         /> */}
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={[styles.goToBackBtnStyle, {width:heightPixel(120), marginBottom: heightPixel(5)}]}
+          onPress={() => {
+            navigation.navigate('Diets');
+          }}>
+          <Ionicons
+            size={fontPixel(18)}
+            name={'caret-back'}
+            style={{color: 'white'}}
+          />
+          <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+            Let's cook
+          </Text>
+        </TouchableOpacity>
         <Image
           style={styles.logoStyle}
           source={require('../../../assets/images/TREVBI_Logo.jpg')}
@@ -245,6 +272,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     backgroundColor: 'white',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   boxContent: {
     flex: 1,
@@ -313,6 +342,17 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(25),
     paddingVertical: heightPixel(15),
     paddingHorizontal: heightPixel(20),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  goToBackBtnStyle: {
+    flexDirection: 'row',
+    backgroundColor: '#063225',
+    borderRadius: heightPixel(15),
+    paddingVertical: heightPixel(5),
+    paddingLeft: heightPixel(5),
+    marginLeft: heightPixel(10),
+    paddingRight: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
   },

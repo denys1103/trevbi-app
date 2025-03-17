@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions, P
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, heightPixel} from '../../config';
 import RNFS from 'react-native-fs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ViewDetailsScreen = ({ item, onGoBack }) => {
   const [textBlocks, setTextBlocks] = useState([]); 
@@ -96,15 +97,11 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
           <Spinner visible={!loading} />
           <TouchableOpacity
             onPress={() => {
-            // setModalVisibleStatus(false);
-            // setAnswerModalVisibleStatus(false);
             }}
             style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
             activeOpacity={0.9}
           >
-            {/* <Image source={{ uri: Platform.OS === 'ios' ? item.photoPath : `file://${item.photoPath}` }} style={StyleSheet.absoluteFill} />
-            <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
-            </View> */}
+           
           </TouchableOpacity>
 
           <View style={StyleSheet.absoluteFill}>
@@ -188,6 +185,19 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 );
               })} */}
               <View style={styles.scanPanelStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                  onPress={onGoBack}>
+                  <Ionicons
+                    size={fontPixel(18)}
+                    name={'caret-back'}
+                    style={{color: 'white'}}
+                  />
+                  <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                    Back
+                  </Text>
+                </TouchableOpacity>
                 <Text allowFontScaling={false}
                   style={{
                     color: 'black',
@@ -232,12 +242,6 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                   })}
                 </ScrollView>
               </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.okButton} onPress={onGoBack}>
-              <Text allowFontScaling={false} style={styles.buttonText}>Back</Text>
             </TouchableOpacity>
           </View>
           {modalVisibleStatus && (
@@ -430,6 +434,18 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(16),
     color: 'blue',
     textDecorationLine: 'underline',
+  },
+  goToBackBtnStyle: {
+    flexDirection: 'row',
+    backgroundColor: '#063225',
+    borderRadius: heightPixel(15),
+    paddingVertical: heightPixel(5),
+    paddingLeft: heightPixel(5),
+    marginTop: heightPixel(5),
+    marginLeft: heightPixel(5),
+    paddingRight: heightPixel(10),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

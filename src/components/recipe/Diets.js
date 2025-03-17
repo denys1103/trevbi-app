@@ -310,6 +310,21 @@ const DietsScreen = ({ navigation }) => {
           style={styles.backgroundStyle}>
           <View style={styles.wrapper}>
             <View style={styles.titleView}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                onPress={() => {
+                  navigation.navigate('Scan');
+                }}>
+                <Ionicons
+                  size={fontPixel(18)}
+                  name={'caret-back'}
+                  style={{color: 'white'}}
+                />
+                <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                  Back
+                </Text>
+              </TouchableOpacity>
               <Text allowFontScaling={false}
                   style={[
                   styles.titleStyle,
@@ -482,6 +497,17 @@ const styles = StyleSheet.create({
     height: SCREEN_WIDTH * 0.28 * 0.6,
     resizeMode: 'cover',
     marginTop: heightPixel(10)
+  },
+  goToBackBtnStyle: {
+    flexDirection: 'row',
+    backgroundColor: '#063225',
+    borderRadius: heightPixel(15),
+    paddingVertical: heightPixel(5),
+    paddingLeft: heightPixel(5),
+    marginLeft: heightPixel(10),
+    paddingRight: heightPixel(10),
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
   },
 });
 

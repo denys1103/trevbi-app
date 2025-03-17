@@ -21,6 +21,7 @@ import ViewDetailsComponent from './ViewDetails';
 // import SearchBar from 'react-native-search-bar';
 import {GlobalContext} from '../../context';
 import { SearchBar } from '@rneui/themed';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ScanHistory = ({ navigation }) => {
   const [historyData, setHistoryData] = useState([]);
@@ -131,7 +132,6 @@ const ScanHistory = ({ navigation }) => {
         onPress={() => {
           handleItemClick(item)
         }}
-        onLongPress={() => confirmDelete(item)}
       >
         <View style={styles.box}>
           <Image
@@ -146,6 +146,18 @@ const ScanHistory = ({ navigation }) => {
               {item.txtArray}
             </Text>
           </View>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              confirmDelete(item)
+            }}
+          >
+            <Ionicons
+              size={fontPixel(40)}
+              name={'trash'}
+              style={{color: 'red'}}
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>

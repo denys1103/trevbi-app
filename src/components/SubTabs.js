@@ -10,7 +10,7 @@ import RecipesComponent from './recipe/Recipes';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
 
 import {
-  widthPixel,
+  widthPixel, heightPixel
 } from '../config';
 
 const Tab = createBottomTabNavigator();
@@ -26,16 +26,16 @@ function CustomTabs() {
         headerBackTitleVisible: true,
         tabBarStyle: {
           backgroundColor: '#efefef',
-          paddingLeft: 10,
-          paddingRight: 10,
-          paddingBottom: 5,
-          paddingTop: 5,
-          height: widthPixel(60),
+          paddingLeft: widthPixel(10),
+          paddingRight: widthPixel(10),
+          paddingBottom: heightPixel(12),
+          paddingTop: heightPixel(5),
+          height: heightPixel(70),
           borderTopColor: '#bbbbbb',
         },
         tabBarActiveBackgroundColor: '#efefef',
         tabBarShowLabel: true,
-        tabBarItemStyle: {marginLeft: 10, marginRight: 10},
+        tabBarItemStyle: {marginLeft: widthPixel(10), marginRight: widthPixel(10)},
         header: ({navigation, route, options}) => {
           const title = getHeaderTitle(options, route.name);
 
