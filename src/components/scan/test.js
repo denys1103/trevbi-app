@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, Linking, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList, Dimensions } from 'react-native';
 import { useCameraDevice, Camera, useCodeScanner } from 'react-native-vision-camera';
 import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
 import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
@@ -7,8 +7,11 @@ import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-g
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { WebView } from 'react-native-webview';
 import {GlobalContext} from '../../context';
 import WhiteCross from './WhiteCross';
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
@@ -33,6 +36,8 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
   const { setCheckEvent, checkEvent } = useContext(GlobalContext);
   const [barcodeScanModalVisibleStatus, setBarcodeScanModalVisibleStatus] = useState(false);
   const [recommendationsModalVisibleStatus, setRecommendationsModalVisibleStatus] = useState(false);
+  const [webViewModalVisibleStatus, setWebViewModalVisibleStatus] = useState(false);
+  const [productUrl, setProductUrl] = useState(null);
   const [enableOnCodeScanned, setEnableOnCodeScanned] = useState(false);
   const [product, setProduct] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
@@ -114,13 +119,29 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     }
   };
 
-  // const device = useCameraDevice('back');
+  const injectedJS = `
+    document.querySelector('#upNav').style.display = 'none';
+    document.querySelector('#mobile-app-top-banner').style.display = 'none';
+    document.querySelector('#donation-banner-top').style.display = 'none';
+    document.querySelector('.topbarsticky').style.display = 'none';
+    document.querySelector('.buttons_prod').style.display = 'none';
+    document.querySelector('#preferences_selected').style.display = 'none';
+    document.querySelector('#report_problem').style.display = 'none';
+    document.querySelector('footer').style.display = 'none';
+    document.querySelector('#prodNav').style.marginTop = '0px';
+    document.querySelectorAll('.alert-box').forEach(element => element.style.display = 'none');
+    const elements = document.querySelectorAll('.card-section');
+    if (elements.length > 0) {
+        elements[elements.length - 1].style.display = 'none';
+    }
+    true;
+  `;
+
   const device = useCameraDevice('back', {
     physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
   });
   const zoom = useSharedValue(device?.neutralZoom || 1);
   const zoomOffset = useSharedValue(0);
-  // const isFocusing = useRef(false);
 
   const gestureZoom = Gesture.Pinch()
     .onBegin(() => {
@@ -140,31 +161,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     zoom: zoom.value,
   }));
 
-  // const focus = useCallback(async (point) => {
-  //   if (isFocusing.current) return;
-  
-  //   const cameraRef = photoCamera.current;
-  //   if (!cameraRef) return;
-  
-  //   try {
-  //     isFocusing.current = true;
-  //     await cameraRef.focus(point);
-  //   } catch (error) {
-  //     console.warn('Focus failed:', error);
-  //   } finally {
-  //     isFocusing.current = false;
-  //   }
-  // }, []);
-
-  // const gestureFocus = Gesture.Tap()
-  //   .onEnd((event) => {
-  //     if (event.x != null && event.y != null) {
-  //       runOnJS(focus)({ x: event.x, y: event.y });
-  //     }
-  //   });
-
-  // const combinedGesture = Gesture.Simultaneous(gestureFocus, gestureZoom);
-
   useEffect(() => {
     const requestCameraPermission = async () => {
       const status = await Camera.getCameraPermissionStatus();
@@ -177,12 +173,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     };
     requestCameraPermission();
   }, []);
-
-  // useEffect(() => {
-  //   if (photoCamera.current) {
-  //     photoCamera.current.focus({ x: width/2, y: height/2 });
-  //   }
-  // }, []);
 
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
@@ -242,10 +232,11 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
           orientation: "landscapeLeft"
         })
         if(!isObjectEmpty(result)){
-          let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+          // let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+          let IngredientsList = result.resultText.toLowerCase().replace(/\n/g, ' ');
           if(IngredientsList.length>0){
             try {
-              const { data } = await client.post('/getAvoidData', {
+              const { data } = await client.post('/getAvoidListData', {
                 IngredientsList,
               });
         
@@ -282,8 +273,14 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
           );
 
           let ocrResults = ocrText.map((current, index, array) => {
-            const updatedFrame = { ...current.elementFrame, x: current.elementFrame.boundingCenterX, y: current.elementFrame.boundingCenterY };
-            current.elementFrame = updatedFrame;
+            let updatedFrame = { ...current.elementFrame };
+            if(Platform.OS === 'ios'){
+              updatedFrame.x = current.elementFrame.boundingCenterX;
+              updatedFrame.y = current.elementFrame.boundingCenterY;
+              current.elementFrame = updatedFrame;
+            }else{
+              updatedFrame.boundingCenterY = current.elementFrame.y;
+            }
             if (index > 0) {
               const previous = array[index - 1].elementFrame;
           
@@ -358,6 +355,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     setAvoidIngredientsName([]);
     setModalData({});
     setModalVisibleStatus(false);
+    setRecommendationsModalVisibleStatus(false);
   };
 
   const askAI = async () => {
@@ -430,7 +428,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 photo={true}
                 video={true}
                 animatedProps={animatedProps}
-                // mode={'translate'}
               />
             </GestureDetector>
           )}
@@ -444,9 +441,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
               style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
               activeOpacity={0.9}
             >
-              {/* <Image source={{ uri: capturedPhoto.photoURI }} style={StyleSheet.absoluteFill} />
-              <View style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}>
-              </View> */}
             </TouchableOpacity>
           )}
 
@@ -459,79 +453,20 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 }}
                 activeOpacity={0.9}
               >
-                {/* {textBlocks.map((block, index) => {
-                  const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
-                  const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
-                  
-                  let matchName = '';
-                  if (singleMatch) {
-                    matchName = singleMatch;
-                  }
-
-                  if (singleMatch == undefined && !block.elementText.includes(',') && index < textBlocks.length - 1) {
-                    const nextBlockText = textBlocks[index + 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
-                    const combinedText = `${cleanedBlockText} ${nextBlockText}`;
-                    
-                    const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
-                    if (matchInNameList) {
-                      matchName = matchInNameList;
-                    }
-                  }
-
-                  if (singleMatch == undefined && index > 0) {
-                    const beforeBlockText = textBlocks[index - 1].elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
-                    const combinedText = `${beforeBlockText} ${cleanedBlockText}`;
-                    
-                    const matchInNameList = avoidIngredientsName.find(name => name.toLowerCase().includes(combinedText.toLowerCase()));
-                    if (matchInNameList) {
-                      matchName = matchInNameList;
-                    }
-                  }
-                  //control font width
-                  const textLength = block.elementText.length;
-                  const characterWidth = 0.6 * block.elementFrame.height;
-                  const textWidth = characterWidth * textLength;
-                  const targetScaleX = block.elementFrame.width / textWidth;
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        // console.log('matchName:', matchName);
-                        const record = avoidIngredients.find(item => item.name === matchName);
-                        setModalData(record);
-                        setModalVisibleStatus(true);
-                      }}
-                      activeOpacity={0.9}
-                      disabled={matchName === ''}
-                      style={{
-                        position: 'absolute',
-                        left: (block.elementFrame.x - (block.elementFrame.width/2.0))/scale,
-                        top: (block.elementFrame.boundingCenterY - (block.elementFrame.height/2.0))/scale,
-                        // color: selectedWords.includes(block.elementText) ? 'red' : '#1E90FF',
-                        // backgroundColor: 'rgba(255,255,255,0)',
-                        padding: 0,
-                        margin: 0,
-                        // width : block.elementFrame.width/scale,
-                        height : block.elementFrame.height/scale,
-                      }}
-                      >
-                      <Text allowFontScaling={false}
-                        style={{
-                          color: matchName!='' ? 'red' : 'black',
-                          fontSize : block.elementFrame.height/scale*0.95,
-                          lineHeight : block.elementFrame.height/scale,
-                          transform: [{ scaleX: targetScaleX }],
-                          transformOrigin: '0% 50% 0',
-                          letterSpacing: 0,
-                          // includeFontPadding: false,
-                        }}
-                      >
-                        {block.elementText}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })} */}
                 <View style={styles.scanPanelStyle}>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                    onPress={resetScan}>
+                    <Ionicons
+                      size={fontPixel(18)}
+                      name={'caret-back'}
+                      style={{color: 'white'}}
+                    />
+                    <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                      Back
+                    </Text>
+                  </TouchableOpacity>
                   <Text allowFontScaling={false}
                     style={{
                       color: 'black',
@@ -540,32 +475,65 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       textAlign: 'center',
                     }}
                   >
-                    {avoidIngredients.length > 0 ? 'Click on the ingredient you want to learn more about':''}
+                    {avoidIngredients.length > 0 ? 'Tap for insights &\nbetter choices':''}
                   </Text>
-                  {avoidIngredients.map((item, index) => {
-                    return (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => {
-                          setModalData(item);
-                          setModalVisibleStatus(true);
-                        }}
-                        activeOpacity={0.9}
-                        disabled={item.name === ''}
-                        >
-                        <Text allowFontScaling={false}
-                          style={{
-                            color: 'red',
-                            fontSize : heightPixel(20),
-                            fontFamily: 'LEMONMILK-Regular',
-                            paddingVertical: heightPixel(10),
+                  <ScrollView
+                    contentContainerStyle={{
+                      paddingVertical: heightPixel(5),
+                    }}
+                    style={{
+                      height: (height - heightPixel(350)),
+                    }}
+                  >
+                    {avoidIngredients.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            setModalData(item);
+                            setModalVisibleStatus(true);
                           }}
-                        >
-                          {item.name}
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                  })}
+                          activeOpacity={0.9}
+                          disabled={item.name === ''}
+                          >
+                          <Text allowFontScaling={false}
+                            style={{
+                              color: 'red',
+                              fontSize : heightPixel(20),
+                              fontFamily: 'LEMONMILK-Regular',
+                              paddingVertical: heightPixel(10),
+                            }}
+                          >
+                            {item.name}
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    })}
+                  </ScrollView>
+                  {(avoidIngredients.length > 10) && <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
+                    <Text allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(40),
+                        textAlign: 'left',
+                        color: 'black',
+                        padding: heightPixel(0),
+                      }}>
+                        &#8595;
+                    </Text>
+                  </View>}
+                  <View style={styles.scanGroupStyle}>
+                    <TouchableOpacity style={styles.scanButton} onPress={resetScan}>
+                      <Text allowFontScaling={false} style={styles.scanButtonText}>Reset</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.scanButton} onPress={getBarcodeAI}>
+                      <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
+                      <Text allowFontScaling={false} style={styles.scanButtonText}>Barcode</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Image
+                    style={styles.logoStyle}
+                    source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  />
                 </View>
               </TouchableOpacity>
             </View>
@@ -600,14 +568,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             {isScanning ? (
               okBtnStatus ? (<>
-                {/* <View style={styles.scanGroupStyle}>
-                  <View style={{marginHorizontal: '3%', width: '40%'}}>
-                    <Text allowFontScaling={false}></Text>
-                  </View>
-                  <View style={{alignItems: 'center', justifyContent: 'center', marginHorizontal: '3%', width: '40%'}}>
-                    <Text allowFontScaling={false} style={{ color: 'black', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' }}>Comming soon</Text>
-                  </View>
-                </View> */}
                 <View style={styles.scanGroupStyle}>
                   <TouchableOpacity style={styles.scanButton} onPress={captureAndRecognizeText}>
                     <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
@@ -628,11 +588,6 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 </Text>
               </>) : <></>
             ) : (
-              !modalVisibleStatus ?
-              <TouchableOpacity style={styles.cancelButton} onPress={resetScan}>
-                <Text allowFontScaling={false} style={styles.buttonText}>Reset</Text>
-              </TouchableOpacity>
-              :
               <></>
             )}
           </View>
@@ -681,35 +636,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 </TouchableOpacity>
               )}
               <View style={styles.modalImageStyle}>
-                {modalData.description != 'There is no the bad ingredients'?
-                (
-                  <>
-                    <Text allowFontScaling={false}
-                      style={{
-                        fontSize : heightPixel(18),
-                        fontFamily: 'LEMONMILK-Medium',
-                        color: 'black',
-                        paddingTop: heightPixel(10),
-                        paddingBottom: heightPixel(5),
-                      }}
-                    >
-                      Scan & score a healthier choice!
-                    </Text>
-                    <View style={styles.scanGroupStyle}>
-                      <TouchableOpacity style={styles.barcodeButton} onPress={getBarcodeAI}>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>Scan</Text>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>barcode</Text>
-                      </TouchableOpacity>
-                      {/* <TouchableOpacity style={styles.barcodeButton} onPress={() => console.log('click recipes')}>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>Trevbi ai</Text>
-                        <Text allowFontScaling={false} style={styles.barcodeButtonText}>recipes</Text>
-                      </TouchableOpacity> */}
-                    </View>
-                  </>
-                )
-                :
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
-                }
               </View>
             </View>
           )}
@@ -774,7 +701,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                     <View>
                       <Text allowFontScaling={false}>Brand: {product.brand}</Text>
                       <Text allowFontScaling={false}>Nutri-Score: {product.nutriscore}</Text>
-                      <TouchableOpacity onPress={() => Linking.openURL(product.url)}>
+                      <TouchableOpacity onPress={() => {setProductUrl(product.url); setWebViewModalVisibleStatus(true);}}>
                         <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
                       </TouchableOpacity>
                     </View>
@@ -793,7 +720,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   ) : null
                 }
                 renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => Linking.openURL(item.url)} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
+                  <TouchableOpacity onPress={() => {setProductUrl(item.url); setWebViewModalVisibleStatus(true);}} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
                     <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{item.name}</Text>
                     <View style={styles.recommendationsDescriptionBoxStyle}>
                       {item.image ?
@@ -804,7 +731,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       <View>
                         <Text allowFontScaling={false}>Brand: {item.brand}</Text>
                         <Text allowFontScaling={false}>Nutri-Score: {item.nutriscore}</Text>
-                        <Text allowFontScaling={false} style={{ color: "blue" }}>{item.source}</Text>
+                        <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -813,6 +740,30 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
               <View style={styles.modalImageStyle}>
                 <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
               </View>
+            </View>
+          )}
+          {webViewModalVisibleStatus && productUrl && (
+            <View style={styles.webViewModalStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={styles.closeButtonStyle}
+                onPress={() => {
+                  setModalVisibleStatus(false);
+                  setWebViewModalVisibleStatus(false);
+                }}>
+                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+              </TouchableOpacity>
+              <WebView 
+                source={{ uri: productUrl }} 
+                style={{ flex: 1, width: '100%', height: heightPixel(400) }}
+                injectedJavaScript={injectedJS}
+                javaScriptEnabled={true}
+                startInLoadingState={true}
+                // webviewDebuggingEnabled={true}
+                onShouldStartLoadWithRequest={(request) => {
+                  return request.url.startsWith('https://world.openfoodfacts.org/product');
+                }} 
+              />
             </View>
           )}
         </GestureHandlerRootView>
@@ -992,7 +943,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.6)',
   },
   barcodeButton: {
     backgroundColor: '#063225',
@@ -1020,6 +971,38 @@ const styles = StyleSheet.create({
   scanButtonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' },
   scanGroupStyle: {
     flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  goToBackBtnStyle: {
+    flexDirection: 'row',
+    backgroundColor: '#063225',
+    borderRadius: heightPixel(15),
+    paddingVertical: heightPixel(5),
+    paddingLeft: heightPixel(5),
+    paddingRight: heightPixel(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoStyle: {
+    width: SCREEN_WIDTH * 0.6,
+    height: SCREEN_WIDTH * 0.28 * 0.6,
+    resizeMode: 'cover',
+    marginTop: heightPixel(10),
+    alignSelf: 'center',
+  },
+  webViewModalStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    width: '95%',
+    paddingTop: '10%',
+    paddingRight: '2%',
+    paddingLeft: '2%',
+    borderRadius: fontPixel(8),
+    borderColor: 'rgba(102,123,104, 1)',
+    borderWidth: heightPixel(2),
+    height: '80%',
   },
 });
 
