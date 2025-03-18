@@ -754,6 +754,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 injectedJavaScript={injectedJS}
                 javaScriptEnabled={true}
                 startInLoadingState={true}
+                onMessage={(event) => {}}
                 // webviewDebuggingEnabled={true}
                 onShouldStartLoadWithRequest={(request) => {
                   return request.url.startsWith('https://world.openfoodfacts.org/product');
