@@ -119,6 +119,24 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     }
   };
 
+  const injectedJS = `
+    document.querySelector('#upNav').style.display = 'none';
+    document.querySelector('#mobile-app-top-banner').style.display = 'none';
+    document.querySelector('#donation-banner-top').style.display = 'none';
+    document.querySelector('.topbarsticky').style.display = 'none';
+    document.querySelector('.buttons_prod').style.display = 'none';
+    document.querySelector('#preferences_selected').style.display = 'none';
+    document.querySelector('#report_problem').style.display = 'none';
+    document.querySelector('footer').style.display = 'none';
+    document.querySelector('#prodNav').style.marginTop = '0px';
+    document.querySelectorAll('.alert-box').forEach(element => element.style.display = 'none');
+    const elements = document.querySelectorAll('.card-section');
+    if (elements.length > 0) {
+        elements[elements.length - 1].style.display = 'none';
+    }
+    true;
+  `;
+
   const device = useCameraDevice('back', {
     physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
   });
@@ -487,7 +505,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       )
                     })}
                   </ScrollView>
-                  <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
+                  {(avoidIngredients.length > 10) && <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
                     <Text allowFontScaling={false}
                       style={{
                         fontSize: fontPixel(40),
@@ -497,7 +515,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       }}>
                         &#8595;
                     </Text>
-                  </View>
+                  </View>}
                   <View style={styles.scanGroupStyle}>
                     <TouchableOpacity style={styles.scanButton} onPress={resetScan}>
                       <Text allowFontScaling={false} style={styles.scanButtonText}>Reset</Text>
@@ -708,7 +726,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                       <View>
                         <Text allowFontScaling={false}>Brand: {item.brand}</Text>
                         <Text allowFontScaling={false}>Nutri-Score: {item.nutriscore}</Text>
-                        <Text allowFontScaling={false} style={{ color: "blue" }}>{item.source}</Text>
+                        <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
@@ -733,7 +751,10 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
               <WebView 
                 source={{ uri: productUrl }} 
                 style={{ flex: 1, width: '100%', height: heightPixel(400) }}
+                injectedJavaScript={injectedJS}
+                javaScriptEnabled={true}
                 startInLoadingState={true}
+                // webviewDebuggingEnabled={true}
                 onShouldStartLoadWithRequest={(request) => {
                   return request.url.startsWith('https://world.openfoodfacts.org/product');
                 }} 
