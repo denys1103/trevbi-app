@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,9 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Image } from 'react-native-svg';
+import Svg, {Image} from 'react-native-svg';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const BuzzeAnimationScreen = () => {
   const x = useSharedValue(width / 2 - 50);
@@ -24,28 +24,25 @@ const BuzzeAnimationScreen = () => {
   useEffect(() => {
     x.value = withRepeat(
       withSequence(
-        withTiming(width - 100, { duration: 1000 }),
-        withTiming(50, { duration: 1000 })
+        withTiming(width - 100, {duration: 1000}),
+        withTiming(50, {duration: 1000}),
       ),
       -1,
-      true
+      true,
     );
 
     y.value = withRepeat(
       withSequence(
-        withTiming(height / 4, { duration: 800 }),
-        withTiming((3 * height) / 4 - 200, { duration: 800 })
+        withTiming(height / 4, {duration: 800}),
+        withTiming((3 * height) / 4 - 200, {duration: 800}),
       ),
       -1,
-      true
+      true,
     );
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: x.value },
-      { translateY: y.value },
-    ],
+    transform: [{translateX: x.value}, {translateY: y.value}],
   }));
 
   return (

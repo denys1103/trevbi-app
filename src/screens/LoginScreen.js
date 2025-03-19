@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Text,
   TextInput,
@@ -11,13 +11,11 @@ import {
   Platform,
   ScrollView,
   Dimensions,
-  Linking,
-  Button,
 } from 'react-native';
-import { GlobalContext } from '../context';
+import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-import { stringMd5 } from 'react-native-quick-md5';
+import {stringMd5} from 'react-native-quick-md5';
 import Toast from 'react-native-toast-message';
 import client from '../config';
 import {
@@ -26,17 +24,13 @@ import {
   heightPixel,
   widthPixel,
 } from '../config';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const {
-    isLoading,
-    error,
-    isConnected,
-  } = useContext(GlobalContext);
- 
+  const {isLoading, error, isConnected} = useContext(GlobalContext);
+
   const [popupVisible, setPopupVisible] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
   const [rePassword, setRePassword] = useState('');
@@ -102,7 +96,7 @@ const LoginScreen = ({ navigation }) => {
 
   const onClickVerify = () => {
     const enc = stringMd5(code);
-    console.log(enc,code_1,code)
+    console.log(enc, code_1, code);
     if (code == '' || enc != code_1) {
       Toast.show({
         type: 'error',
@@ -187,7 +181,7 @@ const LoginScreen = ({ navigation }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
-        <View style={{ flex: 1 }} >
+        <View style={{flex: 1}}>
           <Spinner visible={isLoading || indicator} />
           <ImageBackground
             source={require('../../assets/images/background_login.jpg')}
@@ -209,8 +203,8 @@ const LoginScreen = ({ navigation }) => {
                   Welcome!
                 </Text>
               </View>
-              <View style={{ height: '5%' }} />
-              <View style={(styles.input_view, { width: '65%' })}>
+              <View style={{height: '5%'}} />
+              <View style={(styles.input_view, {width: '65%'})}>
                 <TextInput
                   style={styles.input}
                   value={email}
@@ -231,7 +225,7 @@ const LoginScreen = ({ navigation }) => {
                   placeholderTextColor="#72a045aa"
                   secureTextEntry
                 />
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text
                     style={[
                       styles.text_forgot,
@@ -248,7 +242,7 @@ const LoginScreen = ({ navigation }) => {
                     <Text style={styles.link}>Click Here</Text>
                   </TouchableOpacity>
                 </View>
-                <View style={{ alignItems: 'center' }}>
+                <View style={{alignItems: 'center'}}>
                   <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.7}
@@ -286,7 +280,7 @@ const LoginScreen = ({ navigation }) => {
                   flexDirection: 'column',
                   justifyContent: 'space-evenly',
                 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text
                     style={[
                       styles.text_forgot,
@@ -301,12 +295,11 @@ const LoginScreen = ({ navigation }) => {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-evenly',
-                  }}>
-                </View>
+                  }}></View>
                 <View
-                  style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                  style={{flexDirection: 'column', justifyContent: 'center'}}>
                   <View
-                    style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <Text
                       style={[
                         styles.text_forgot,
@@ -316,10 +309,7 @@ const LoginScreen = ({ navigation }) => {
                       ]}>
                       By Signing In, you agree with our{' '}
                     </Text>
-                    <TouchableOpacity
-                      onPress={() =>
-                        console.log('Terms')
-                      }>
+                    <TouchableOpacity onPress={() => console.log('Terms')}>
                       <Text style={styles.link_white}>Terms</Text>
                     </TouchableOpacity>
                     <Text
@@ -333,7 +323,7 @@ const LoginScreen = ({ navigation }) => {
                     </Text>
                   </View>
                   <View
-                    style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    style={{flexDirection: 'row', justifyContent: 'center'}}>
                     <Text
                       style={[
                         styles.text_forgot,
@@ -344,9 +334,7 @@ const LoginScreen = ({ navigation }) => {
                       your data in our{' '}
                     </Text>
                     <TouchableOpacity
-                      onPress={() =>
-                        console.log('Privacy Policy')
-                      }>
+                      onPress={() => console.log('Privacy Policy')}>
                       <Text style={styles.link_white}>Privacy Policy</Text>
                     </TouchableOpacity>
                     <Text
@@ -360,9 +348,7 @@ const LoginScreen = ({ navigation }) => {
                       and{' '}
                     </Text>
                     <TouchableOpacity
-                      onPress={() =>
-                        console.log('Cookies Policy')
-                      }>
+                      onPress={() => console.log('Cookies Policy')}>
                       <Text style={styles.link_white}>Cookies Policy</Text>
                     </TouchableOpacity>
                   </View>
@@ -664,7 +650,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: heightPixel(12),
   },
-  dropdown3DropdownStyle: { backgroundColor: 'slategray' },
+  dropdown3DropdownStyle: {backgroundColor: 'slategray'},
   dropdown3RowStyle: {
     backgroundColor: 'slategray',
     borderWidth: 1,

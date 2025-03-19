@@ -6,7 +6,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import {fontPixel, pixelSizeVertical, pixelSizeHorizontal} from '../config';
+import {fontPixel, pixelSizeVertical} from '../config';
 
 const MainSplash = ({navigation}) => {
   return (
@@ -25,7 +25,10 @@ const MainSplash = ({navigation}) => {
               justifyContent: 'flex-end',
             }}>
             <TouchableOpacity
-              style={{paddingVertical: pixelSizeVertical(20), alignItems: 'flex-end'}}
+              style={{
+                paddingVertical: pixelSizeVertical(20),
+                alignItems: 'flex-end',
+              }}
               activeOpacity={0.7}
               onPress={() => navigation.navigate('Login')}>
               <Text

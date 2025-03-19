@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -6,30 +6,23 @@ import {
   Image,
   View,
   StyleSheet,
-  ScrollView,
   Dimensions,
   Platform,
 } from 'react-native';
-import { GlobalContext } from '../context';
+import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CheckBox from '@react-native-community/checkbox';
-import {
-  fontPixel,
-  heightPixel,
-  widthPixel,
-} from '../config';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+import {fontPixel, heightPixel, widthPixel} from '../config';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const WelcomeScreen = ({ navigation }) => {
-  const {
-    isLoading,
-  } = useContext(GlobalContext);
+const WelcomeScreen = ({navigation}) => {
+  const {isLoading} = useContext(GlobalContext);
 
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }} >
+      <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
         <ImageBackground
           source={require('../../assets/images/vegetables.jpg')}
@@ -44,36 +37,40 @@ const WelcomeScreen = ({ navigation }) => {
         </ImageBackground>
         <View style={styles.wrapper}>
           <View style={styles.descriptionView}>
-            <Text allowFontScaling={false}
-                style={[
+            <Text
+              allowFontScaling={false}
+              style={[
                 styles.titleStyle,
                 {
-                    fontFamily: 'LEMONMILK-Bold',
+                  fontFamily: 'LEMONMILK-Bold',
                 },
-                ]}>
-                Know your food—scan
+              ]}>
+              Know your food—scan
             </Text>
-            <Text allowFontScaling={false}
-                style={[
+            <Text
+              allowFontScaling={false}
+              style={[
                 styles.titleStyle,
                 {
-                    fontFamily: 'LEMONMILK-Bold',
+                  fontFamily: 'LEMONMILK-Bold',
                 },
-                ]}>
-                Ingredients, find better
+              ]}>
+              Ingredients, find better
             </Text>
-            <Text allowFontScaling={false}
-                style={[
+            <Text
+              allowFontScaling={false}
+              style={[
                 styles.titleStyle,
                 {
-                    fontFamily: 'LEMONMILK-Bold',
+                  fontFamily: 'LEMONMILK-Bold',
                 },
-                ]}>
-                Choices, get ai recipes
+              ]}>
+              Choices, get ai recipes
             </Text>
           </View>
           <View style={{alignItems: 'flex-start'}}>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -83,7 +80,8 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               &#8226; Scan ingredients
             </Text>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -92,7 +90,8 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               &#8226; instant insights
             </Text>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -101,7 +100,8 @@ const WelcomeScreen = ({ navigation }) => {
               ]}>
               &#8226; healthier choices
             </Text>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
@@ -111,34 +111,46 @@ const WelcomeScreen = ({ navigation }) => {
               &#8226; AI powered recipe scan
             </Text>
           </View>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{alignItems: 'center'}}>
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.7}
               onPress={async () => {
                 navigation.navigate('SplashSecond');
               }}>
-              <Text allowFontScaling={false} style={[
-                styles.text_button,
-                {
-                  fontFamily: 'LEMONMILK-Bold',
-                },
-              ]}>Explore trevbi</Text>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.text_button,
+                  {
+                    fontFamily: 'LEMONMILK-Bold',
+                  },
+                ]}>
+                Explore trevbi
+              </Text>
             </TouchableOpacity>
             <View style={styles.checkboxContainer}>
               <CheckBox
                 disabled={false}
                 value={toggleCheckBox}
-                onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
+                onValueChange={newValue => setToggleCheckBox(newValue)}
+                style={
+                  Platform.OS === 'ios'
+                    ? styles.checkbox
+                    : styles.checkboxAndroid
+                }
                 boxType={'square'}
               />
-              <Text allowFontScaling={false} style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.label,
                   {
                     fontFamily: 'LEMONMILK-Light',
                   },
-                ]}>DON'T SHOW THIS SCREEN AGAIN</Text>
+                ]}>
+                DON'T SHOW THIS SCREEN AGAIN
+              </Text>
             </View>
           </View>
         </View>
@@ -172,7 +184,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(10)
+    paddingTop: heightPixel(10),
   },
   descriptionView: {
     flexDirection: 'column',
@@ -224,7 +236,7 @@ const styles = StyleSheet.create({
   },
   checkboxAndroid: {
     alignSelf: 'center',
-    transform: [{ scale: 1.5 }],
+    transform: [{scale: 1.5}],
   },
   label: {
     fontSize: fontPixel(18),

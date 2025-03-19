@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {Dimensions, PixelRatio} from 'react-native';
-import {HOST_URL} from "@env"
+import {HOST_URL} from '@env';
 import RNFS from 'react-native-fs';
 const appDir = `${RNFS.DocumentDirectoryPath}/ScanHistory`;
 const indexFilePath = `${appDir}/index.json`;
@@ -113,7 +113,7 @@ const theme = {
         shadowRadius: 0,
         elevation: 0,
       },
-      '0': {
+      0: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -123,7 +123,7 @@ const theme = {
         shadowRadius: 1.0,
         elevation: 1,
       },
-      '1': {
+      1: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -133,7 +133,7 @@ const theme = {
         shadowRadius: 1.41,
         elevation: 2,
       },
-      '2': {
+      2: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -143,7 +143,7 @@ const theme = {
         shadowRadius: 2.22,
         elevation: 3,
       },
-      '3': {
+      3: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -153,7 +153,7 @@ const theme = {
         shadowRadius: 2.62,
         elevation: 4,
       },
-      '4': {
+      4: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -163,7 +163,7 @@ const theme = {
         shadowRadius: 3.84,
         elevation: 5,
       },
-      '5': {
+      5: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -173,7 +173,7 @@ const theme = {
         shadowRadius: 4.65,
         elevation: 6,
       },
-      '6': {
+      6: {
         shadowColor: 'b$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -183,7 +183,7 @@ const theme = {
         shadowRadius: 4.65,
         elevation: 7,
       },
-      '7': {
+      7: {
         shadowColor: '$backgroundLight800k',
         shadowOffset: {
           width: 0,
@@ -193,7 +193,7 @@ const theme = {
         shadowRadius: 4.65,
         elevation: 8,
       },
-      '8': {
+      8: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -203,7 +203,7 @@ const theme = {
         shadowRadius: 5.46,
         elevation: 9,
       },
-      '9': {
+      9: {
         shadowColor: '$backgroundLight800',
         shadowOffset: {
           width: 0,
@@ -664,33 +664,33 @@ const theme = {
     },
     space: {
       px: '1px',
-      '0': 0,
-      '0.5': 2,
-      '1': 4,
-      '1.5': 6,
-      '2': 8,
-      '2.5': 10,
-      '3': 12,
-      '3.5': 14,
-      '4': 16,
-      '5': 20,
-      '6': 24,
-      '7': 28,
-      '8': 32,
-      '9': 36,
-      '10': 40,
-      '12': 48,
-      '16': 64,
-      '20': 80,
-      '24': 96,
-      '32': 128,
-      '40': 160,
-      '48': 192,
-      '56': 224,
-      '64': 256,
-      '72': 288,
-      '80': 320,
-      '96': 384,
+      0: 0,
+      0.5: 2,
+      1: 4,
+      1.5: 6,
+      2: 8,
+      2.5: 10,
+      3: 12,
+      3.5: 14,
+      4: 16,
+      5: 20,
+      6: 24,
+      7: 28,
+      8: 32,
+      9: 36,
+      10: 40,
+      12: 48,
+      16: 64,
+      20: 80,
+      24: 96,
+      32: 128,
+      40: 160,
+      48: 192,
+      56: 224,
+      64: 256,
+      72: 288,
+      80: 320,
+      96: 384,
       '1/2': '50%',
       '1/3': '33.333%',
       '2/3': '66.666%',
@@ -709,11 +709,11 @@ const theme = {
       full: '100%',
     },
     borderWidths: {
-      '0': 0,
-      '1': '1px',
-      '2': '2px',
-      '4': '4px',
-      '8': '8px',
+      0: 0,
+      1: '1px',
+      2: '2px',
+      4: '4px',
+      8: '8px',
     },
     radii: {
       none: 0,

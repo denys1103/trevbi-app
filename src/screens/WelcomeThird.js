@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useContext} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -6,26 +6,19 @@ import {
   Image,
   View,
   StyleSheet,
-  ScrollView,
   Dimensions,
 } from 'react-native';
-import { GlobalContext } from '../context';
+import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {
-  fontPixel,
-  heightPixel,
-  widthPixel,
-} from '../config';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+import {fontPixel, heightPixel, widthPixel} from '../config';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const WelcomeSecondScreen = ({ navigation }) => {
-  const {
-    isLoading,
-  } = useContext(GlobalContext);
+const WelcomeSecondScreen = ({navigation}) => {
+  const {isLoading} = useContext(GlobalContext);
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }} >
+      <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
         <ImageBackground
           source={require('../../assets/images/background_screen2.jpg')}
@@ -34,105 +27,117 @@ const WelcomeSecondScreen = ({ navigation }) => {
           style={styles.backgroundImageStyle}>
           <View style={styles.wrapper}>
             <View style={styles.descriptionView}>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
+                    fontFamily: 'LEMONMILK-Bold',
                   },
-                  ]}>
-                  How It Works
+                ]}>
+                How It Works
               </Text>
             </View>
             <View style={styles.descriptionTxtView}>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(20)
+                    fontFamily: 'LEMONMILK-Regular',
+                    paddingTop: heightPixel(20),
                   },
-                  ]}>
-                  1.  SCAN INGREDIENTS
+                ]}>
+                1. SCAN INGREDIENTS
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingLeft: heightPixel(36),
+                    fontFamily: 'LEMONMILK-Regular',
+                    paddingLeft: heightPixel(36),
                   },
-                  ]}>
-                  You might be shocked
-              </Text>
-            </View>
-            <View style={styles.descriptionTxtView}>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                  },
-                  ]}>
-                  2. scan barcode to see
-              </Text>
-              <Text allowFontScaling={false}
-                  style={[
-                  styles.descriptionStyle,
-                  {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingLeft: heightPixel(36),
-                  },
-                  ]}>
-                  better brand choices
+                ]}>
+                You might be shocked
               </Text>
             </View>
             <View style={styles.descriptionTxtView}>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
+                    fontFamily: 'LEMONMILK-Regular',
                   },
-                  ]}>
-                  3. easily build healthy
+                ]}>
+                2. scan barcode to see
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingLeft: heightPixel(36),
+                    fontFamily: 'LEMONMILK-Regular',
+                    paddingLeft: heightPixel(36),
                   },
-                  ]}>
-                  recipes with trevbi ai
+                ]}>
+                better brand choices
+              </Text>
+            </View>
+            <View style={styles.descriptionTxtView}>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.descriptionStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Regular',
+                  },
+                ]}>
+                3. easily build healthy
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.descriptionStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Regular',
+                    paddingLeft: heightPixel(36),
+                  },
+                ]}>
+                recipes with trevbi ai
               </Text>
             </View>
             <View>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(10)
+                    fontFamily: 'LEMONMILK-Bold',
+                    paddingTop: heightPixel(10),
                   },
-                  ]}>
-                  See Beyond the Label
+                ]}>
+                See Beyond the Label
               </Text>
             </View>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{alignItems: 'center'}}>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
                 onPress={async () => {
                   navigation.navigate('Dashboard');
                 }}>
-                  <Text allowFontScaling={false} style={[
+                <Text
+                  allowFontScaling={false}
+                  style={[
                     styles.text_button,
                     {
                       fontFamily: 'LEMONMILK-Bold',
                     },
-                  ]}>"LET'S SCAN!"</Text>
+                  ]}>
+                  "LET'S SCAN!"
+                </Text>
               </TouchableOpacity>
               <Image
                 style={styles.logoStyle}
@@ -141,7 +146,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
             </View>
           </View>
         </ImageBackground>
-        </View>
+      </View>
     </View>
   );
 };
@@ -160,7 +165,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.6,
     height: SCREEN_WIDTH * 0.28 * 0.6,
     resizeMode: 'cover',
-    marginTop: heightPixel(10)
+    marginTop: heightPixel(10),
   },
   wrapper: {
     flex: 1,
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(50)
+    paddingTop: heightPixel(50),
   },
   titleStyle: {
     textAlign: 'center',
@@ -187,7 +192,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    width: '96%'
+    width: '96%',
   },
   descriptionStyle: {
     textAlign: 'center',

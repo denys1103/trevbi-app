@@ -1,14 +1,14 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '../config';
-import { baseURL } from '../config';
-import { showAlert, closeAlert } from 'react-native-customisable-alert';
+import {baseURL} from '../config';
+import {showAlert, closeAlert} from 'react-native-customisable-alert';
 import NetInfo from '@react-native-community/netinfo';
 
 export const GlobalContext = createContext({});
 export const useGlobalContext = () => useContext(GlobalContext);
 
-export const GlobalContextProvider = ({ children }) => {
+export const GlobalContextProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);

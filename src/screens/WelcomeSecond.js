@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -9,23 +9,17 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { GlobalContext } from '../context';
+import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {
-  fontPixel,
-  heightPixel,
-  widthPixel,
-} from '../config';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+import {fontPixel, heightPixel, widthPixel} from '../config';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const WelcomeSecondScreen = ({ navigation }) => {
-  const {
-    isLoading,
-  } = useContext(GlobalContext);
+const WelcomeSecondScreen = ({navigation}) => {
+  const {isLoading} = useContext(GlobalContext);
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }} >
+      <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
         <ImageBackground
           source={require('../../assets/images/background_screen1.jpg')}
@@ -34,88 +28,99 @@ const WelcomeSecondScreen = ({ navigation }) => {
           style={styles.backgroundImageStyle}>
           <View style={styles.wrapper}>
             <View style={styles.titleView}>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
+                    fontFamily: 'LEMONMILK-Bold',
                   },
-                  ]}>
-                  Is Your Food
+                ]}>
+                Is Your Food
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
+                    fontFamily: 'LEMONMILK-Bold',
                   },
-                  ]}>
-                  Helping or Hurting?
+                ]}>
+                Helping or Hurting?
               </Text>
             </View>
             <View style={styles.descriptionView}>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
+                    fontFamily: 'LEMONMILK-Regular',
                   },
-                  ]}>
-                  Get instant insights
+                ]}>
+                Get instant insights
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
+                    fontFamily: 'LEMONMILK-Regular',
                   },
-                  ]}>
-                  and find out if your
+                ]}>
+                and find out if your
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
+                    fontFamily: 'LEMONMILK-Regular',
                   },
-                  ]}>
-                  food is a win or a sin
+                ]}>
+                food is a win or a sin
               </Text>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.descriptionStyle,
                   {
-                      fontFamily: 'LEMONMILK-Regular',
+                    fontFamily: 'LEMONMILK-Regular',
                   },
-                  ]}>
-                  with TREVBI!
+                ]}>
+                with TREVBI!
               </Text>
             </View>
             <View>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(10)
+                    fontFamily: 'LEMONMILK-Bold',
+                    paddingTop: heightPixel(10),
                   },
-                  ]}>
-                  Find Out Now
+                ]}>
+                Find Out Now
               </Text>
             </View>
-            <View style={{ alignItems: 'center' }}>
+            <View style={{alignItems: 'center'}}>
               <TouchableOpacity
                 style={styles.button}
                 activeOpacity={0.7}
                 onPress={async () => {
                   navigation.navigate('SplashThird');
                 }}>
-                  <Text allowFontScaling={false} style={[
+                <Text
+                  allowFontScaling={false}
+                  style={[
                     styles.text_button,
                     {
                       fontFamily: 'LEMONMILK-Bold',
                     },
-                  ]}>LET'S DO THIS!</Text>
+                  ]}>
+                  LET'S DO THIS!
+                </Text>
               </TouchableOpacity>
               <Image
                 style={styles.logoStyle}
@@ -124,7 +129,7 @@ const WelcomeSecondScreen = ({ navigation }) => {
             </View>
           </View>
         </ImageBackground>
-        </View>
+      </View>
     </View>
   );
 };
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.6,
     height: SCREEN_WIDTH * 0.28 * 0.6,
     resizeMode: 'cover',
-    marginTop: heightPixel(10)
+    marginTop: heightPixel(10),
   },
   wrapper: {
     flex: 1,
@@ -151,7 +156,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(90)
+    paddingTop: heightPixel(90),
   },
   titleStyle: {
     textAlign: 'center',

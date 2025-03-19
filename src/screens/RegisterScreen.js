@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Text,
   TextInput,
@@ -8,7 +8,6 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  LogBox,
   Platform,
   ScrollView,
   Dimensions,
@@ -18,11 +17,9 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import {
   fontPixel,
-  pixelSizeVertical,
   pixelSizeHorizontal,
   heightPixel,
   widthPixel,
-  imageURL,
 } from '../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -31,8 +28,7 @@ const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [Confpassword, setConfPassword] = useState(null);
-  const {isLoading, error} =
-    useContext(GlobalContext);
+  const {isLoading, error} = useContext(GlobalContext);
 
   // useEffect(() => {
   //   LogBox.ignoreLogs([
