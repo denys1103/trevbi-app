@@ -48,7 +48,7 @@ const WelcomeSecondScreen = ({navigation}) => {
                     paddingTop: heightPixel(20),
                   },
                 ]}>
-                1. SCAN INGREDIENTS
+                1.  SCAN INGREDIENTS
               </Text>
               <Text
                 allowFontScaling={false}

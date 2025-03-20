@@ -1,25 +1,69 @@
-import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList, Dimensions } from 'react-native';
-import { useCameraDevice, Camera, useCodeScanner } from 'react-native-vision-camera';
-import { Camera as VisionCamera, PhotoRecognizer } from 'react-native-vision-camera-text-recognition';
-import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation, runOnJS } from 'react-native-reanimated'
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  useCallback,
+} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Image,
+  useWindowDimensions,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Linking,
+  FlatList,
+  Dimensions,
+} from 'react-native';
+import {
+  useCameraDevice,
+  Camera,
+  useCodeScanner,
+} from 'react-native-vision-camera';
+import {
+  Camera as VisionCamera,
+  PhotoRecognizer,
+} from 'react-native-vision-camera-text-recognition';
+import Reanimated, {
+  useAnimatedProps,
+  useSharedValue,
+  interpolate,
+  Extrapolation,
+  runOnJS,
+} from 'react-native-reanimated';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
-import client, {fontPixel, widthPixel, heightPixel, appDir, indexFilePath} from '../../config';
+import client, {
+  fontPixel,
+  widthPixel,
+  heightPixel,
+  appDir,
+  indexFilePath,
+} from '../../config';
 import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { WebView } from 'react-native-webview';
+import {WebView} from 'react-native-webview';
 import {GlobalContext} from '../../context';
 import WhiteCross from './WhiteCross';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
-})
-const ReanimatedCamera = Reanimated.createAnimatedComponent(VisionCamera)
+});
+const ReanimatedCamera = Reanimated.createAnimatedComponent(VisionCamera);
 
-const ScanAndRecognizeScreen = ({ navigation }) => {
-  const [textBlocks, setTextBlocks] = useState([]); 
+const ScanAndRecognizeScreen = ({navigation}) => {
+  const [textBlocks, setTextBlocks] = useState([]);
   const [selectedWords, setSelectedWords] = useState([]);
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [isScanning, setIsScanning] = useState(true);
@@ -31,22 +75,28 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
   const [avoidIngredientsName, setAvoidIngredientsName] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
-  const [answerModalVisibleStatus, setAnswerModalVisibleStatus] = useState(false);
+  const [answerModalVisibleStatus, setAnswerModalVisibleStatus] =
+    useState(false);
   const [answerTxt, setAnswerTxt] = useState('');
-  const { setCheckEvent, checkEvent } = useContext(GlobalContext);
-  const [barcodeScanModalVisibleStatus, setBarcodeScanModalVisibleStatus] = useState(false);
-  const [recommendationsModalVisibleStatus, setRecommendationsModalVisibleStatus] = useState(false);
-  const [webViewModalVisibleStatus, setWebViewModalVisibleStatus] = useState(false);
+  const {setCheckEvent, checkEvent} = useContext(GlobalContext);
+  const [barcodeScanModalVisibleStatus, setBarcodeScanModalVisibleStatus] =
+    useState(false);
+  const [
+    recommendationsModalVisibleStatus,
+    setRecommendationsModalVisibleStatus,
+  ] = useState(false);
+  const [webViewModalVisibleStatus, setWebViewModalVisibleStatus] =
+    useState(false);
   const [productUrl, setProductUrl] = useState(null);
   const [enableOnCodeScanned, setEnableOnCodeScanned] = useState(false);
   const [product, setProduct] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const codeScanner = useCodeScanner({
     codeTypes: ['ean-13'],
-    onCodeScanned: (codes) => {
+    onCodeScanned: codes => {
       if (enableOnCodeScanned) {
         let barcode = codes[0]?.value;
-        if(barcode){
+        if (barcode) {
           fetchProductDetails(barcode);
           setEnableOnCodeScanned(false);
           setBarcodeScanModalVisibleStatus(false);
@@ -55,39 +105,45 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     },
   });
 
-  const fetchProductDetails = async (barcode) => {
+  const fetchProductDetails = async barcode => {
     try {
       const foodFactsUrl = `https://world.openfoodfacts.net/api/v2/product/${barcode}?fields=product_name,brands,image_url,nutriscore_grade,nova_group,categories_tags`;
-  
+
       const foodFactsResponse = await fetch(foodFactsUrl);
       const foodFactsData = await foodFactsResponse.json();
-  
-      let category = "unknown";
-  
-      if (foodFactsData.status === 1 && foodFactsData.product.categories_tags?.length > 0) {
-        category = foodFactsData.product.categories_tags[foodFactsData.product.categories_tags.length-1]; 
-      } 
-  
+
+      let category = 'unknown';
+
+      if (
+        foodFactsData.status === 1 &&
+        foodFactsData.product.categories_tags?.length > 0
+      ) {
+        category =
+          foodFactsData.product.categories_tags[
+            foodFactsData.product.categories_tags.length - 1
+          ];
+      }
+
       const productInfo = {
         name: foodFactsData.product.product_name,
         brand: foodFactsData.product.brands,
         image: foodFactsData.product.image_url,
         url: `https://world.openfoodfacts.org/product/${barcode}`,
-        nutriscore: foodFactsData.product?.nutriscore_grade || "unknown",
-        novaGroup: foodFactsData.product?.nova_group || "unknown",
+        nutriscore: foodFactsData.product?.nutriscore_grade || 'unknown',
+        novaGroup: foodFactsData.product?.nova_group || 'unknown',
         category: category,
       };
-  
+
       setProduct(productInfo);
       fetchHealthierAlternatives(category);
     } catch (error) {
-      Alert.alert("Alert", "Could not fetch product details.");
+      Alert.alert('Alert', 'Could not fetch product details.');
     }
   };
 
-  const fetchHealthierAlternatives = async (category) => {
+  const fetchHealthierAlternatives = async category => {
     try {
-      if (!category || category === "unknown") {
+      if (!category || category === 'unknown') {
         setRecommendations([]);
         return;
       }
@@ -100,13 +156,13 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
       if (openFoodFactsData.products && openFoodFactsData.products.length > 0) {
         healthierProducts = openFoodFactsData.products
           .slice(0, 20)
-          .map((item) => ({
+          .map(item => ({
             name: item.product_name,
             brand: item.brands,
             image: item.image_url,
             url: `https://world.openfoodfacts.org/product/${item.code}`,
             nutriscore: item.nutriscore_grade,
-            source: "OpenFoodFacts",
+            source: 'OpenFoodFacts',
           }));
       }
 
@@ -114,7 +170,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
       setRecommendationsModalVisibleStatus(true);
       setOkBtnStatus(true);
     } catch (error) {
-      console.error("Error fetching alternatives", error);
+      console.error('Error fetching alternatives', error);
       setOkBtnStatus(true);
     }
   };
@@ -138,14 +194,18 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
   `;
 
   const device = useCameraDevice('back', {
-    physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
+    physicalDevices: [
+      'ultra-wide-angle-camera',
+      'wide-angle-camera',
+      'telephoto-camera',
+    ],
   });
   const zoom = useSharedValue(device?.neutralZoom || 1);
   const zoomOffset = useSharedValue(0);
 
   const gestureZoom = Gesture.Pinch()
     .onBegin(() => {
-      zoomOffset.value = zoom.value
+      zoomOffset.value = zoom.value;
     })
     .onUpdate(event => {
       const z = zoomOffset.value * event.scale;
@@ -154,8 +214,8 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
         [1, 10],
         [device?.minZoom || 1, device?.maxZoom || 10],
         Extrapolation.CLAMP,
-      )
-    })
+      );
+    });
 
   const animatedProps = useAnimatedProps(() => ({
     zoom: zoom.value,
@@ -183,7 +243,7 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     }
   };
 
-  const updateIndexFile = async (newEntry) => {
+  const updateIndexFile = async newEntry => {
     try {
       const currentIndex = JSON.parse(await RNFS.readFile(indexFilePath));
       currentIndex.push(newEntry);
@@ -193,157 +253,185 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
     }
   };
 
-  const getIngredientsList = (inputText) => {
-    return inputText
-      // .split(/[,;:()."]/)
-      .split(/[,;:()."]|\b(?:and|or|with)\b/i)
-      .map(sentence => sentence.trim())
-      .filter(sentence => sentence && (sentence.match(/\s/g) || []).length < 4);
+  const getIngredientsList = inputText => {
+    return (
+      inputText
+        // .split(/[,;:()."]/)
+        .split(/[,;:()."]|\b(?:and|or|with)\b/i)
+        .map(sentence => sentence.trim())
+        .filter(
+          sentence => sentence && (sentence.match(/\s/g) || []).length < 4,
+        )
+    );
   };
 
-  const isObjectEmpty = (objectName) => {
-    return JSON.stringify(objectName) === "{}";
+  const isObjectEmpty = objectName => {
+    return JSON.stringify(objectName) === '{}';
   };
 
   const captureAndRecognizeText = async () => {
-      try {
-        await createAppDir();
-        setOkBtnStatus(false);
-        setModalVisibleStatus(false);
+    try {
+      await createAppDir();
+      setOkBtnStatus(false);
+      setModalVisibleStatus(false);
 
-        const photoPath = `${appDir}/photo_${Date.now()}.jpg`;
-        const avoidPath = `${appDir}/avoid_${Date.now()}.json`;
-        const blockPath = `${appDir}/block_${Date.now()}.json`;
+      const photoPath = `${appDir}/photo_${Date.now()}.jpg`;
+      const avoidPath = `${appDir}/avoid_${Date.now()}.json`;
+      const blockPath = `${appDir}/block_${Date.now()}.json`;
 
-        // const photo = await photoCamera.current.takePhoto()
-        // const photo = await photoCamera.current.takeSnapshot({
-        //     quality: 100
-        // })
-        const sourcePath = `${RNFS.MainBundlePath}/scanTest01.jpg`;
-        // const sourcePath = `${appDir}/scanTest01.jpg`;
-        const photo = {};
-        await RNFS.copyFile(sourcePath, photoPath);
-        const photoURI = Platform.OS === 'ios' ? sourcePath : `file://${sourcePath}`;
-        const photoCopyURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
-        photo.photoURI = photoCopyURI;
-        setCapturedPhoto(photo);
-        const result = await PhotoRecognizer({
-          uri:photoURI,
-          orientation: "landscapeLeft"
-        })
-        if(!isObjectEmpty(result)){
-          // let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
-          let IngredientsList = result.resultText.toLowerCase().replace(/\n/g, ' ');
-          if(IngredientsList.length>0){
-            try {
-              const { data } = await client.post('/getAvoidListData', {
-                IngredientsList,
-              });
-        
-              if (data.success) {
-                setAvoidIngredients(data.results);
-                await RNFS.writeFile(avoidPath, JSON.stringify({ avoidIngredients: data.results }));
-                // console.log('avoidIngredients:', data.results);
-                const nameArray = data.results.map(doc => doc.name);
-                setAvoidIngredientsName(nameArray);
-                if(nameArray.length == 0) {
-                  setModalData({'name':'', 'description': 'There is no the bad ingredients'});
-                  setModalVisibleStatus(true);
-                }
-              } else {
-                console.log('server error!');
+      // const photo = await photoCamera.current.takePhoto()
+      // const photo = await photoCamera.current.takeSnapshot({
+      //     quality: 100
+      // })
+      const sourcePath = `${RNFS.MainBundlePath}/scanTest01.jpg`;
+      // const sourcePath = `${appDir}/scanTest01.jpg`;
+      const photo = {};
+      await RNFS.copyFile(sourcePath, photoPath);
+      const photoURI =
+        Platform.OS === 'ios' ? sourcePath : `file://${sourcePath}`;
+      const photoCopyURI =
+        Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
+      photo.photoURI = photoCopyURI;
+      setCapturedPhoto(photo);
+      const result = await PhotoRecognizer({
+        uri: photoURI,
+        orientation: 'landscapeLeft',
+      });
+      if (!isObjectEmpty(result)) {
+        // let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+        let IngredientsList = result.resultText
+          .toLowerCase()
+          .replace(/\n/g, ' ');
+        if (IngredientsList.length > 0) {
+          try {
+            const {data} = await client.post('/getAvoidListData', {
+              IngredientsList,
+            });
+
+            if (data.success) {
+              setAvoidIngredients(data.results);
+              await RNFS.writeFile(
+                avoidPath,
+                JSON.stringify({avoidIngredients: data.results}),
+              );
+              // console.log('avoidIngredients:', data.results);
+              const nameArray = data.results.map(doc => doc.name);
+              setAvoidIngredientsName(nameArray);
+              if (nameArray.length == 0) {
+                setModalData({
+                  name: '',
+                  description: 'There is no the bad ingredients',
+                });
+                setModalVisibleStatus(true);
               }
-            } catch (e) {
-              console.log('new error:', e);
-              Alert.alert('Get Avoid Data', e);
+            } else {
+              console.log('server error!');
             }
+          } catch (e) {
+            console.log('new error:', e);
+            Alert.alert('Get Avoid Data', e);
+          }
+        } else {
+          setAvoidIngredients([]);
+          await RNFS.writeFile(
+            avoidPath,
+            JSON.stringify({avoidIngredients: []}),
+          );
+          setAvoidIngredientsName([]);
+          setModalData({
+            name: '',
+            description: 'There is no the bad ingredients',
+          });
+          setModalVisibleStatus(true);
+        }
+
+        let ocrText = result.blocks.flatMap(block =>
+          block.lines.flatMap(line => line.elements),
+        );
+        const ocrWords = result.blocks.flatMap(block =>
+          block.lines.flatMap(line =>
+            line.elements.map(element => element.elementText),
+          ),
+        );
+
+        let ocrResults = ocrText.map((current, index, array) => {
+          let updatedFrame = {...current.elementFrame};
+          if (Platform.OS === 'ios') {
+            updatedFrame.x = current.elementFrame.boundingCenterX;
+            updatedFrame.y = current.elementFrame.boundingCenterY;
+            current.elementFrame = updatedFrame;
           } else {
-            setAvoidIngredients([]);
-            await RNFS.writeFile(avoidPath, JSON.stringify({ avoidIngredients: [] }));
-            setAvoidIngredientsName([]);
-            setModalData({'name':'', 'description': 'There is no the bad ingredients'});
-            setModalVisibleStatus(true);
+            updatedFrame.boundingCenterY = current.elementFrame.y;
+          }
+          if (index > 0) {
+            const previous = array[index - 1].elementFrame;
+
+            if (previous.x < current.elementFrame.x) {
+              if (
+                previous.y <= current.elementFrame.y &&
+                previous.y + previous.height > current.elementFrame.y
+              ) {
+                updatedFrame.boundingCenterY = previous.boundingCenterY;
+              }
+              if (
+                previous.y > current.elementFrame.y &&
+                previous.y - previous.height < current.elementFrame.y
+              ) {
+                updatedFrame.boundingCenterY = previous.boundingCenterY;
+              }
+              array[index].elementFrame = updatedFrame;
+            }
           }
 
-          let ocrText = result.blocks.flatMap((block) =>
-            block.lines.flatMap((line) => line.elements)
-          );
-          const ocrWords = result.blocks.flatMap((block) =>
-            block.lines.flatMap((line) => line.elements.map((element) => element.elementText))
-          );
+          return {elementText: current.elementText, elementFrame: updatedFrame};
+        });
+        // try {
+        //   const { data } = await client.post('/getCorrectWords', {
+        //     ocrWords,
+        //   });
 
-          let ocrResults = ocrText.map((current, index, array) => {
-            let updatedFrame = { ...current.elementFrame };
-            if(Platform.OS === 'ios'){
-              updatedFrame.x = current.elementFrame.boundingCenterX;
-              updatedFrame.y = current.elementFrame.boundingCenterY;
-              current.elementFrame = updatedFrame;
-            }else{
-              updatedFrame.boundingCenterY = current.elementFrame.y;
-            }
-            if (index > 0) {
-              const previous = array[index - 1].elementFrame;
-          
-              if (previous.x < current.elementFrame.x) {
-                if (
-                  previous.y <= current.elementFrame.y &&
-                  previous.y + previous.height > current.elementFrame.y
-                ) {
-                  updatedFrame.boundingCenterY = previous.boundingCenterY;
-                }
-                if (
-                  previous.y > current.elementFrame.y &&
-                  previous.y - previous.height < current.elementFrame.y
-                ) {
-                  updatedFrame.boundingCenterY = previous.boundingCenterY;
-                }
-                array[index].elementFrame = updatedFrame;
-              }
-            }
-          
-            return { elementText:current.elementText, elementFrame: updatedFrame};
-          });
-          // try {
-          //   const { data } = await client.post('/getCorrectWords', {
-          //     ocrWords,
-          //   });
-      
-          //   if (data.success) {
-          //   //   console.log(JSON.stringify(data.results, null, 2))
-          //     if(data.results.length == ocrResults.length){
-          //       ocrResults.forEach((item, index) => {
-          //         item.elementText = data.results[index];
-          //       });
-          //     }
-          //   } else {
-          //     console.log('server error!');
-          //   }
-          // } catch (e) {
-          //   console.log('new error:', e);
-          //   Alert.alert('Get Correct Words Data', e);
-          // } finally {
-            setTextBlocks(ocrResults);
-            await RNFS.writeFile(blockPath, JSON.stringify({ textBlocks: ocrResults }));
-            const newEntry = { photoPath, avoidPath, blockPath };
-            await updateIndexFile(newEntry);
-            // console.log(JSON.stringify(ocrResults, null, 2))
-            setCheckEvent(!checkEvent);
-            setIsScanning(false);
-            setOkBtnStatus(true);
-          // }
-          // console.log(JSON.stringify(result, null, 2))
-        } else {
-          setModalData({'name':'', 'description': 'There is no captured text.\nPlease try again.'});
-          setModalVisibleStatus(true);
-          setIsScanning(false);
-          setOkBtnStatus(true);
-        }
-      } catch (error) {
+        //   if (data.success) {
+        //   //   console.log(JSON.stringify(data.results, null, 2))
+        //     if(data.results.length == ocrResults.length){
+        //       ocrResults.forEach((item, index) => {
+        //         item.elementText = data.results[index];
+        //       });
+        //     }
+        //   } else {
+        //     console.log('server error!');
+        //   }
+        // } catch (e) {
+        //   console.log('new error:', e);
+        //   Alert.alert('Get Correct Words Data', e);
+        // } finally {
+        setTextBlocks(ocrResults);
+        await RNFS.writeFile(
+          blockPath,
+          JSON.stringify({textBlocks: ocrResults}),
+        );
+        const newEntry = {photoPath, avoidPath, blockPath};
+        await updateIndexFile(newEntry);
+        // console.log(JSON.stringify(ocrResults, null, 2))
+        setCheckEvent(!checkEvent);
         setIsScanning(false);
         setOkBtnStatus(true);
-        console.log(error)
-        Alert.alert('Error', 'Failed to capture the photo.');
+        // }
+        // console.log(JSON.stringify(result, null, 2))
+      } else {
+        setModalData({
+          name: '',
+          description: 'There is no captured text.\nPlease try again.',
+        });
+        setModalVisibleStatus(true);
+        setIsScanning(false);
+        setOkBtnStatus(true);
       }
+    } catch (error) {
+      setIsScanning(false);
+      setOkBtnStatus(true);
+      console.log(error);
+      Alert.alert('Error', 'Failed to capture the photo.');
+    }
   };
 
   const resetScan = () => {
@@ -361,13 +449,13 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
   const askAI = async () => {
     try {
       setOkBtnStatus(false);
-      const { data } = await client.post('/getAskAi', {
+      const {data} = await client.post('/getAskAi', {
         modalData,
       });
 
       if (data.success) {
         // console.log(data.results)
-        if(data.results.length > 0) {
+        if (data.results.length > 0) {
           setAnswerTxt(data.results);
           setAnswerModalVisibleStatus(true);
           setModalVisibleStatus(false);
@@ -401,9 +489,10 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
             onPress={async () => {
               const newStatus = await Camera.requestCameraPermission();
               setHasPermission(newStatus === 'granted');
-            }}
-          >
-            <Text allowFontScaling={false} style={styles.buttonText}>Grant Permission</Text>
+            }}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Grant Permission
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -411,11 +500,13 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <TouchableWithoutFeedback
-        onPress={() => {setModalVisibleStatus(false); setAnswerModalVisibleStatus(false)}}
-        disabled={true}
-      >
+        onPress={() => {
+          setModalVisibleStatus(false);
+          setAnswerModalVisibleStatus(false);
+        }}
+        disabled={true}>
         <GestureHandlerRootView style={styles.container}>
           <Spinner visible={!okBtnStatus} />
           {isScanning && !!device && (
@@ -438,10 +529,15 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 // setModalVisibleStatus(false);
                 // setAnswerModalVisibleStatus(false);
               }}
-              style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
-              activeOpacity={0.9}
-            >
-            </TouchableOpacity>
+              style={
+                (StyleSheet.absoluteFill,
+                {
+                  backgroundColor: 'rgba(255,255,255,1)',
+                  width: width,
+                  height: height,
+                })
+              }
+              activeOpacity={0.9}></TouchableOpacity>
           )}
 
           {!isScanning && (
@@ -451,40 +547,49 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}
-                activeOpacity={0.9}
-              >
+                activeOpacity={0.9}>
                 <View style={styles.scanPanelStyle}>
                   <TouchableOpacity
                     activeOpacity={0.5}
-                    style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                    style={[
+                      styles.goToBackBtnStyle,
+                      {width: heightPixel(80), marginBottom: heightPixel(5)},
+                    ]}
                     onPress={resetScan}>
                     <Ionicons
                       size={fontPixel(18)}
                       name={'caret-back'}
                       style={{color: 'white'}}
                     />
-                    <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(14),
+                        color: 'white',
+                        fontFamily: 'LEMONMILK-Medium',
+                      }}>
                       Back
                     </Text>
                   </TouchableOpacity>
-                  <Text allowFontScaling={false}
+                  <Text
+                    allowFontScaling={false}
                     style={{
                       color: 'black',
-                      fontSize : heightPixel(22),
+                      fontSize: heightPixel(22),
                       fontFamily: 'LEMONMILK-Medium',
                       textAlign: 'center',
-                    }}
-                  >
-                    {avoidIngredients.length > 0 ? 'Tap for insights &\nbetter choices':''}
+                    }}>
+                    {avoidIngredients.length > 0
+                      ? 'Tap for insights &\nbetter choices'
+                      : ''}
                   </Text>
                   <ScrollView
                     contentContainerStyle={{
                       paddingVertical: heightPixel(5),
                     }}
                     style={{
-                      height: (height - heightPixel(350)),
-                    }}
-                  >
+                      height: height - heightPixel(350),
+                    }}>
                     {avoidIngredients.map((item, index) => {
                       return (
                         <TouchableOpacity
@@ -494,40 +599,64 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                             setModalVisibleStatus(true);
                           }}
                           activeOpacity={0.9}
-                          disabled={item.name === ''}
-                          >
-                          <Text allowFontScaling={false}
+                          disabled={item.name === ''}>
+                          <Text
+                            allowFontScaling={false}
                             style={{
                               color: 'red',
-                              fontSize : heightPixel(20),
+                              fontSize: heightPixel(20),
                               fontFamily: 'LEMONMILK-Regular',
                               paddingVertical: heightPixel(10),
-                            }}
-                          >
+                            }}>
                             {item.name}
                           </Text>
                         </TouchableOpacity>
-                      )
+                      );
                     })}
                   </ScrollView>
-                  {(avoidIngredients.length > 10) && <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
-                    <Text allowFontScaling={false}
+                  {avoidIngredients.length > 10 && (
+                    <View
                       style={{
-                        fontSize: fontPixel(40),
-                        textAlign: 'left',
-                        color: 'black',
-                        padding: heightPixel(0),
+                        width: SCREEN_WIDTH,
+                        paddingHorizontal: heightPixel(8),
+                        marginTop: heightPixel(-10),
+                        backgroundColor: 'transparent',
                       }}>
+                      <Text
+                        allowFontScaling={false}
+                        style={{
+                          fontSize: fontPixel(40),
+                          textAlign: 'left',
+                          color: 'black',
+                          padding: heightPixel(0),
+                        }}>
                         &#8595;
-                    </Text>
-                  </View>}
+                      </Text>
+                    </View>
+                  )}
                   <View style={styles.scanGroupStyle}>
-                    <TouchableOpacity style={styles.scanButton} onPress={resetScan}>
-                      <Text allowFontScaling={false} style={styles.scanButtonText}>Reset</Text>
+                    <TouchableOpacity
+                      style={styles.scanButton}
+                      onPress={resetScan}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Reset
+                      </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.scanButton} onPress={getBarcodeAI}>
-                      <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
-                      <Text allowFontScaling={false} style={styles.scanButtonText}>Barcode</Text>
+                    <TouchableOpacity
+                      style={styles.scanButton}
+                      onPress={getBarcodeAI}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Scan
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Barcode
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   <Image
@@ -541,25 +670,33 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
 
           <View style={styles.descriptionPanel}>
             {isScanning ? (
-              okBtnStatus ? (<>
-                <Text allowFontScaling={false} style={
-                  {
+              okBtnStatus ? (
+                <>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Bold',
                       paddingTop: heightPixel(16),
-                      color: 'black', 
-                      fontSize: fontPixel(22)
-                  }}>See Beyond the Label—But
-                </Text>
-                <Text allowFontScaling={false} style={
-                  {
+                      color: 'black',
+                      fontSize: fontPixel(22),
+                    }}>
+                    See Beyond the Label—But
+                  </Text>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Bold',
                       paddingTop: heightPixel(5),
                       paddingBottom: heightPixel(16),
-                      color: 'black', 
-                      fontSize: fontPixel(22)
-                  }}>First, Focus Your Lens
-                </Text>
-              </>) : <></>
+                      color: 'black',
+                      fontSize: fontPixel(22),
+                    }}>
+                    First, Focus Your Lens
+                  </Text>
+                </>
+              ) : (
+                <></>
+              )
             ) : (
               <></>
             )}
@@ -567,26 +704,53 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
 
           <View style={styles.buttonContainer}>
             {isScanning ? (
-              okBtnStatus ? (<>
-                <View style={styles.scanGroupStyle}>
-                  <TouchableOpacity style={styles.scanButton} onPress={captureAndRecognizeText}>
-                    <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
-                    <Text allowFontScaling={false} style={styles.scanButtonText}>Ingredients</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity activeOpacity={0.9} style={styles.scanButton} onPress={() => navigation.navigate('RecipeWelcome')}>
-                    <Text allowFontScaling={false} style={styles.scanButtonText}>Trevbi ai</Text>
-                    <Text allowFontScaling={false} style={styles.scanButtonText}>recipes</Text>
-                  </TouchableOpacity>
-                </View>
-                <Text allowFontScaling={false} style={
-                  {
+              okBtnStatus ? (
+                <>
+                  <View style={styles.scanGroupStyle}>
+                    <TouchableOpacity
+                      style={styles.scanButton}
+                      onPress={captureAndRecognizeText}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Scan
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Ingredients
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      activeOpacity={0.9}
+                      style={styles.scanButton}
+                      onPress={() => navigation.navigate('RecipeWelcome')}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Trevbi ai
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        recipes
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Regular',
                       paddingTop: heightPixel(8),
-                      color: 'black', 
-                      fontSize: fontPixel(18)
-                  }}>App camera
-                </Text>
-              </>) : <></>
+                      color: 'black',
+                      fontSize: fontPixel(18),
+                    }}>
+                    App camera
+                  </Text>
+                </>
+              ) : (
+                <></>
+              )
             ) : (
               <></>
             )}
@@ -600,43 +764,71 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+                <Image
+                  source={require('../../../assets/images/close_btn.png')}
+                  style={{width: heightPixel(40), height: heightPixel(40)}}
+                />
               </TouchableOpacity>
-              {modalData.name != '' ? 
-                (<Text allowFontScaling={false} style={styles.modalTextStyle}>
-                  <Text allowFontScaling={false} style={styles.modalTitleStyle}>{modalData.name}: </Text>
-                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description}</Text>
-                </Text>)
-                : 
-                (<View style={styles.modalEmptyStyle}>
-                  {modalData.description.includes('There is no captured text') ? 
-                  <Text allowFontScaling={false} style={[
-                    styles.modalContentsStyle,
-                    {
-                      textAlign: 'center',
-                    },
-                  ]}>{modalData.description} </Text>
-                  :
-                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description} </Text>
-                  }
-                </View>)
-              }
+              {modalData.name != '' ? (
+                <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                  <Text allowFontScaling={false} style={styles.modalTitleStyle}>
+                    {modalData.name}:{' '}
+                  </Text>
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.modalContentsStyle}>
+                    {modalData.description}
+                  </Text>
+                </Text>
+              ) : (
+                <View style={styles.modalEmptyStyle}>
+                  {modalData.description.includes(
+                    'There is no captured text',
+                  ) ? (
+                    <Text
+                      allowFontScaling={false}
+                      style={[
+                        styles.modalContentsStyle,
+                        {
+                          textAlign: 'center',
+                        },
+                      ]}>
+                      {modalData.description}{' '}
+                    </Text>
+                  ) : (
+                    <Text
+                      allowFontScaling={false}
+                      style={styles.modalContentsStyle}>
+                      {modalData.description}{' '}
+                    </Text>
+                  )}
+                </View>
+              )}
               {modalData.source && (
                 <TouchableOpacity
                   style={{paddingBottom: heightPixel(10)}}
-                  onPress={() =>
-                    Linking.openURL(
-                      modalData.source,
-                    )
-                  }>
+                  onPress={() => Linking.openURL(modalData.source)}>
                   <Text allowFontScaling={false} style={styles.modalTextStyle}>
-                    <Text allowFontScaling={false} style={{fontSize:fontPixel(16), color:'black', fontFamily: 'LEMONMILK-Medium'}}>CLICK HERE: </Text>
-                    <Text allowFontScaling={false} style={styles.link_blue}>SOURCE</Text>
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(16),
+                        color: 'black',
+                        fontFamily: 'LEMONMILK-Medium',
+                      }}>
+                      CLICK HERE:{' '}
+                    </Text>
+                    <Text allowFontScaling={false} style={styles.link_blue}>
+                      SOURCE
+                    </Text>
                   </Text>
                 </TouchableOpacity>
               )}
               <View style={styles.modalImageStyle}>
-                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+                <Image
+                  source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  style={{width: heightPixel(150), height: heightPixel(41.6)}}
+                />
               </View>
             </View>
           )}
@@ -668,13 +860,23 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+                <Image
+                  source={require('../../../assets/images/close_btn.png')}
+                  style={{width: heightPixel(40), height: heightPixel(40)}}
+                />
               </TouchableOpacity>
               <Text allowFontScaling={false} style={styles.modalTextStyle}>
-                <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
+                <Text
+                  allowFontScaling={false}
+                  style={styles.modalContentsStyle}>
+                  {answerTxt}
+                </Text>
               </Text>
               <View style={styles.modalImageStyle}>
-                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+                <Image
+                  source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  style={{width: heightPixel(150), height: heightPixel(41.6)}}
+                />
               </View>
             </View>
           )}
@@ -687,22 +889,45 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   // setModalVisibleStatus(false);
                   setRecommendationsModalVisibleStatus(false);
                 }}>
-                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+                <Image
+                  source={require('../../../assets/images/close_btn.png')}
+                  style={{width: heightPixel(40), height: heightPixel(40)}}
+                />
               </TouchableOpacity>
               {product && (
                 <View style={styles.recommendationsProductStyle}>
-                  <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{product.name}</Text>
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.recommendationsProductNameStyle}>
+                    {product.name}
+                  </Text>
                   <View style={styles.recommendationsDescriptionBoxStyle}>
-                    {product.image ?
-                      <Image source={{ uri: product.image }} style={styles.recommendationsProductImgStyle} />
-                      :
-                      <Image source={require('../../../assets/images/no_img.jpg')} style={styles.recommendationsProductImgStyle} />
-                    }
+                    {product.image ? (
+                      <Image
+                        source={{uri: product.image}}
+                        style={styles.recommendationsProductImgStyle}
+                      />
+                    ) : (
+                      <Image
+                        source={require('../../../assets/images/no_img.jpg')}
+                        style={styles.recommendationsProductImgStyle}
+                      />
+                    )}
                     <View>
-                      <Text allowFontScaling={false}>Brand: {product.brand}</Text>
-                      <Text allowFontScaling={false}>Nutri-Score: {product.nutriscore}</Text>
-                      <TouchableOpacity onPress={() => {setProductUrl(product.url); setWebViewModalVisibleStatus(true);}}>
-                        <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
+                      <Text allowFontScaling={false}>
+                        Brand: {product.brand}
+                      </Text>
+                      <Text allowFontScaling={false}>
+                        Nutri-Score: {product.nutriscore}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setProductUrl(product.url);
+                          setWebViewModalVisibleStatus(true);
+                        }}>
+                        <Text allowFontScaling={false} style={{color: 'blue'}}>
+                          More Details
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -714,31 +939,61 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                 keyExtractor={(item, index) => index.toString()}
                 ListHeaderComponent={() =>
                   recommendations.length > 0 ? (
-                    <Text allowFontScaling={false} style={styles.recommendationsHealthierStyle}>
+                    <Text
+                      allowFontScaling={false}
+                      style={styles.recommendationsHealthierStyle}>
                       Healthy Alternatives:
                     </Text>
                   ) : null
                 }
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => {setProductUrl(item.url); setWebViewModalVisibleStatus(true);}} style={{ padding: heightPixel(10), borderBottomWidth: heightPixel(1), borderColor: "#ccc" }}>
-                    <Text allowFontScaling={false} style={styles.recommendationsProductNameStyle}>{item.name}</Text>
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setProductUrl(item.url);
+                      setWebViewModalVisibleStatus(true);
+                    }}
+                    style={{
+                      padding: heightPixel(10),
+                      borderBottomWidth: heightPixel(1),
+                      borderColor: '#ccc',
+                    }}>
+                    <Text
+                      allowFontScaling={false}
+                      style={styles.recommendationsProductNameStyle}>
+                      {item.name}
+                    </Text>
                     <View style={styles.recommendationsDescriptionBoxStyle}>
-                      {item.image ?
-                        <Image source={{ uri: item.image }} style={styles.recommendationsProductImgStyle} />
-                        :
-                        <Image source={require('../../../assets/images/no_img.jpg')} style={styles.recommendationsProductImgStyle} />
-                      }
+                      {item.image ? (
+                        <Image
+                          source={{uri: item.image}}
+                          style={styles.recommendationsProductImgStyle}
+                        />
+                      ) : (
+                        <Image
+                          source={require('../../../assets/images/no_img.jpg')}
+                          style={styles.recommendationsProductImgStyle}
+                        />
+                      )}
                       <View>
-                        <Text allowFontScaling={false}>Brand: {item.brand}</Text>
-                        <Text allowFontScaling={false}>Nutri-Score: {item.nutriscore}</Text>
-                        <Text allowFontScaling={false} style={{ color: "blue" }}>More Details</Text>
+                        <Text allowFontScaling={false}>
+                          Brand: {item.brand}
+                        </Text>
+                        <Text allowFontScaling={false}>
+                          Nutri-Score: {item.nutriscore}
+                        </Text>
+                        <Text allowFontScaling={false} style={{color: 'blue'}}>
+                          More Details
+                        </Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                 )}
               />
               <View style={styles.modalImageStyle}>
-                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+                <Image
+                  source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  style={{width: heightPixel(150), height: heightPixel(41.6)}}
+                />
               </View>
             </View>
           )}
@@ -751,19 +1006,24 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
                   setModalVisibleStatus(false);
                   setWebViewModalVisibleStatus(false);
                 }}>
-                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+                <Image
+                  source={require('../../../assets/images/close_btn.png')}
+                  style={{width: heightPixel(40), height: heightPixel(40)}}
+                />
               </TouchableOpacity>
-              <WebView 
-                source={{ uri: productUrl }} 
-                style={{ flex: 1, width: '100%', height: heightPixel(400) }}
+              <WebView
+                source={{uri: productUrl}}
+                style={{flex: 1, width: '100%', height: heightPixel(400)}}
                 injectedJavaScript={injectedJS}
                 javaScriptEnabled={true}
                 startInLoadingState={true}
-                onMessage={(event) => {}}
+                onMessage={event => {}}
                 // webviewDebuggingEnabled={true}
-                onShouldStartLoadWithRequest={(request) => {
-                  return request.url.startsWith('https://world.openfoodfacts.org/product');
-                }} 
+                onShouldStartLoadWithRequest={request => {
+                  return request.url.startsWith(
+                    'https://world.openfoodfacts.org/product',
+                  );
+                }}
               />
             </View>
           )}
@@ -774,9 +1034,9 @@ const ScanAndRecognizeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  overlayContainer: { ...StyleSheet.absoluteFillObject, zIndex: 1 },
-  textBlock: { flexDirection: 'row', flexWrap: 'wrap' },
+  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  overlayContainer: {...StyleSheet.absoluteFillObject, zIndex: 1},
+  textBlock: {flexDirection: 'row', flexWrap: 'wrap'},
   permissionContainer: {
     backgroundColor: '#9bba77',
     alignItems: 'center',
@@ -806,7 +1066,11 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
-  buttonText: { color: 'white', fontSize: fontPixel(18), fontFamily: 'LEMONMILK-Bold' },
+  buttonText: {
+    color: 'white',
+    fontSize: fontPixel(18),
+    fontFamily: 'LEMONMILK-Bold',
+  },
   modalStyle: {
     flex: 1,
     justifyContent: 'center',
@@ -916,16 +1180,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   recommendationsProductStyle: {
-    padding: heightPixel(10), 
-    borderBottomWidth: heightPixel(2), 
+    padding: heightPixel(10),
+    borderBottomWidth: heightPixel(2),
     borderColor: 'rgba(102,123,104, 1)',
   },
   recommendationsProductNameStyle: {
-    fontSize: fontPixel(14), 
+    fontSize: fontPixel(14),
     fontFamily: 'LEMONMILK-Medium',
   },
   recommendationsProductImgStyle: {
-    width: heightPixel(100), 
+    width: heightPixel(100),
     height: heightPixel(100),
     marginRight: heightPixel(20),
   },
@@ -933,7 +1197,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   recommendationsHealthierStyle: {
-    fontSize: fontPixel(16), 
+    fontSize: fontPixel(16),
     fontFamily: 'LEMONMILK-Bold',
     padding: heightPixel(10),
   },
@@ -957,7 +1221,11 @@ const styles = StyleSheet.create({
     marginHorizontal: '3%',
     width: '40%',
   },
-  barcodeButtonText: { color: 'white', fontSize: fontPixel(14), fontFamily: 'LEMONMILK-Medium' },
+  barcodeButtonText: {
+    color: 'white',
+    fontSize: fontPixel(14),
+    fontFamily: 'LEMONMILK-Medium',
+  },
   scanButton: {
     backgroundColor: '#063225',
     paddingVertical: heightPixel(5),
@@ -969,7 +1237,11 @@ const styles = StyleSheet.create({
     marginHorizontal: '3%',
     width: '40%',
   },
-  scanButtonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' },
+  scanButtonText: {
+    color: 'white',
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Medium',
+  },
   scanGroupStyle: {
     flexDirection: 'row',
     justifyContent: 'center',

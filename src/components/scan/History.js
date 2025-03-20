@@ -10,25 +10,20 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import {
-  fontPixel,
-  heightPixel,
-  appDir,
-  indexFilePath,
-} from '../../config';
+import {fontPixel, heightPixel, appDir, indexFilePath} from '../../config';
 import RNFS from 'react-native-fs';
 import ViewDetailsComponent from './ViewDetails';
 // import SearchBar from 'react-native-search-bar';
 import {GlobalContext} from '../../context';
-import { SearchBar } from '@rneui/themed';
+import {SearchBar} from '@rneui/themed';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ScanHistory = ({ navigation }) => {
+const ScanHistory = ({navigation}) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [validEntriesData, setValidEntriesData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { checkEvent } = useContext(GlobalContext);
+  const {checkEvent} = useContext(GlobalContext);
   const [search, setSearch] = useState('');
 
   const createAppDir = async () => {
@@ -47,13 +42,19 @@ const ScanHistory = ({ navigation }) => {
         const indexData = JSON.parse(await RNFS.readFile(indexFilePath));
 
         const validatedHistory = await Promise.all(
-          indexData.map(async (entry) => {
-            const photoExists = entry.photoPath ? await RNFS.exists(entry.photoPath) : false;
-            const avoidExists = entry.avoidPath ? await RNFS.exists(entry.avoidPath) : false;
-            const blockExists = entry.blockPath ? await RNFS.exists(entry.blockPath) : false;
+          indexData.map(async entry => {
+            const photoExists = entry.photoPath
+              ? await RNFS.exists(entry.photoPath)
+              : false;
+            const avoidExists = entry.avoidPath
+              ? await RNFS.exists(entry.avoidPath)
+              : false;
+            const blockExists = entry.blockPath
+              ? await RNFS.exists(entry.blockPath)
+              : false;
 
             return photoExists && avoidExists && blockExists ? entry : null;
-          })
+          }),
         );
 
         const validEntries = validatedHistory.filter(Boolean);
@@ -61,17 +62,25 @@ const ScanHistory = ({ navigation }) => {
         await RNFS.writeFile(indexFilePath, JSON.stringify(validEntries));
 
         const historyEntries = await Promise.all(
-          validEntries.map(async (entry) => {
+          validEntries.map(async entry => {
             const avoidContent = await RNFS.readFile(entry.avoidPath, 'utf8');
             const parsedAvoidData = JSON.parse(avoidContent);
-            const nameArray = parsedAvoidData.avoidIngredients.map(doc => doc.name);
+            const nameArray = parsedAvoidData.avoidIngredients.map(
+              doc => doc.name,
+            );
 
             const blockContent = await RNFS.readFile(entry.blockPath, 'utf8');
             const blockAvoidData = JSON.parse(blockContent);
-            const txtArray = blockAvoidData.textBlocks.map(doc => doc.elementText);
+            const txtArray = blockAvoidData.textBlocks.map(
+              doc => doc.elementText,
+            );
 
-            return {...entry, nameArray: nameArray.join(', '), txtArray: txtArray.join(' ')};
-          })
+            return {
+              ...entry,
+              nameArray: nameArray.join(', '),
+              txtArray: txtArray.join(' '),
+            };
+          }),
         );
 
         historyEntries.reverse();
@@ -83,37 +92,46 @@ const ScanHistory = ({ navigation }) => {
     }
   };
 
-  const deleteHistoryItem = async (item) => {
+  const deleteHistoryItem = async item => {
     try {
-      const updatedValidEntriesData = validEntriesData.filter((entry) => entry.photoPath !== item.photoPath);
+      const updatedValidEntriesData = validEntriesData.filter(
+        entry => entry.photoPath !== item.photoPath,
+      );
       setValidEntriesData(updatedValidEntriesData);
-      const updatedHistory = historyData.filter((entry) => entry.photoPath !== item.photoPath);
-      await RNFS.writeFile(indexFilePath, JSON.stringify(updatedValidEntriesData));
+      const updatedHistory = historyData.filter(
+        entry => entry.photoPath !== item.photoPath,
+      );
+      await RNFS.writeFile(
+        indexFilePath,
+        JSON.stringify(updatedValidEntriesData),
+      );
       setHistoryData(updatedHistory);
-      const updatedSearchHistory = searchHistoryData.filter((entry) => entry.photoPath !== item.photoPath);
+      const updatedSearchHistory = searchHistoryData.filter(
+        entry => entry.photoPath !== item.photoPath,
+      );
       setSearchHistoryData(updatedSearchHistory);
     } catch (error) {
       console.error('Error deleting history item:', error);
     }
   };
 
-  const confirmDelete = (item) => {
+  const confirmDelete = item => {
     Alert.alert(
       'Delete History',
       'Are you sure you want to delete this history item?',
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', onPress: () => deleteHistoryItem(item) },
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Delete', onPress: () => deleteHistoryItem(item)},
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
   useEffect(() => {
     fetchScanHistory();
   }, [checkEvent]);
-  
-  const handleItemClick = (item) => {
+
+  const handleItemClick = item => {
     setSelectedItem(item);
   };
 
@@ -122,36 +140,47 @@ const ScanHistory = ({ navigation }) => {
   };
 
   if (selectedItem) {
-    return <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />;
+    return (
+      <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />
+    );
   }
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <View>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-          handleItemClick(item)
-        }}
-      >
+          handleItemClick(item);
+        }}>
         <View style={styles.box}>
           <Image
             style={styles.image}
-            source={{ uri: Platform.OS === 'ios' ? item.photoPath : `file://${item.photoPath}` }}
+            source={{
+              uri:
+                Platform.OS === 'ios'
+                  ? item.photoPath
+                  : `file://${item.photoPath}`,
+            }}
           />
           <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={item.nameArray?styles.title:styles.noAvoidStyle} numberOfLines={1}>
-              {item.nameArray?item.nameArray:'No ingredients to avoid'}
+            <Text
+              allowFontScaling={false}
+              style={item.nameArray ? styles.title : styles.noAvoidStyle}
+              numberOfLines={1}>
+              {item.nameArray ? item.nameArray : 'No ingredients to avoid'}
             </Text>
-            <Text allowFontScaling={false} style={styles.description} numberOfLines={1}>
+            <Text
+              allowFontScaling={false}
+              style={styles.description}
+              numberOfLines={1}>
               {item.txtArray}
             </Text>
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              confirmDelete(item)
-            }}
-          >
+              confirmDelete(item);
+            }}>
             <Ionicons
               size={fontPixel(40)}
               name={'trash'}
@@ -193,8 +222,11 @@ const ScanHistory = ({ navigation }) => {
           placeholder="Search Bad Ingredient"
           onChangeText={searchHistory}
           platform={Platform.OS === 'ios' ? 'ios' : 'android'}
-          containerStyle={{borderRadius:heightPixel(20), marginBottom:heightPixel(10)}}
-          inputContainerStyle={{borderRadius:heightPixel(20)}}
+          containerStyle={{
+            borderRadius: heightPixel(20),
+            marginBottom: heightPixel(10),
+          }}
+          inputContainerStyle={{borderRadius: heightPixel(20)}}
           searchIcon={Platform.OS === 'ios' ? {name: 'search'} : null}
           clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
           value={search}
@@ -206,12 +238,14 @@ const ScanHistory = ({ navigation }) => {
         renderItem={renderItem}
         // contentContainerStyle={styles.list}
         ListEmptyComponent={
-          <Text allowFontScaling={false} style={styles.emptyMessage}>No history available</Text>
+          <Text allowFontScaling={false} style={styles.emptyMessage}>
+            No history available
+          </Text>
         }
       />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -9,9 +9,7 @@ import HistoryComponent from './scan/History';
 import RecipesComponent from './recipe/Recipes';
 import {Text, View, Image, StyleSheet, Platform} from 'react-native';
 
-import {
-  widthPixel, heightPixel
-} from '../config';
+import {widthPixel, heightPixel} from '../config';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,14 +33,15 @@ function CustomTabs() {
         },
         tabBarActiveBackgroundColor: '#efefef',
         tabBarShowLabel: true,
-        tabBarItemStyle: {marginLeft: widthPixel(10), marginRight: widthPixel(10)},
+        tabBarItemStyle: {
+          marginLeft: widthPixel(10),
+          marginRight: widthPixel(10),
+        },
         header: ({navigation, route, options}) => {
           const title = getHeaderTitle(options, route.name);
-
           return <></>;
         },
-      }}
-    >
+      }}>
       <Tab.Screen
         name="Scan"
         component={Platform.OS === 'ios' ? IosScanComponent : ScanComponent}

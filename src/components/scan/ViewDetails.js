@@ -1,19 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+  Alert,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Linking,
+} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, heightPixel} from '../../config';
 import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ViewDetailsScreen = ({ item, onGoBack }) => {
-  const [textBlocks, setTextBlocks] = useState([]); 
+const ViewDetailsScreen = ({item, onGoBack}) => {
+  const [textBlocks, setTextBlocks] = useState([]);
   const {height, width, scale} = useWindowDimensions();
   const [loading, setLoading] = useState(true);
   const [avoidIngredients, setAvoidIngredients] = useState([]);
   const [avoidIngredientsName, setAvoidIngredientsName] = useState([]);
   const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
-  const [answerModalVisibleStatus, setAnswerModalVisibleStatus] = useState(false);
+  const [answerModalVisibleStatus, setAnswerModalVisibleStatus] =
+    useState(false);
   const [answerTxt, setAnswerTxt] = useState('');
 
   const loadData = async () => {
@@ -24,8 +37,11 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
       setAvoidIngredients(parsedAvoidData.avoidIngredients);
       const nameArray = parsedAvoidData.avoidIngredients.map(doc => doc.name);
       setAvoidIngredientsName(nameArray);
-      if(nameArray.length == 0) {
-        setModalData({'name':'', 'description': 'There is no the bad ingredients'});
+      if (nameArray.length == 0) {
+        setModalData({
+          name: '',
+          description: 'There is no the bad ingredients',
+        });
         setModalVisibleStatus(true);
       }
 
@@ -45,13 +61,13 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
 
   const askAI = async () => {
     try {
-      const { data } = await client.post('/getAskAi', {
+      const {data} = await client.post('/getAskAi', {
         modalData,
       });
 
       if (data.success) {
         // console.log(data.results)
-        if(data.results.length > 0) {
+        if (data.results.length > 0) {
           setAnswerTxt(data.results);
           setAnswerModalVisibleStatus(true);
           setModalVisibleStatus(false);
@@ -70,7 +86,6 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
     //   const { data } = await client.post('/getBarcodeAi', {
     //     modalData,
     //   });
-
     //   if (data.success) {
     //     console.log(data.results)
     //     if(data.results.length > 0) {
@@ -88,21 +103,26 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <TouchableWithoutFeedback
-        onPress={() => {setModalVisibleStatus(false); setAnswerModalVisibleStatus(false)}}
-        disabled={true}
-      >
+        onPress={() => {
+          setModalVisibleStatus(false);
+          setAnswerModalVisibleStatus(false);
+        }}
+        disabled={true}>
         <View style={styles.container}>
           <Spinner visible={!loading} />
           <TouchableOpacity
-            onPress={() => {
-            }}
-            style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
-            activeOpacity={0.9}
-          >
-           
-          </TouchableOpacity>
+            onPress={() => {}}
+            style={
+              (StyleSheet.absoluteFill,
+              {
+                backgroundColor: 'rgba(255,255,255,1)',
+                width: width,
+                height: height,
+              })
+            }
+            activeOpacity={0.9}></TouchableOpacity>
 
           <View style={StyleSheet.absoluteFill}>
             <TouchableOpacity
@@ -110,8 +130,7 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                 setModalVisibleStatus(false);
                 setAnswerModalVisibleStatus(false);
               }}
-              activeOpacity={0.9}
-            >
+              activeOpacity={0.9}>
               {/* {textBlocks.map((block, index) => {
                 const cleanedBlockText = block.elementText.replace(/^[().,]+|[().,]+$/g, '').trim();
                 const singleMatch = avoidIngredientsName.find(name => name.toLowerCase() === cleanedBlockText.toLowerCase());
@@ -187,35 +206,45 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
               <View style={styles.scanPanelStyle}>
                 <TouchableOpacity
                   activeOpacity={0.5}
-                  style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                  style={[
+                    styles.goToBackBtnStyle,
+                    {width: heightPixel(80), marginBottom: heightPixel(5)},
+                  ]}
                   onPress={onGoBack}>
                   <Ionicons
                     size={fontPixel(18)}
                     name={'caret-back'}
                     style={{color: 'white'}}
                   />
-                  <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      fontSize: fontPixel(14),
+                      color: 'white',
+                      fontFamily: 'LEMONMILK-Medium',
+                    }}>
                     Back
                   </Text>
                 </TouchableOpacity>
-                <Text allowFontScaling={false}
+                <Text
+                  allowFontScaling={false}
                   style={{
                     color: 'black',
-                    fontSize : heightPixel(22),
+                    fontSize: heightPixel(22),
                     fontFamily: 'LEMONMILK-Medium',
                     textAlign: 'center',
-                  }}
-                >
-                  {avoidIngredients.length > 0 ? 'Click on the ingredient you want to learn more about':''}
+                  }}>
+                  {avoidIngredients.length > 0
+                    ? 'Click on the ingredient you want to learn more about'
+                    : ''}
                 </Text>
                 <ScrollView
                   contentContainerStyle={{
                     paddingVertical: heightPixel(5),
                   }}
                   style={{
-                    maxHeight: (height - heightPixel(100)),
-                  }}
-                >
+                    maxHeight: height - heightPixel(100),
+                  }}>
                   {avoidIngredients.map((item, index) => {
                     return (
                       <TouchableOpacity
@@ -225,20 +254,19 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                           setModalVisibleStatus(true);
                         }}
                         activeOpacity={0.9}
-                        disabled={item.name === ''}
-                        >
-                        <Text allowFontScaling={false}
+                        disabled={item.name === ''}>
+                        <Text
+                          allowFontScaling={false}
                           style={{
                             color: 'red',
-                            fontSize : heightPixel(20),
+                            fontSize: heightPixel(20),
                             fontFamily: 'LEMONMILK-Regular',
                             paddingVertical: heightPixel(10),
-                          }}
-                        >
+                          }}>
                           {item.name}
                         </Text>
                       </TouchableOpacity>
-                    )
+                    );
                   })}
                 </ScrollView>
               </View>
@@ -253,61 +281,73 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+                <Image
+                  source={require('../../../assets/images/close_btn.png')}
+                  style={{width: heightPixel(40), height: heightPixel(40)}}
+                />
               </TouchableOpacity>
-              {modalData.name != '' ? 
-                (<Text allowFontScaling={false} style={styles.modalTextStyle}>
-                  <Text allowFontScaling={false} style={styles.modalTitleStyle}>{modalData.name}: </Text>
-                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description}</Text>
+              {modalData.name != '' ? (
+                <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                  <Text allowFontScaling={false} style={styles.modalTitleStyle}>
+                    {modalData.name}:{' '}
+                  </Text>
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.modalContentsStyle}>
+                    {modalData.description}
+                  </Text>
                   {modalData.source && (
                     <TouchableOpacity
-                      onPress={() =>
-                        Linking.openURL(
-                          modalData.source,
-                        )
-                      }>
-                      <Text allowFontScaling={false} style={styles.link_blue}>Source</Text>
+                      onPress={() => Linking.openURL(modalData.source)}>
+                      <Text allowFontScaling={false} style={styles.link_blue}>
+                        Source
+                      </Text>
                     </TouchableOpacity>
                   )}
-                </Text>)
-                : 
-                (<View style={styles.modalEmptyStyle}>
-                  <Text allowFontScaling={false} style={styles.modalContentsStyle}>{modalData.description} </Text>
-                </View>)
-              }
+                </Text>
+              ) : (
+                <View style={styles.modalEmptyStyle}>
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.modalContentsStyle}>
+                    {modalData.description}{' '}
+                  </Text>
+                </View>
+              )}
               <View style={styles.modalImageStyle}>
-                {modalData.description != 'There is no the bad ingredients'?
-                (
+                {modalData.description != 'There is no the bad ingredients' ? (
                   <>
-                    <Text allowFontScaling={false}
+                    <Text
+                      allowFontScaling={false}
                       style={{
-                        fontSize : heightPixel(18),
+                        fontSize: heightPixel(18),
                         fontFamily: 'LEMONMILK-Medium',
                         color: 'black',
                         paddingTop: heightPixel(10),
                         paddingBottom: heightPixel(5),
-                      }}
-                    >
+                      }}>
                       "WANT HEALTHIER, ASK TREVBI"
                     </Text>
                     <TouchableOpacity style={styles.AIButton} onPress={askAI}>
                       {/* <Image source={require('../../../assets/images/ASK_TREVBI.jpg')} style={{width:heightPixel(155), height:heightPixel(80)}} /> */}
-                      <Text allowFontScaling={false}
+                      <Text
+                        allowFontScaling={false}
                         style={{
-                          fontSize : heightPixel(16),
+                          fontSize: heightPixel(16),
                           fontFamily: 'LEMONMILK-Light',
                           color: 'black',
                           paddingVertical: heightPixel(10),
-                        }}
-                      >
+                        }}>
                         SEE BETTER INGREDIENTS
                       </Text>
                     </TouchableOpacity>
                   </>
-                )
-                :
-                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
-                }
+                ) : (
+                  <Image
+                    source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                    style={{width: heightPixel(150), height: heightPixel(41.6)}}
+                  />
+                )}
               </View>
             </View>
           )}
@@ -320,13 +360,23 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
                   setModalVisibleStatus(false);
                   setAnswerModalVisibleStatus(false);
                 }}>
-                <Image source={require('../../../assets/images/close_btn.png')} style={{width:heightPixel(40), height:heightPixel(40)}} />
+                <Image
+                  source={require('../../../assets/images/close_btn.png')}
+                  style={{width: heightPixel(40), height: heightPixel(40)}}
+                />
               </TouchableOpacity>
               <Text allowFontScaling={false} style={styles.modalTextStyle}>
-                <Text allowFontScaling={false} style={styles.modalContentsStyle}>{answerTxt}</Text>
+                <Text
+                  allowFontScaling={false}
+                  style={styles.modalContentsStyle}>
+                  {answerTxt}
+                </Text>
               </Text>
               <View style={styles.modalImageStyle}>
-                <Image source={require('../../../assets/images/TREVBI_Transparent_Logo.png')} style={{width:heightPixel(150), height:heightPixel(41.6)}} />
+                <Image
+                  source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  style={{width: heightPixel(150), height: heightPixel(41.6)}}
+                />
               </View>
             </View>
           )}
@@ -337,9 +387,9 @@ const ViewDetailsScreen = ({ item, onGoBack }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  overlayContainer: { ...StyleSheet.absoluteFillObject, zIndex: 1 },
-  textBlock: { flexDirection: 'row', flexWrap: 'wrap' },
+  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  overlayContainer: {...StyleSheet.absoluteFillObject, zIndex: 1},
+  textBlock: {flexDirection: 'row', flexWrap: 'wrap'},
   permissionContainer: {
     backgroundColor: '#9bba77',
     alignItems: 'center',
@@ -367,7 +417,11 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
-  buttonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Regular' },
+  buttonText: {
+    color: 'white',
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Regular',
+  },
   modalStyle: {
     flex: 1,
     justifyContent: 'center',
