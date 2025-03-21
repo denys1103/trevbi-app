@@ -1,22 +1,53 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, useWindowDimensions, Platform, SafeAreaView, TouchableWithoutFeedback, ScrollView, Linking, FlatList, Dimensions, Keyboard } from 'react-native';
-import { useCameraDevice, Camera } from 'react-native-vision-camera';
-import { Camera as VisionCamera } from 'react-native-vision-camera-text-recognition';
-import Reanimated, { useAnimatedProps, useSharedValue, interpolate, Extrapolation } from 'react-native-reanimated'
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
+import React, {useEffect, useState, useRef, useContext} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Image,
+  useWindowDimensions,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Linking,
+  FlatList,
+  Dimensions,
+  Keyboard,
+} from 'react-native';
+import {useCameraDevice, Camera} from 'react-native-vision-camera';
+import {Camera as VisionCamera} from 'react-native-vision-camera-text-recognition';
+import Reanimated, {
+  useAnimatedProps,
+  useSharedValue,
+  interpolate,
+  Extrapolation,
+} from 'react-native-reanimated';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
-import client, {fontPixel, heightPixel, appDir, indexRecipeFilePath} from '../../config';
+import client, {
+  fontPixel,
+  heightPixel,
+  appDir,
+  indexRecipeFilePath,
+} from '../../config';
 import RNFS from 'react-native-fs';
-import { GlobalContext } from '../../context';
+import {GlobalContext} from '../../context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 Reanimated.addWhitelistedNativeProps({
   zoom: true,
-})
-const ReanimatedCamera = Reanimated.createAnimatedComponent(VisionCamera)
+});
+const ReanimatedCamera = Reanimated.createAnimatedComponent(VisionCamera);
 
-const RecipeScanScreen = ({ navigation }) => {
+const RecipeScanScreen = ({navigation}) => {
   const [capturedPhoto, setCapturedPhoto] = useState(null);
   const [isScanning, setIsScanning] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
@@ -28,21 +59,21 @@ const RecipeScanScreen = ({ navigation }) => {
   const [recipeIngredients, setRecipeIngredients] = useState(null);
   const [recipeResult, setRecipeResult] = useState(null);
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
-  const {
-    selectedDiets,
-    setCheckEvent,
-    checkEvent,
-  } = useContext(GlobalContext);
+  const {selectedDiets, setCheckEvent, checkEvent} = useContext(GlobalContext);
 
   const device = useCameraDevice('back', {
-    physicalDevices: ['ultra-wide-angle-camera', 'wide-angle-camera', 'telephoto-camera']
+    physicalDevices: [
+      'ultra-wide-angle-camera',
+      'wide-angle-camera',
+      'telephoto-camera',
+    ],
   });
   const zoom = useSharedValue(device?.neutralZoom || 1);
   const zoomOffset = useSharedValue(0);
 
   const gestureZoom = Gesture.Pinch()
     .onBegin(() => {
-      zoomOffset.value = zoom.value
+      zoomOffset.value = zoom.value;
     })
     .onUpdate(event => {
       const z = zoomOffset.value * event.scale;
@@ -51,8 +82,8 @@ const RecipeScanScreen = ({ navigation }) => {
         [1, 10],
         [device?.minZoom || 1, device?.maxZoom || 10],
         Extrapolation.CLAMP,
-      )
-    })
+      );
+    });
 
   const animatedProps = useAnimatedProps(() => ({
     zoom: zoom.value,
@@ -80,7 +111,7 @@ const RecipeScanScreen = ({ navigation }) => {
     }
   };
 
-  const updateRecipeIndexFile = async (newEntry) => {
+  const updateRecipeIndexFile = async newEntry => {
     try {
       const currentIndex = JSON.parse(await RNFS.readFile(indexRecipeFilePath));
       currentIndex.push(newEntry);
@@ -100,12 +131,13 @@ const RecipeScanScreen = ({ navigation }) => {
         const photoPath = `${appDir}/recipePhoto_${Date.now()}.jpg`;
 
         const photo = await photoCamera.current.takeSnapshot({
-          quality: 100
-        })
+          quality: 100,
+        });
         await RNFS.copyFile(photo.path, photoPath);
-        const photoURI = Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
+        const photoURI =
+          Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
         setCapturedPhoto(photoURI);
-        if(photoURI){
+        if (photoURI) {
           try {
             const formData = new FormData();
             formData.append('image', {
@@ -113,12 +145,16 @@ const RecipeScanScreen = ({ navigation }) => {
               type: 'image/jpeg',
               name: 'food.jpg',
             });
-      
-            const response = await client.post('/getIngredientsForRecipe', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
+
+            const response = await client.post(
+              '/getIngredientsForRecipe',
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
               },
-            });
+            );
             if (response.data.success) {
               setRecipeIngredients(response.data.results);
               setEditRecipeIngredients(response.data.results);
@@ -136,7 +172,7 @@ const RecipeScanScreen = ({ navigation }) => {
       } catch (error) {
         setIsScanning(false);
         setOkBtnStatus(true);
-        console.log(error)
+        console.log(error);
         Alert.alert('Error', 'Failed to capture the photo.');
       }
     }
@@ -148,7 +184,7 @@ const RecipeScanScreen = ({ navigation }) => {
         setOkBtnStatus(false);
         setModalVisibleStatus(false);
 
-        if(capturedPhoto){
+        if (capturedPhoto) {
           try {
             const formData = new FormData();
             formData.append('image', {
@@ -158,7 +194,7 @@ const RecipeScanScreen = ({ navigation }) => {
             });
             formData.append('diets', selectedDiets);
             formData.append('ingredients', recipeIngredients);
-      
+
             const response = await client.post('/makeRecipe', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
@@ -180,7 +216,7 @@ const RecipeScanScreen = ({ navigation }) => {
       } catch (error) {
         setIsScanning(false);
         setOkBtnStatus(true);
-        console.log(error)
+        console.log(error);
         Alert.alert('Error', 'Failed to capture the photo.');
       }
     }
@@ -188,13 +224,13 @@ const RecipeScanScreen = ({ navigation }) => {
 
   const saveRecipe = async () => {
     const recipePath = `${appDir}/recipe_${Date.now()}.json`;
-    if(capturedPhoto && recipeResult){
-      await RNFS.writeFile(recipePath, JSON.stringify({ recipe: recipeResult }));
-      const newEntry = { photoPath: capturedPhoto, recipePath };
+    if (capturedPhoto && recipeResult) {
+      await RNFS.writeFile(recipePath, JSON.stringify({recipe: recipeResult}));
+      const newEntry = {photoPath: capturedPhoto, recipePath};
       await updateRecipeIndexFile(newEntry);
       setCheckEvent(!checkEvent);
       Alert.alert('Success', 'The recipe has been saved.');
-    }else{
+    } else {
       Alert.alert('Failed', 'Failed to save recipe.');
     }
   };
@@ -219,9 +255,10 @@ const RecipeScanScreen = ({ navigation }) => {
             onPress={async () => {
               const newStatus = await Camera.requestCameraPermission();
               setHasPermission(newStatus === 'granted');
-            }}
-          >
-            <Text allowFontScaling={false} style={styles.buttonText}>Grant Permission</Text>
+            }}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Grant Permission
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -229,11 +266,8 @@ const RecipeScanScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <TouchableWithoutFeedback
-        onPress={Keyboard.dismiss}
-        disabled={true}
-      >
+    <SafeAreaView style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} disabled={true}>
         <GestureHandlerRootView style={styles.container}>
           <Spinner visible={!okBtnStatus} />
           {isScanning && !!device && (
@@ -252,153 +286,239 @@ const RecipeScanScreen = ({ navigation }) => {
 
           {capturedPhoto && (
             <TouchableOpacity
-              style={(StyleSheet.absoluteFill, {backgroundColor: 'rgba(255,255,255,1)', width:width, height:height})}
-              activeOpacity={0.9}
-            >
-            </TouchableOpacity>
+              style={
+                (StyleSheet.absoluteFill,
+                {
+                  backgroundColor: 'rgba(255,255,255,1)',
+                  width: width,
+                  height: height,
+                })
+              }
+              activeOpacity={0.9}></TouchableOpacity>
           )}
 
           {!isScanning && (
             <View style={StyleSheet.absoluteFill}>
-                <View style={styles.scanPanelStyle}>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
-                    onPress={resetScan}>
-                    <Ionicons
-                      size={fontPixel(18)}
-                      name={'caret-back'}
-                      style={{color: 'white'}}
-                    />
-                    <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
-                      Back
-                    </Text>
-                  </TouchableOpacity>
-                  <Image source={{ uri: capturedPhoto }} style={styles.capturedImage} />
-                  {recipeIngredients && !recipeResult && (
-                    <>
-                      <View style={styles.recipeIngredientsViewStyle}>
-                        <Text allowFontScaling={false} style={styles.recipeIngredientsDescriptionStyle}>
-                          AI isn't perfect, but your recipe
-                        </Text>
-                        <Text allowFontScaling={false} style={styles.recipeIngredientsDescriptionStyle}>
-                          can be. edit, add, or remove
-                        </Text>
-                        <Text allowFontScaling={false} style={styles.recipeIngredientsDescriptionStyle}>
-                          ingredients to get it just right
-                        </Text>
-                      </View>
-                      <ScrollView
-                        contentContainerStyle={{
-                          paddingVertical: heightPixel(5),
-                        }}
-                        style={{
-                          height: (SCREEN_HEIGHT - heightPixel(550)),
-                        }}
-                      >
-                        <Text allowFontScaling={false} style={[styles.recipeItem, {marginBottom: heightPixel(6)}]}>
-                          You can edit the following ingredients:
-                        </Text>
-                        {recipeIngredients.split('\n').map((ingredient, index) => (
-                          <Text allowFontScaling={false} key={index} style={[styles.recipeItem, {marginBottom: heightPixel(6)}]}>
+              <View style={styles.scanPanelStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={[
+                    styles.goToBackBtnStyle,
+                    {width: heightPixel(80), marginBottom: heightPixel(5)},
+                  ]}
+                  onPress={resetScan}>
+                  <Ionicons
+                    size={fontPixel(18)}
+                    name={'caret-back'}
+                    style={{color: 'white'}}
+                  />
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      fontSize: fontPixel(14),
+                      color: 'white',
+                      fontFamily: 'LEMONMILK-Medium',
+                    }}>
+                    Back
+                  </Text>
+                </TouchableOpacity>
+                <Image
+                  source={{uri: capturedPhoto}}
+                  style={styles.capturedImage}
+                />
+                {recipeIngredients && !recipeResult && (
+                  <>
+                    <View style={styles.recipeIngredientsViewStyle}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.recipeIngredientsDescriptionStyle}>
+                        AI isn't perfect, but your recipe
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.recipeIngredientsDescriptionStyle}>
+                        can be. edit, add, or remove
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.recipeIngredientsDescriptionStyle}>
+                        ingredients to get it just right
+                      </Text>
+                    </View>
+                    <ScrollView
+                      contentContainerStyle={{
+                        paddingVertical: heightPixel(5),
+                      }}
+                      style={{
+                        height: SCREEN_HEIGHT - heightPixel(550),
+                      }}>
+                      <Text
+                        allowFontScaling={false}
+                        style={[
+                          styles.recipeItem,
+                          {marginBottom: heightPixel(6)},
+                        ]}>
+                        You can edit the following ingredients:
+                      </Text>
+                      {recipeIngredients
+                        .split('\n')
+                        .map((ingredient, index) => (
+                          <Text
+                            allowFontScaling={false}
+                            key={index}
+                            style={[
+                              styles.recipeItem,
+                              {marginBottom: heightPixel(6)},
+                            ]}>
                             {ingredient}
                           </Text>
                         ))}
-                      </ScrollView>
-                      <View style={styles.scanGroupStyle}>
-                        <TouchableOpacity style={styles.scanButton} onPress={scanAndRecipe}>
-                          <Text allowFontScaling={false} style={styles.scanButtonText}>Looks</Text>
-                          <Text allowFontScaling={false} style={styles.scanButtonText}>good</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.scanButton} onPress={() => {setModalVisibleStatus(true)}}>
-                          <Text allowFontScaling={false} style={styles.scanButtonText}>Edit</Text>
-                        </TouchableOpacity>
-                      </View>
-                      <Image
-                        style={styles.logoStyle}
-                        source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
-                      />
-                    </>
-                  )}
-                  {recipeResult && (
-                    <>
-                      <ScrollView
-                        contentContainerStyle={{
-                          paddingVertical: heightPixel(5),
-                        }}
-                        style={{
-                          maxHeight: (height - heightPixel(100)),
-                        }}
-                      >
-                        {recipeResult.split('\n').map((recipeItem, index) => (
-                          <Text allowFontScaling={false} key={index} style={styles.recipeItem}>
-                            {recipeItem}
-                          </Text>
-                        ))}
-                      </ScrollView>
+                    </ScrollView>
+                    <View style={styles.scanGroupStyle}>
                       <TouchableOpacity
-                        activeOpacity={0.5}
-                        style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5), alignSelf: 'center'}]}
-                        onPress={saveRecipe}>
-                        <Ionicons
-                          size={fontPixel(18)}
-                          name={'save-outline'}
-                          style={{color: 'white', paddingRight: heightPixel(2)}}
-                        />
-                        <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
-                          Save
+                        style={styles.scanButton}
+                        onPress={scanAndRecipe}>
+                        <Text
+                          allowFontScaling={false}
+                          style={styles.scanButtonText}>
+                          Looks
+                        </Text>
+                        <Text
+                          allowFontScaling={false}
+                          style={styles.scanButtonText}>
+                          good
                         </Text>
                       </TouchableOpacity>
-                    </>
-                  )}
-                </View>
+                      <TouchableOpacity
+                        style={styles.scanButton}
+                        onPress={() => {
+                          setModalVisibleStatus(true);
+                        }}>
+                        <Text
+                          allowFontScaling={false}
+                          style={styles.scanButtonText}>
+                          Edit
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Image
+                      style={styles.logoStyle}
+                      source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                    />
+                  </>
+                )}
+                {recipeResult && (
+                  <>
+                    <ScrollView
+                      contentContainerStyle={{
+                        paddingVertical: heightPixel(5),
+                      }}
+                      style={{
+                        maxHeight: height - heightPixel(100),
+                      }}>
+                      {recipeResult.split('\n').map((recipeItem, index) => (
+                        <Text
+                          allowFontScaling={false}
+                          key={index}
+                          style={styles.recipeItem}>
+                          {recipeItem}
+                        </Text>
+                      ))}
+                    </ScrollView>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={[
+                        styles.goToBackBtnStyle,
+                        {
+                          width: heightPixel(80),
+                          marginBottom: heightPixel(5),
+                          alignSelf: 'center',
+                        },
+                      ]}
+                      onPress={saveRecipe}>
+                      <Ionicons
+                        size={fontPixel(18)}
+                        name={'save-outline'}
+                        style={{color: 'white', paddingRight: heightPixel(2)}}
+                      />
+                      <Text
+                        allowFontScaling={false}
+                        style={{
+                          fontSize: fontPixel(14),
+                          color: 'white',
+                          fontFamily: 'LEMONMILK-Medium',
+                        }}>
+                        Save
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
             </View>
           )}
 
           <View style={styles.descriptionPanel}>
             {isScanning ? (
-              okBtnStatus ? (<>
-                <Text allowFontScaling={false} style={
-                  {
+              okBtnStatus ? (
+                <>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Bold',
                       paddingTop: heightPixel(16),
-                      color: 'black', 
-                      fontSize: fontPixel(22)
-                  }}>A clear pic means a better
-                </Text>
-                <Text allowFontScaling={false} style={
-                  {
+                      color: 'black',
+                      fontSize: fontPixel(22),
+                    }}>
+                    A clear pic means a better
+                  </Text>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Bold',
                       paddingTop: heightPixel(5),
                       paddingBottom: heightPixel(16),
-                      color: 'black', 
-                      fontSize: fontPixel(22)
-                  }}>recipe-steady that shot!
-                </Text>
-              </>) : <></>
+                      color: 'black',
+                      fontSize: fontPixel(22),
+                    }}>
+                    recipe-steady that shot!
+                  </Text>
+                </>
+              ) : (
+                <></>
+              )
             ) : (
               <></>
             )}
           </View>
           <View style={styles.goToHomePanel}>
             {isScanning ? (
-              okBtnStatus ? (<>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  style={styles.goToBackBtnStyle}
-                  onPress={() => {
-                    navigation.navigate('Diets');
-                  }}>
-                  <Ionicons
-                    size={fontPixel(18)}
-                    name={'caret-back'}
-                    style={{color: 'white'}}
-                  />
-                  <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
-                    Diets
-                  </Text>
-                </TouchableOpacity>
-              </>) : <></>
+              okBtnStatus ? (
+                <>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={styles.goToBackBtnStyle}
+                    onPress={() => {
+                      navigation.navigate('Diets');
+                    }}>
+                    <Ionicons
+                      size={fontPixel(18)}
+                      name={'caret-back'}
+                      style={{color: 'white'}}
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(14),
+                        color: 'white',
+                        fontFamily: 'LEMONMILK-Medium',
+                      }}>
+                      Diets
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <></>
+              )
             ) : (
               <></>
             )}
@@ -406,31 +526,47 @@ const RecipeScanScreen = ({ navigation }) => {
 
           <View style={styles.buttonContainer}>
             {isScanning ? (
-              okBtnStatus ? (<>
-                <View style={styles.scanGroupStyle}>
-                  <TouchableOpacity style={styles.scanButton} onPress={captureAndGetIngredients}>
-                    <Text allowFontScaling={false} style={styles.scanButtonText}>Scan</Text>
-                    <Text allowFontScaling={false} style={styles.scanButtonText}>Food</Text>
-                  </TouchableOpacity>
-                </View>
-                <Text allowFontScaling={false} style={
-                  {
+              okBtnStatus ? (
+                <>
+                  <View style={styles.scanGroupStyle}>
+                    <TouchableOpacity
+                      style={styles.scanButton}
+                      onPress={captureAndGetIngredients}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Scan
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Food
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Regular',
                       paddingTop: heightPixel(8),
-                      color: 'black', 
-                      fontSize: fontPixel(18)
-                  }}>
-                  Scan fridge, pantry, or ingredients.
-                </Text>
-                <Text allowFontScaling={false} style={
-                  {
+                      color: 'black',
+                      fontSize: fontPixel(18),
+                    }}>
+                    Scan fridge, pantry, or ingredients.
+                  </Text>
+                  <Text
+                    allowFontScaling={false}
+                    style={{
                       fontFamily: 'LEMONMILK-Regular',
-                      color: 'black', 
-                      fontSize: fontPixel(18)
-                  }}>
-                  TREVBI will create your recipe
-                </Text>
-              </>) : <></>
+                      color: 'black',
+                      fontSize: fontPixel(18),
+                    }}>
+                    TREVBI will create your recipe
+                  </Text>
+                </>
+              ) : (
+                <></>
+              )
             ) : (
               <></>
             )}
@@ -439,11 +575,29 @@ const RecipeScanScreen = ({ navigation }) => {
           {modalVisibleStatus && (
             <View style={styles.modalStyle}>
               <View style={styles.scanGroupStyle}>
-                <TouchableOpacity style={styles.makeRecipeButton} onPress={()=>{setEditRecipeIngredients(recipeIngredients); setModalVisibleStatus(false);}}>
-                  <Text allowFontScaling={false} style={styles.makeRecipeButtonText}>Cancel</Text>
+                <TouchableOpacity
+                  style={styles.makeRecipeButton}
+                  onPress={() => {
+                    setEditRecipeIngredients(recipeIngredients);
+                    setModalVisibleStatus(false);
+                  }}>
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.makeRecipeButtonText}>
+                    Cancel
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.makeRecipeButton} onPress={() => {setRecipeIngredients(editRecipeIngredients); setModalVisibleStatus(false);}}>
-                  <Text allowFontScaling={false} style={styles.makeRecipeButtonText}>Save</Text>
+                <TouchableOpacity
+                  style={styles.makeRecipeButton}
+                  onPress={() => {
+                    setRecipeIngredients(editRecipeIngredients);
+                    setModalVisibleStatus(false);
+                  }}>
+                  <Text
+                    allowFontScaling={false}
+                    style={styles.makeRecipeButtonText}>
+                    Save
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.modalContentsViewStyle}>
@@ -466,8 +620,8 @@ const RecipeScanScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  textBlock: { flexDirection: 'row', flexWrap: 'wrap' },
+  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  textBlock: {flexDirection: 'row', flexWrap: 'wrap'},
   permissionContainer: {
     backgroundColor: '#9bba77',
     alignItems: 'center',
@@ -497,7 +651,11 @@ const styles = StyleSheet.create({
     borderRadius: heightPixel(8),
     marginHorizontal: heightPixel(20),
   },
-  buttonText: { color: 'white', fontSize: fontPixel(18), fontFamily: 'LEMONMILK-Bold' },
+  buttonText: {
+    color: 'white',
+    fontSize: fontPixel(18),
+    fontFamily: 'LEMONMILK-Bold',
+  },
   scanPanelStyle: {
     padding: heightPixel(20),
     flexDirection: 'column',
@@ -523,7 +681,11 @@ const styles = StyleSheet.create({
     marginHorizontal: '3%',
     width: '40%',
   },
-  scanButtonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' },
+  scanButtonText: {
+    color: 'white',
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Medium',
+  },
   scanGroupStyle: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -606,7 +768,11 @@ const styles = StyleSheet.create({
     marginHorizontal: '3%',
     width: '35%',
   },
-  makeRecipeButtonText: { color: 'white', fontSize: fontPixel(16), fontFamily: 'LEMONMILK-Medium' },
+  makeRecipeButtonText: {
+    color: 'white',
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Medium',
+  },
   textInputStyle: {
     borderColor: '#c0c0c0',
     borderWidth: heightPixel(1),

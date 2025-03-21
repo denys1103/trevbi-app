@@ -21,14 +21,14 @@ import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ViewDetailsComponent from './ViewDetails';
 import {GlobalContext} from '../../context';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const RecipesHistory = ({ navigation }) => {
+const RecipesHistory = ({navigation}) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [validEntriesData, setValidEntriesData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { checkEvent } = useContext(GlobalContext);
+  const {checkEvent} = useContext(GlobalContext);
   const [search, setSearch] = useState('');
 
   const createAppDir = async () => {
@@ -47,12 +47,16 @@ const RecipesHistory = ({ navigation }) => {
         const indexData = JSON.parse(await RNFS.readFile(indexRecipeFilePath));
 
         const validatedHistory = await Promise.all(
-          indexData.map(async (entry) => {
-            const photoExists = entry.photoPath ? await RNFS.exists(entry.photoPath) : false;
-            const recipeExists = entry.recipePath ? await RNFS.exists(entry.recipePath) : false;
+          indexData.map(async entry => {
+            const photoExists = entry.photoPath
+              ? await RNFS.exists(entry.photoPath)
+              : false;
+            const recipeExists = entry.recipePath
+              ? await RNFS.exists(entry.recipePath)
+              : false;
 
             return photoExists && recipeExists ? entry : null;
-          })
+          }),
         );
 
         const validEntries = validatedHistory.filter(Boolean);
@@ -60,15 +64,17 @@ const RecipesHistory = ({ navigation }) => {
         await RNFS.writeFile(indexRecipeFilePath, JSON.stringify(validEntries));
 
         const historyEntries = await Promise.all(
-          validEntries.map(async (entry) => {
+          validEntries.map(async entry => {
             const recipeContent = await RNFS.readFile(entry.recipePath, 'utf8');
             const parsedRecipeData = JSON.parse(recipeContent);
-            const extractedText = parsedRecipeData.recipe.split('the ingredients detected in your photo.')[1];
+            const extractedText = parsedRecipeData.recipe.split(
+              'the ingredients detected in your photo.',
+            )[1];
             const textPart = extractedText ? extractedText.slice(0, 100) : '';
             let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
 
             return {...entry, textPart: cleanedTextPart};
-          })
+          }),
         );
 
         historyEntries.reverse();
@@ -80,37 +86,46 @@ const RecipesHistory = ({ navigation }) => {
     }
   };
 
-  const deleteHistoryItem = async (item) => {
+  const deleteHistoryItem = async item => {
     try {
-      const updatedValidEntriesData = validEntriesData.filter((entry) => entry.photoPath !== item.photoPath);
+      const updatedValidEntriesData = validEntriesData.filter(
+        entry => entry.photoPath !== item.photoPath,
+      );
       setValidEntriesData(updatedValidEntriesData);
-      const updatedHistory = historyData.filter((entry) => entry.photoPath !== item.photoPath);
-      await RNFS.writeFile(indexRecipeFilePath, JSON.stringify(updatedValidEntriesData));
+      const updatedHistory = historyData.filter(
+        entry => entry.photoPath !== item.photoPath,
+      );
+      await RNFS.writeFile(
+        indexRecipeFilePath,
+        JSON.stringify(updatedValidEntriesData),
+      );
       setHistoryData(updatedHistory);
-      const updatedSearchHistory = searchHistoryData.filter((entry) => entry.photoPath !== item.photoPath);
+      const updatedSearchHistory = searchHistoryData.filter(
+        entry => entry.photoPath !== item.photoPath,
+      );
       setSearchHistoryData(updatedSearchHistory);
     } catch (error) {
       console.error('Error deleting recipe history item:', error);
     }
   };
 
-  const confirmDelete = (item) => {
+  const confirmDelete = item => {
     Alert.alert(
       'Delete Recipe',
       'Are you sure you want to delete this recipe item?',
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', onPress: () => deleteHistoryItem(item) },
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Delete', onPress: () => deleteHistoryItem(item)},
       ],
-      { cancelable: true }
+      {cancelable: true},
     );
   };
 
   useEffect(() => {
     fetchRecipesHistory();
   }, [checkEvent]);
-  
-  const handleItemClick = (item) => {
+
+  const handleItemClick = item => {
     setSelectedItem(item);
   };
 
@@ -119,33 +134,41 @@ const RecipesHistory = ({ navigation }) => {
   };
 
   if (selectedItem) {
-    return <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />;
+    return (
+      <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />
+    );
   }
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <View>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-          handleItemClick(item)
-        }}
-      >
+          handleItemClick(item);
+        }}>
         <View style={styles.box}>
           <Image
             style={styles.image}
-            source={{ uri: Platform.OS === 'ios' ? item.photoPath : `file://${item.photoPath}` }}
+            source={{
+              uri:
+                Platform.OS === 'ios'
+                  ? item.photoPath
+                  : `file://${item.photoPath}`,
+            }}
           />
           <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={styles.noAvoidStyle} numberOfLines={2}>
-              {item.textPart?item.textPart:'No recipe'}
+            <Text
+              allowFontScaling={false}
+              style={styles.noAvoidStyle}
+              numberOfLines={2}>
+              {item.textPart ? item.textPart : 'No recipe'}
             </Text>
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              confirmDelete(item)
-            }}
-          >
+              confirmDelete(item);
+            }}>
             <Ionicons
               size={fontPixel(40)}
               name={'trash'}
@@ -188,7 +211,10 @@ const RecipesHistory = ({ navigation }) => {
         /> */}
         <TouchableOpacity
           activeOpacity={0.5}
-          style={[styles.goToBackBtnStyle, {width:heightPixel(120), marginBottom: heightPixel(5)}]}
+          style={[
+            styles.goToBackBtnStyle,
+            {width: heightPixel(120), marginBottom: heightPixel(5)},
+          ]}
           onPress={() => {
             navigation.navigate('Diets');
           }}>
@@ -197,7 +223,13 @@ const RecipesHistory = ({ navigation }) => {
             name={'caret-back'}
             style={{color: 'white'}}
           />
-          <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontSize: fontPixel(14),
+              color: 'white',
+              fontFamily: 'LEMONMILK-Medium',
+            }}>
             Let's cook
           </Text>
         </TouchableOpacity>
@@ -206,30 +238,33 @@ const RecipesHistory = ({ navigation }) => {
           source={require('../../../assets/images/TREVBI_Logo.jpg')}
         />
       </View>
-      {searchHistoryData.length > 0 ? 
+      {searchHistoryData.length > 0 ? (
         <FlatList
           data={searchHistoryData}
           keyExtractor={(item, index) => `${item.photoPath}-${index}`}
           renderItem={renderItem}
           // contentContainerStyle={styles.list}
           ListEmptyComponent={
-            <Text allowFontScaling={false} style={styles.emptyMessage}>No history available</Text>
+            <Text allowFontScaling={false} style={styles.emptyMessage}>
+              No history available
+            </Text>
           }
         />
-        :
+      ) : (
         <View style={styles.wrapper}>
           <Image
             style={styles.recipeImgStyle}
             source={require('../../../assets/images/recipes.png')}
           />
-          <Text allowFontScaling={false}
-              style={[
+          <Text
+            allowFontScaling={false}
+            style={[
               styles.titleStyle,
               {
-                  fontFamily: 'LEMONMILK-Light',
+                fontFamily: 'LEMONMILK-Light',
               },
-              ]}>
-              {`You have not saved\nany recipes yet.`}
+            ]}>
+            {`You have not saved\nany recipes yet.`}
           </Text>
           <Image
             style={styles.recipeScreenStyle}
@@ -241,18 +276,22 @@ const RecipesHistory = ({ navigation }) => {
             onPress={() => {
               navigation.navigate('Diets');
             }}>
-            <Text allowFontScaling={false} style={[
-              styles.text_button,
-              {
-                fontFamily: 'LEMONMILK-Medium',
-              },
-            ]}>Let's cook</Text>
+            <Text
+              allowFontScaling={false}
+              style={[
+                styles.text_button,
+                {
+                  fontFamily: 'LEMONMILK-Medium',
+                },
+              ]}>
+              Let's cook
+            </Text>
           </TouchableOpacity>
         </View>
-      }
+      )}
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -319,7 +358,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-space',
     alignItems: 'center',
     width: '100%',
-    height: (SCREEN_HEIGHT - SCREEN_WIDTH * 0.4 - heightPixel(150)),
+    height: SCREEN_HEIGHT - SCREEN_WIDTH * 0.4 - heightPixel(150),
   },
   titleStyle: {
     textAlign: 'center',

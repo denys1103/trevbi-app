@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, {useState, useEffect, useContext, useRef} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,23 +8,16 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import { GlobalContext } from '../../context';
+import {GlobalContext} from '../../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CheckboxTree from 'react-native-tree-checkbox';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  fontPixel,
-  heightPixel,
-  widthPixel,
-} from '../../config';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+import {fontPixel, heightPixel, widthPixel} from '../../config';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const DietsScreen = ({ navigation }) => {
-  const {
-    isLoading,
-    selectedDiets,
-    setSelectedDiets,
-  } = useContext(GlobalContext);
+const DietsScreen = ({navigation}) => {
+  const {isLoading, selectedDiets, setSelectedDiets} =
+    useContext(GlobalContext);
   const recursiveData = [
     {
       name: 'Keto Diet',
@@ -295,7 +288,7 @@ const DietsScreen = ({ navigation }) => {
       ],
     },
   ];
-  
+
   const ref = useRef(null);
 
   // useEffect(() => {
@@ -304,15 +297,17 @@ const DietsScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flex: 1 }} >
+      <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
-        <View
-          style={styles.backgroundStyle}>
+        <View style={styles.backgroundStyle}>
           <View style={styles.wrapper}>
             <View style={styles.titleView}>
               <TouchableOpacity
                 activeOpacity={0.5}
-                style={[styles.goToBackBtnStyle, {width:heightPixel(80), marginBottom: heightPixel(5)}]}
+                style={[
+                  styles.goToBackBtnStyle,
+                  {width: heightPixel(80), marginBottom: heightPixel(5)},
+                ]}
                 onPress={() => {
                   navigation.navigate('Scan');
                 }}>
@@ -321,18 +316,26 @@ const DietsScreen = ({ navigation }) => {
                   name={'caret-back'}
                   style={{color: 'white'}}
                 />
-                <Text allowFontScaling={false} style={{fontSize: fontPixel(14), color: 'white', fontFamily: 'LEMONMILK-Medium'}}>
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontSize: fontPixel(14),
+                    color: 'white',
+                    fontFamily: 'LEMONMILK-Medium',
+                  }}>
                   Back
                 </Text>
               </TouchableOpacity>
-              <Text allowFontScaling={false}
-                  style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
+                    fontFamily: 'LEMONMILK-Bold',
                   },
-                  ]}>
-                  Tap &#9662; for diet details. ☑ Select multiple diets for TREVBI AI to create custom recipes!
+                ]}>
+                Tap &#9662; for diet details. ☑ Select multiple diets for TREVBI
+                AI to create custom recipes!
               </Text>
             </View>
             <View style={styles.descriptionView}>
@@ -342,69 +345,94 @@ const DietsScreen = ({ navigation }) => {
                 keyField="name"
                 textField="name"
                 childField="childs"
-                textStyle={{ color: 'black' }}
-                renderItem={({ item, isSelect, isOpen, onOpen, onClose, onSelect }) => (
+                textStyle={{color: 'black'}}
+                renderItem={({
+                  item,
+                  isSelect,
+                  isOpen,
+                  onOpen,
+                  onClose,
+                  onSelect,
+                }) => (
                   <View style={styles.wrapItem}>
-                    {item.childs ?
+                    {item.childs ? (
                       <TouchableOpacity onPress={onSelect}>
                         <Ionicons
                           size={fontPixel(24)}
-                          name={isSelect ? 'checkbox-outline' : 'square-outline'}
+                          name={
+                            isSelect ? 'checkbox-outline' : 'square-outline'
+                          }
                         />
                       </TouchableOpacity>
-                      :
-                      <Text allowFontScaling={false} style={styles.name}>&#8226;</Text>
-                    }
-                    <Text allowFontScaling={false} style={styles.name}>{item.name}</Text>
-                    {item.childs ? 
-                      (isOpen ? 
-                        (
-                          <TouchableOpacity style={{paddingHorizontal: heightPixel(5)}} onPress={onClose}>
-                            <Ionicons
-                              size={fontPixel(16)}
-                              name={'caret-forward'}
-                            />
-                          </TouchableOpacity>
-                        ) : (
-                          <TouchableOpacity style={{paddingHorizontal: heightPixel(5)}} onPress={onOpen}>
-                            <Ionicons
-                              size={fontPixel(16)}
-                              name={'caret-down-sharp'}
-                            />
-                          </TouchableOpacity>
-                        )
-                      ):<></>
-                    }
+                    ) : (
+                      <Text allowFontScaling={false} style={styles.name}>
+                        &#8226;
+                      </Text>
+                    )}
+                    <Text allowFontScaling={false} style={styles.name}>
+                      {item.name}
+                    </Text>
+                    {item.childs ? (
+                      isOpen ? (
+                        <TouchableOpacity
+                          style={{paddingHorizontal: heightPixel(5)}}
+                          onPress={onClose}>
+                          <Ionicons
+                            size={fontPixel(16)}
+                            name={'caret-forward'}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          style={{paddingHorizontal: heightPixel(5)}}
+                          onPress={onOpen}>
+                          <Ionicons
+                            size={fontPixel(16)}
+                            name={'caret-down-sharp'}
+                          />
+                        </TouchableOpacity>
+                      )
+                    ) : (
+                      <></>
+                    )}
                   </View>
                 )}
                 onSelect={item => {
                   setSelectedDiets(item.join(', '));
                 }}
               />
-              <View style={{ width: SCREEN_WIDTH, paddingHorizontal: heightPixel(8), marginTop: heightPixel(-10), backgroundColor: 'transparent' }}>
-                <Text allowFontScaling={false}
+              <View
+                style={{
+                  width: SCREEN_WIDTH,
+                  paddingHorizontal: heightPixel(8),
+                  marginTop: heightPixel(-10),
+                  backgroundColor: 'transparent',
+                }}>
+                <Text
+                  allowFontScaling={false}
                   style={{
                     fontSize: fontPixel(40),
                     textAlign: 'left',
                     color: 'black',
                     padding: heightPixel(0),
                   }}>
-                    &#8595;
+                  &#8595;
                 </Text>
               </View>
             </View>
-            <View style={{ alignItems: 'center' }}>
-              <Text allowFontScaling={false}
-                  style={[
+            <View style={{alignItems: 'center'}}>
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.titleStyle,
                   {
-                      fontFamily: 'LEMONMILK-Bold',
-                      paddingBottom: heightPixel(10),
-                      paddingTop: heightPixel(0),
-                      fontSize: fontPixel(16),
+                    fontFamily: 'LEMONMILK-Bold',
+                    paddingBottom: heightPixel(10),
+                    paddingTop: heightPixel(0),
+                    fontSize: fontPixel(16),
                   },
-                  ]}>
-                  Click "next" to skip and scan
+                ]}>
+                Click "next" to skip and scan
               </Text>
               <TouchableOpacity
                 style={styles.button}
@@ -412,12 +440,16 @@ const DietsScreen = ({ navigation }) => {
                 onPress={async () => {
                   navigation.navigate('RecipeScan');
                 }}>
-                  <Text allowFontScaling={false} style={[
+                <Text
+                  allowFontScaling={false}
+                  style={[
                     styles.text_button,
                     {
                       fontFamily: 'LEMONMILK-Medium',
                     },
-                  ]}>Next</Text>
+                  ]}>
+                  Next
+                </Text>
               </TouchableOpacity>
               <Image
                 style={styles.logoStyle}
@@ -426,7 +458,7 @@ const DietsScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -496,7 +528,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.6,
     height: SCREEN_WIDTH * 0.28 * 0.6,
     resizeMode: 'cover',
-    marginTop: heightPixel(10)
+    marginTop: heightPixel(10),
   },
   goToBackBtnStyle: {
     flexDirection: 'row',

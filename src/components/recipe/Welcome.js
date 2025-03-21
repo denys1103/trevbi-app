@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, {useState, useContext} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -9,26 +9,20 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
-import { GlobalContext } from '../../context';
+import {GlobalContext} from '../../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CheckBox from '@react-native-community/checkbox';
-import {
-  fontPixel,
-  heightPixel,
-  widthPixel,
-} from '../../config';
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+import {fontPixel, heightPixel, widthPixel} from '../../config';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const WelcomeScreen = ({ navigation }) => {
-  const {
-    isLoading,
-  } = useContext(GlobalContext);
+const WelcomeScreen = ({navigation}) => {
+  const {isLoading} = useContext(GlobalContext);
 
-  const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flex: 1 }} >
+      <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
         <View style={styles.overlay}>
           <Image
@@ -42,76 +36,92 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
         <View style={styles.wrapper}>
           <View style={styles.descriptionView}>
-            <Text allowFontScaling={false}
-                style={[
+            <Text
+              allowFontScaling={false}
+              style={[
                 styles.titleStyle,
                 {
-                    fontFamily: 'LEMONMILK-Bold',
-                    paddingTop: heightPixel(10),
+                  fontFamily: 'LEMONMILK-Bold',
+                  paddingTop: heightPixel(10),
                 },
-                ]}>
-                No recipe? no problem! 
+              ]}>
+              No recipe? no problem!
             </Text>
           </View>
           <View style={styles.descriptionView}>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={{
-                  fontFamily: 'LEMONMILK-Regular',
-                  fontSize: fontPixel(18),
-                  textAlign: 'center',
-                  color: 'black',
-                }}>
+                fontFamily: 'LEMONMILK-Regular',
+                fontSize: fontPixel(18),
+                textAlign: 'center',
+                color: 'black',
+              }}>
               Snap a pic of your fridge or
             </Text>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={{
-                  fontFamily: 'LEMONMILK-Regular',
-                  fontSize: fontPixel(18),
-                  textAlign: 'center',
-                  color: 'black',
-                  paddingTop: heightPixel(10),
-                }}>
+                fontFamily: 'LEMONMILK-Regular',
+                fontSize: fontPixel(18),
+                textAlign: 'center',
+                color: 'black',
+                paddingTop: heightPixel(10),
+              }}>
               pantry—TREVBI AI will whip up the
             </Text>
-            <Text allowFontScaling={false}
+            <Text
+              allowFontScaling={false}
               style={{
-                  fontFamily: 'LEMONMILK-Regular',
-                  fontSize: fontPixel(18),
-                  textAlign: 'center',
-                  color: 'black',
-                  paddingTop: heightPixel(10),
-                }}>
+                fontFamily: 'LEMONMILK-Regular',
+                fontSize: fontPixel(18),
+                textAlign: 'center',
+                color: 'black',
+                paddingTop: heightPixel(10),
+              }}>
               perfect recipe for you!
             </Text>
           </View>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{alignItems: 'center'}}>
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.7}
               onPress={() => {
                 navigation.navigate('Diets');
               }}>
-              <Text allowFontScaling={false} style={[
-                styles.text_button,
-                {
-                  fontFamily: 'LEMONMILK-Medium',
-                },
-              ]}>Let's cook with ai</Text>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.text_button,
+                  {
+                    fontFamily: 'LEMONMILK-Medium',
+                  },
+                ]}>
+                Let's cook with ai
+              </Text>
             </TouchableOpacity>
             <View style={styles.checkboxContainer}>
               <CheckBox
                 disabled={false}
                 value={toggleCheckBox}
-                onValueChange={(newValue) => setToggleCheckBox(newValue)}
-                style={Platform.OS === 'ios' ? styles.checkbox : styles.checkboxAndroid}
+                onValueChange={newValue => setToggleCheckBox(newValue)}
+                style={
+                  Platform.OS === 'ios'
+                    ? styles.checkbox
+                    : styles.checkboxAndroid
+                }
                 boxType={'square'}
               />
-              <Text allowFontScaling={false} style={[
+              <Text
+                allowFontScaling={false}
+                style={[
                   styles.label,
                   {
                     fontFamily: 'LEMONMILK-Light',
                   },
-                ]}>DON'T SHOW THIS SCREEN AGAIN</Text>
+                ]}>
+                DON'T SHOW THIS SCREEN AGAIN
+              </Text>
             </View>
           </View>
         </View>
@@ -147,7 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    paddingTop: heightPixel(10)
+    paddingTop: heightPixel(10),
   },
   descriptionView: {
     flexDirection: 'column',
@@ -199,7 +209,7 @@ const styles = StyleSheet.create({
   },
   checkboxAndroid: {
     alignSelf: 'center',
-    transform: [{ scale: 1.5 }],
+    transform: [{scale: 1.5}],
   },
   label: {
     fontSize: fontPixel(18),
