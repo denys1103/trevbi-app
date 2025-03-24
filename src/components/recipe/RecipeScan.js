@@ -59,7 +59,8 @@ const RecipeScanScreen = ({navigation}) => {
   const [recipeIngredients, setRecipeIngredients] = useState(null);
   const [recipeResult, setRecipeResult] = useState(null);
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
-  const {selectedDiets, setCheckEvent, checkEvent} = useContext(GlobalContext);
+  const {selectedDiets, selectedMeal, setCheckEvent, checkEvent} =
+    useContext(GlobalContext);
 
   const device = useCameraDevice('back', {
     physicalDevices: [
@@ -157,7 +158,7 @@ const RecipeScanScreen = ({navigation}) => {
             );
             if (response.data.success) {
               setRecipeIngredients(response.data.results);
-              setEditRecipeIngredients(response.data.results);
+              setEditRecipeIngredients(`${response.data.results}\n\n\n\n`);
             } else {
               console.log('server error!');
             }
@@ -193,9 +194,10 @@ const RecipeScanScreen = ({navigation}) => {
               name: 'food.jpg',
             });
             formData.append('diets', selectedDiets);
+            formData.append('meal', selectedMeal);
             formData.append('ingredients', recipeIngredients);
 
-            const response = await client.post('/makeRecipe', formData, {
+            const response = await client.post('/makeMealRecipe', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
@@ -578,7 +580,7 @@ const RecipeScanScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.makeRecipeButton}
                   onPress={() => {
-                    setEditRecipeIngredients(recipeIngredients);
+                    setEditRecipeIngredients(`${recipeIngredients}\n\n\n\n`);
                     setModalVisibleStatus(false);
                   }}>
                   <Text
@@ -590,7 +592,7 @@ const RecipeScanScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.makeRecipeButton}
                   onPress={() => {
-                    setRecipeIngredients(editRecipeIngredients);
+                    setRecipeIngredients(editRecipeIngredients.trimEnd());
                     setModalVisibleStatus(false);
                   }}>
                   <Text

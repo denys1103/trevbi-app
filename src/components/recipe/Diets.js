@@ -16,8 +16,23 @@ import {fontPixel, heightPixel, widthPixel} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const DietsScreen = ({navigation}) => {
-  const {isLoading, selectedDiets, setSelectedDiets} =
-    useContext(GlobalContext);
+  const {
+    isLoading,
+    selectedDiets,
+    setSelectedDiets,
+    selectedMeal,
+    setSelectedMeal,
+  } = useContext(GlobalContext);
+
+  const toggleMeal = meal => {
+    setSelectedMeal(meal);
+  };
+
+  const meals = [
+    {key: 'breakfast', label: 'Breakfast'},
+    {key: 'lunch', label: 'Lunch'},
+    {key: 'dinner', label: 'Dinner'},
+  ];
   const recursiveData = [
     {
       name: 'Keto Diet',
@@ -339,6 +354,41 @@ const DietsScreen = ({navigation}) => {
               </Text>
             </View>
             <View style={styles.descriptionView}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: heightPixel(6),
+                  paddingBottom: heightPixel(10),
+                }}>
+                {meals.map(meal => (
+                  <View
+                    key={meal.key}
+                    style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TouchableOpacity onPress={() => toggleMeal(meal.key)}>
+                      <Ionicons
+                        size={fontPixel(24)}
+                        name={
+                          selectedMeal === meal.key
+                            ? 'checkbox-outline'
+                            : 'square-outline'
+                        }
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(16),
+                        color: 'black',
+                        fontFamily: 'LEMONMILK-Light',
+                        marginLeft: heightPixel(5),
+                      }}>
+                      {meal.label}
+                    </Text>
+                  </View>
+                ))}
+              </View>
               <CheckboxTree
                 ref={ref}
                 data={recursiveData}
@@ -405,7 +455,7 @@ const DietsScreen = ({navigation}) => {
                 style={{
                   width: SCREEN_WIDTH,
                   paddingHorizontal: heightPixel(8),
-                  marginTop: heightPixel(-10),
+                  marginTop: heightPixel(-20),
                   backgroundColor: 'transparent',
                 }}>
                 <Text
@@ -494,9 +544,9 @@ const styles = StyleSheet.create({
   },
   descriptionView: {
     width: '100%',
-    paddingVertical: heightPixel(20),
+    paddingBottom: heightPixel(20),
     paddingHorizontal: heightPixel(10),
-    height: '60%',
+    height: '50%',
   },
   text_button: {
     fontSize: fontPixel(20),
