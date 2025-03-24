@@ -155,7 +155,7 @@ const RecipeScanScreen = ({navigation}) => {
           );
           if (response.data.success) {
             setRecipeIngredients(response.data.results);
-            setEditRecipeIngredients(`${response.data.results}\n\n\n\n`);
+            setEditRecipeIngredients(`${response.data.results}\n\n\n\n\n`);
           } else {
             console.log('server error!');
           }
@@ -574,7 +574,7 @@ const RecipeScanScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.makeRecipeButton}
                   onPress={() => {
-                    setEditRecipeIngredients(`${recipeIngredients}\n\n\n\n`);
+                    setEditRecipeIngredients(`${recipeIngredients}\n\n\n\n\n`);
                     setModalVisibleStatus(false);
                   }}>
                   <Text

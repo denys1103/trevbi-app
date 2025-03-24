@@ -455,13 +455,13 @@ const DietsScreen = ({navigation}) => {
                 style={{
                   width: SCREEN_WIDTH,
                   paddingHorizontal: heightPixel(8),
-                  marginTop: heightPixel(-20),
+                  marginTop: heightPixel(-10),
                   backgroundColor: 'transparent',
                 }}>
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontSize: fontPixel(40),
+                    fontSize: fontPixel(30),
                     textAlign: 'left',
                     color: 'black',
                     padding: heightPixel(0),
