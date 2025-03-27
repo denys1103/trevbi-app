@@ -18,14 +18,14 @@ const Stack = createNativeStackNavigator();
 const Navigation = () => {
   const {userInfo, splashLoading} = useContext(GlobalContext);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator key={userInfo?.token ? 'authenticated' : 'guest'}>
       {splashLoading ? (
         <Stack.Screen
           name="Splash Screen"
           component={SplashScreen}
           options={{headerShown: false}}
         />
-      ) : userInfo.token ? (
+      ) : userInfo?.token ? (
         <>
           <Stack.Screen
             name="Tabs"
