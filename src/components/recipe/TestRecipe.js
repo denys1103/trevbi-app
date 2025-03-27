@@ -34,6 +34,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import client, {
   fontPixel,
   heightPixel,
+  widthPixel,
   appDir,
   indexRecipeFilePath,
 } from '../../config';
@@ -427,6 +428,7 @@ const RecipeScanScreen = ({navigation}) => {
                         styles.goToBackBtnStyle,
                         {
                           width: heightPixel(80),
+                          marginTop: heightPixel(10),
                           marginBottom: heightPixel(5),
                           alignSelf: 'center',
                         },
@@ -540,7 +542,7 @@ const RecipeScanScreen = ({navigation}) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <Text
+                  {/* <Text
                     allowFontScaling={false}
                     style={{
                       fontFamily: 'LEMONMILK-Regular',
@@ -558,7 +560,7 @@ const RecipeScanScreen = ({navigation}) => {
                       fontSize: fontPixel(18),
                     }}>
                     TREVBI will create your recipe
-                  </Text>
+                  </Text> */}
                 </>
               ) : (
                 <></>
@@ -566,6 +568,93 @@ const RecipeScanScreen = ({navigation}) => {
             ) : (
               <></>
             )}
+          </View>
+
+          <View style={styles.tabBarContainer}>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.tabItemStyle}
+              onPress={() => console.log('')}>
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../../assets/images/scan_active.png')}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(11),
+                  color: '#61a148',
+                }}>
+                SCAN
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.tabItemStyle}
+              onPress={() => navigation.navigate('Recipes')}>
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../../assets/images/recipes.png')}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(11),
+                  color: '#000000',
+                }}>
+                RECIPES
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.tabItemStyle}
+              onPress={() => navigation.navigate('History')}>
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../../assets/images/history.png')}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(11),
+                  color: '#000000',
+                }}>
+                HISTORY
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              style={styles.tabItemStyle}
+              onPress={() => navigation.navigate('Profile')}>
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../../assets/images/profile.png')}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(11),
+                  color: '#000000',
+                }}>
+                PROFILE
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {modalVisibleStatus && (
@@ -628,7 +717,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: heightPixel(40),
+    bottom: heightPixel(80),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -654,6 +743,7 @@ const styles = StyleSheet.create({
   },
   scanPanelStyle: {
     padding: heightPixel(20),
+    paddingBottom: heightPixel(80),
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
@@ -797,6 +887,26 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     marginTop: heightPixel(10),
     alignSelf: 'center',
+  },
+  tabBarContainer: {
+    position: 'absolute',
+    bottom: heightPixel(0),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#efefef',
+    paddingLeft: widthPixel(10),
+    paddingRight: widthPixel(10),
+    paddingBottom: heightPixel(12),
+    paddingTop: heightPixel(5),
+    height: heightPixel(70),
+    borderTopColor: '#bbbbbb',
+  },
+  tabItemStyle: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

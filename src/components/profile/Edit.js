@@ -153,7 +153,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
       <View style={styles.pencilContainer}>
         <TouchableOpacity onPress={() => setEditVisible(false)}>
           <MaterialCommunityIcons
-            color={'#7d7d7d'}
+            color={'#72a045'}
             name="arrow-left-bold-box-outline"
             size={fontPixel(28)}
           />
@@ -173,18 +173,24 @@ export function ProfileEdit({setEditVisible, navigation}) {
         <TouchableOpacity
           style={styles.changeAvatarButton}
           onPress={chooseAvataPhotoFile}>
-          <Text style={styles.changeAvatarButtonText}>Change Avatar</Text>
+          <Text allowFontScaling={false} style={styles.changeAvatarButtonText}>
+            Change Avatar
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.form}>
-        <Text style={styles.label}>Name</Text>
+        <Text allowFontScaling={false} style={styles.label}>
+          Name
+        </Text>
         <TextInput
           style={styles.input}
           placeholder="Enter Name"
           value={fullname}
           onChangeText={setName}
         />
-        <Text style={styles.label}>Gender</Text>
+        <Text allowFontScaling={false} style={styles.label}>
+          Gender
+        </Text>
         <SelectList
           setSelected={key => setGenderValue(key)}
           placeholder={'--Select Gender--'}
@@ -202,7 +208,9 @@ export function ProfileEdit({setEditVisible, navigation}) {
           data={gender}
           save="key"
         />
-        <Text style={styles.label}>Date of Birth</Text>
+        <Text allowFontScaling={false} style={styles.label}>
+          Date of Birth
+        </Text>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
@@ -251,14 +259,18 @@ export function ProfileEdit({setEditVisible, navigation}) {
             setOpenBirth(false);
           }}
         />
-        <Text style={styles.label}>Phone Number</Text>
+        <Text allowFontScaling={false} style={styles.label}>
+          Phone Number
+        </Text>
         <TextInput
           style={styles.input}
           placeholder=""
           value={phone_num}
           onChangeText={handlePhoneNumChange}
         />
-        <Text style={styles.label}>Email address</Text>
+        <Text allowFontScaling={false} style={styles.label}>
+          Email address
+        </Text>
         <TextInput
           style={styles.input}
           placeholder=""
@@ -267,7 +279,9 @@ export function ProfileEdit({setEditVisible, navigation}) {
           editable={false}
         />
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Save</Text>
+          <Text allowFontScaling={false} style={styles.buttonText}>
+            Save
+          </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

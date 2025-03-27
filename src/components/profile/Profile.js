@@ -52,7 +52,7 @@ export function Profile({setEditVisible, navigation}) {
       <View style={styles.pencilContainer}>
         <TouchableOpacity onPress={() => setEditVisible(true)}>
           <MaterialCommunityIcons
-            color={'#7d7d7d'}
+            color={'#72a045'}
             name="account-edit"
             size={fontPixel(28)}
           />
@@ -78,8 +78,10 @@ export function Profile({setEditVisible, navigation}) {
             size={fontPixel(32)}
           />
           <View style={styles.boxContent}>
-            <Text style={styles.label}>Name</Text>
-            <Text style={styles.profileDataStyle}>
+            <Text allowFontScaling={false} style={styles.label}>
+              Name
+            </Text>
+            <Text allowFontScaling={false} style={styles.profileDataStyle}>
               {profile?.fullname ? profile.fullname : ''}
             </Text>
           </View>
@@ -91,8 +93,10 @@ export function Profile({setEditVisible, navigation}) {
             size={fontPixel(32)}
           />
           <View style={styles.boxContent}>
-            <Text style={styles.label}>Gender</Text>
-            <Text style={styles.profileDataStyle}>
+            <Text allowFontScaling={false} style={styles.label}>
+              Gender
+            </Text>
+            <Text allowFontScaling={false} style={styles.profileDataStyle}>
               {profile?.gender
                 ? profile.gender === '0'
                   ? 'Male'
@@ -108,8 +112,10 @@ export function Profile({setEditVisible, navigation}) {
             size={fontPixel(32)}
           />
           <View style={styles.boxContent}>
-            <Text style={styles.label}>Date of Birth</Text>
-            <Text style={styles.profileDataStyle}>
+            <Text allowFontScaling={false} style={styles.label}>
+              Date of Birth
+            </Text>
+            <Text allowFontScaling={false} style={styles.profileDataStyle}>
               {profile?.birth
                 ? format_date(profile.birth)
                 : format_date(new Date())}
@@ -123,8 +129,10 @@ export function Profile({setEditVisible, navigation}) {
             size={fontPixel(32)}
           />
           <View style={styles.boxContent}>
-            <Text style={styles.label}>Phone Number</Text>
-            <Text style={styles.profileDataStyle}>
+            <Text allowFontScaling={false} style={styles.label}>
+              Phone Number
+            </Text>
+            <Text allowFontScaling={false} style={styles.profileDataStyle}>
               {profile?.phone_num ? profile.phone_num : ''}
             </Text>
           </View>
@@ -136,14 +144,18 @@ export function Profile({setEditVisible, navigation}) {
             size={fontPixel(32)}
           />
           <View style={styles.boxContent}>
-            <Text style={styles.label}>Email address</Text>
-            <Text style={styles.profileDataStyle}>
+            <Text allowFontScaling={false} style={styles.label}>
+              Email address
+            </Text>
+            <Text allowFontScaling={false} style={styles.profileDataStyle}>
               {profile?.email ? profile.email : ''}
             </Text>
           </View>
         </View>
         <TouchableOpacity style={styles.button} onPress={logout}>
-          <Text style={styles.buttonText}>Logout</Text>
+          <Text allowFontScaling={false} style={styles.buttonText}>
+            Logout
+          </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

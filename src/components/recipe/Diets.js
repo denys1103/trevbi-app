@@ -341,6 +341,54 @@ const DietsScreen = ({navigation}) => {
                   Back
                 </Text>
               </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.titleStyle,
+                    {
+                      fontFamily: 'LEMONMILK-Bold',
+                    },
+                  ]}>
+                  Tap
+                </Text>
+                <Ionicons
+                  style={{paddingHorizontal: heightPixel(2)}}
+                  color={'black'}
+                  size={fontPixel(16)}
+                  name={'caret-down-sharp'}
+                />
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.titleStyle,
+                    {
+                      fontFamily: 'LEMONMILK-Bold',
+                    },
+                  ]}>
+                  for diet details.
+                </Text>
+                <Ionicons
+                  style={{paddingHorizontal: heightPixel(2)}}
+                  size={fontPixel(24)}
+                  name={'checkbox-outline'}
+                />
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.titleStyle,
+                    {
+                      fontFamily: 'LEMONMILK-Bold',
+                    },
+                  ]}>
+                  Select
+                </Text>
+              </View>
               <Text
                 allowFontScaling={false}
                 style={[
@@ -349,8 +397,17 @@ const DietsScreen = ({navigation}) => {
                     fontFamily: 'LEMONMILK-Bold',
                   },
                 ]}>
-                Tap &#9662; for diet details. ☑ Select multiple diets for TREVBI
-                AI to create custom recipes!
+                multiple diets for TREVBI AI to
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.titleStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Bold',
+                  },
+                ]}>
+                create custom recipes!
               </Text>
             </View>
             <View style={styles.descriptionView}>
@@ -428,6 +485,7 @@ const DietsScreen = ({navigation}) => {
                           style={{paddingHorizontal: heightPixel(5)}}
                           onPress={onClose}>
                           <Ionicons
+                            color={'black'}
                             size={fontPixel(16)}
                             name={'caret-forward'}
                           />
@@ -437,6 +495,7 @@ const DietsScreen = ({navigation}) => {
                           style={{paddingHorizontal: heightPixel(5)}}
                           onPress={onOpen}>
                           <Ionicons
+                            color={'black'}
                             size={fontPixel(16)}
                             name={'caret-down-sharp'}
                           />
@@ -534,7 +593,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(18),
     color: 'black',
-    padding: heightPixel(5),
+    padding: heightPixel(0),
   },
   titleView: {
     flexDirection: 'column',

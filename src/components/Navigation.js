@@ -26,11 +26,28 @@ const Navigation = () => {
           options={{headerShown: false}}
         />
       ) : userInfo.token ? (
-        <Stack.Screen
-          name="Tabs"
-          component={Tabs}
-          options={{headerShown: false}}
-        />
+        <>
+          <Stack.Screen
+            name="Tabs"
+            component={Tabs}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="RecipeWelcome"
+            component={RecipeWelcome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Diets"
+            component={Diets}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="RecipeScan"
+            component={RecipeScan}
+            options={{headerShown: false}}
+          />
+        </>
       ) : (
         <>
           <Stack.Screen
