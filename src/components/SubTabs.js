@@ -7,7 +7,8 @@ import IosScanComponent from './scan/ios';
 import IosScanTestComponent from './scan/test';
 import HistoryComponent from './scan/History';
 import RecipesComponent from './recipe/Recipes';
-import {Text, View, Image, StyleSheet, Platform} from 'react-native';
+import {ProfileMenu} from './profile/index';
+import {Image, Platform} from 'react-native';
 
 import {widthPixel, heightPixel} from '../config';
 
@@ -119,6 +120,33 @@ function CustomTabs() {
                   resizeMode: 'contain',
                 }}
                 source={require('../../assets/images/history.png')}
+              />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileMenu}
+        options={{
+          tabBarLabel: 'PROFILE',
+          tabBarIcon: ({focused, color, size}) =>
+            focused ? (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/profile_active.png')}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: widthPixel(40),
+                  height: widthPixel(40),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../assets/images/profile.png')}
               />
             ),
         }}

@@ -18,18 +18,13 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {stringMd5} from 'react-native-quick-md5';
 import Toast from 'react-native-toast-message';
 import client from '../config';
-import {
-  fontPixel,
-  pixelSizeHorizontal,
-  heightPixel,
-  widthPixel,
-} from '../config';
+import {fontPixel, heightPixel, widthPixel} from '../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const {isLoading, error, isConnected} = useContext(GlobalContext);
+  const {isLoading, login, isConnected} = useContext(GlobalContext);
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
@@ -49,7 +44,7 @@ const LoginScreen = ({navigation}) => {
       });
       return;
     }
-    if (emailAddress == '') {
+    if (emailAddress === '') {
       Toast.show({
         type: 'error',
         text1: 'Warning',
@@ -97,7 +92,7 @@ const LoginScreen = ({navigation}) => {
   const onClickVerify = () => {
     const enc = stringMd5(code);
     console.log(enc, code_1, code);
-    if (code == '' || enc != code_1) {
+    if (code === '' || enc !== code_1) {
       Toast.show({
         type: 'error',
         text1: 'Alert',
@@ -127,7 +122,7 @@ const LoginScreen = ({navigation}) => {
       return;
     }
 
-    if (rePassword != confirmPassword) {
+    if (rePassword !== confirmPassword) {
       Toast.show({
         type: 'error',
         text1: 'Warning',
@@ -225,7 +220,7 @@ const LoginScreen = ({navigation}) => {
                   placeholderTextColor="#72a045aa"
                   secureTextEntry
                 />
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                {/* <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text
                     style={[
                       styles.text_forgot,
@@ -241,13 +236,21 @@ const LoginScreen = ({navigation}) => {
                     }}>
                     <Text style={styles.link}>Click Here</Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
                 <View style={{alignItems: 'center'}}>
                   <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.7}
                     onPress={async () => {
-                      // login(email, password, fcmToken);
+                      if (email && password) {
+                        login(email, password);
+                      } else {
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Warning',
+                          text2: 'Email / password is required!',
+                        });
+                      }
                     }}>
                     <Text style={styles.text_button}>Login</Text>
                   </TouchableOpacity>
@@ -280,7 +283,7 @@ const LoginScreen = ({navigation}) => {
                   flexDirection: 'column',
                   justifyContent: 'space-evenly',
                 }}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                {/* <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                   <Text
                     style={[
                       styles.text_forgot,
@@ -290,7 +293,7 @@ const LoginScreen = ({navigation}) => {
                     ]}>
                     or Sign up with
                   </Text>
-                </View>
+                </View> */}
                 <View
                   style={{
                     flexDirection: 'row',
@@ -510,9 +513,9 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: widthPixel(20),
     padding: heightPixel(15),
-    borderWidth: 1,
+    borderWidth: heightPixel(1),
     borderColor: '#72a045',
-    borderRadius: 10,
+    borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
     color: '#72a045',
     textAlign: 'center',
@@ -520,9 +523,9 @@ const styles = StyleSheet.create({
   input_password: {
     marginBottom: widthPixel(5),
     padding: heightPixel(15),
-    borderWidth: 1,
+    borderWidth: heightPixel(1),
     borderColor: '#72a045',
-    borderRadius: 10,
+    borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
     color: '#72a045',
     textAlign: 'center',
@@ -557,22 +560,9 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '50%',
-    height: 100,
+    height: heightPixel(100),
     resizeMode: 'contain',
     marginTop: heightPixel(20),
-  },
-  text0: {
-    fontSize: fontPixel(48),
-    color: 'white',
-    paddingHorizontal: pixelSizeHorizontal(40),
-  },
-  text1: {
-    fontSize: fontPixel(48),
-    color: 'white',
-  },
-  text2: {
-    fontSize: fontPixel(20),
-    color: 'white',
   },
   text_welcome: {
     fontSize: fontPixel(28),
@@ -592,99 +582,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#428242',
     borderRadius: 5,
     paddingVertical: widthPixel(15),
-    paddingHorizontal: 20,
+    paddingHorizontal: heightPixel(20),
     marginBottom: heightPixel(20),
     alignItems: 'center',
     justifyContent: 'center',
     width: '70%',
-  },
-  to_link: {
-    width: heightPixel(60),
-    height: heightPixel(60),
-  },
-  selectModalStyle: {
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    width: SCREEN_WIDTH * 0.8,
-    height: heightPixel(300),
-    padding: heightPixel(10),
-    alignItems: 'center',
-    borderRadius: heightPixel(10),
-    position: 'absolute',
-    left: SCREEN_WIDTH * 0.1,
-    top: SCREEN_HEIGHT / 3,
-    borderWidth: 1,
-    borderColor: '#d1d1d1',
-    zIndex: 5,
-    elevation: 5,
-  },
-  modal_box_title: {
-    fontSize: fontPixel(24),
-    color: '#242424',
-  },
-  dropdown3BtnStyle: {
-    width: '100%',
-    marginBottom: widthPixel(10),
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 10,
-    backgroundColor: '#555555',
-    color: 'white',
-    textAlign: 'center',
-  },
-  dropdown3BtnChildStyle: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: heightPixel(18),
-  },
-  dropdown3BtnImage: {
-    width: heightPixel(40),
-    height: heightPixel(40),
-    resizeMode: 'cover',
-  },
-  dropdown3BtnTxt: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginHorizontal: heightPixel(12),
-  },
-  dropdown3DropdownStyle: {backgroundColor: 'slategray'},
-  dropdown3RowStyle: {
-    backgroundColor: 'slategray',
-    borderWidth: 1,
-    borderColor: 'black',
-    borderBottomColor: '#444',
-    height: heightPixel(50),
-  },
-  dropdown3RowChildStyle: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingHorizontal: heightPixel(18),
-  },
-  dropdownRowImage: {
-    width: heightPixel(40),
-    height: heightPixel(40),
-    resizeMode: 'cover',
-  },
-  dropdown3RowTxt: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginHorizontal: heightPixel(12),
-  },
-  select_button: {
-    marginTop: heightPixel(20),
-    backgroundColor: '#428242',
-    borderRadius: 5,
-    paddingVertical: widthPixel(10),
-    paddingHorizontal: widthPixel(30),
-    marginBottom: heightPixel(20),
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   popup_view: {
     backgroundColor: '#eeeeee',
@@ -694,7 +596,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: SCREEN_WIDTH / 10,
     top: SCREEN_HEIGHT / 4,
-    borderWidth: 1,
+    borderWidth: heightPixel(1),
     borderColor: '#d1d1d1',
     zIndex: 5,
     elevation: 5,

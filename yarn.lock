@@ -3234,9 +3234,12 @@ __metadata:
     prettier: 2.8.8
     react: 18.2.0
     react-native: 0.74.1
+    react-native-date-picker: ^5.0.11
     react-native-dotenv: ^3.4.11
+    react-native-dropdown-select-list: ^2.0.5
     react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.21.2
+    react-native-image-picker: ^8.2.0
     react-native-loading-spinner-overlay: ^3.0.1
     react-native-quick-md5: ^3.0.6
     react-native-reanimated: ^3.5.4
@@ -9109,6 +9112,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-date-picker@npm:^5.0.11":
+  version: 5.0.11
+  resolution: "react-native-date-picker@npm:5.0.11"
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+  checksum: 2523bd74751753235dbdfff28239275996ab68e1b8905cf29b3c8dc005ba4b3526b73266e73cf1d381c0403cfb8d158f8073831cc292a09b8317059f8d7fdb03
+  languageName: node
+  linkType: hard
+
 "react-native-dotenv@npm:^3.4.11":
   version: 3.4.11
   resolution: "react-native-dotenv@npm:3.4.11"
@@ -9117,6 +9130,13 @@ __metadata:
   peerDependencies:
     "@babel/runtime": ^7.20.6
   checksum: 3ebac2c2ed79dd7e4920fd3fc2da9187413b7190231618e4858b46c47833677838b96d531afe7bd5c4b0a60454dba40cb8708722210df5d522e30aefbf41da05
+  languageName: node
+  linkType: hard
+
+"react-native-dropdown-select-list@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "react-native-dropdown-select-list@npm:2.0.5"
+  checksum: bbf3f05cceae402aab122a83026521da3125e25a1bead5cb2a739316788a8980fc86229c6144cbce9ea6ab58e91a3d7291e41de9a9715ca9e980c05af81486c3
   languageName: node
   linkType: hard
 
@@ -9147,6 +9167,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: ad4ada2221d16ce56ecff0c5ab1d4a0220937e9e408c85729d9150b2eb3fdc0c5a92597bd4068a9b3e1b951380c28691f5e401071cc257c69008d39c9269f0d4
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "react-native-image-picker@npm:8.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: d261d4f0571b771c5d2d8a1d5c129743a4993318a454e5bf7850db0fa452d4d5da2215a2f2af3879cd38211b864b3ba77d1d09255ff1f43112b3dcf985d6c233
   languageName: node
   linkType: hard
 

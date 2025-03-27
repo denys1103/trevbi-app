@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
+import Toast from 'react-native-toast-message';
 
 import {
   fontPixel,
@@ -28,7 +29,7 @@ const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [Confpassword, setConfPassword] = useState(null);
-  const {isLoading, error} = useContext(GlobalContext);
+  const {isLoading, register} = useContext(GlobalContext);
 
   // useEffect(() => {
   //   LogBox.ignoreLogs([
@@ -53,15 +54,7 @@ const RegisterScreen = ({navigation}) => {
                   style={styles.logo}
                   source={require('../../assets/images/TREVBI_Transparent_Logo.png')}
                 />
-                <Text
-                  style={[
-                    styles.text_welcome,
-                    {
-                      fontFamily: 'MyriadPro-Regular',
-                    },
-                  ]}>
-                  Sign Up
-                </Text>
+                <Text style={styles.text_welcome}>Sign Up</Text>
               </View>
               <View style={(styles.input_view, {width: '65%'})}>
                 <TextInput
@@ -99,20 +92,27 @@ const RegisterScreen = ({navigation}) => {
                     style={styles.button}
                     activeOpacity={0.7}
                     onPress={async () => {
-                      console.log('register action');
-                      // register(name, email, password, Confpassword, navigation, selectedOption);
+                      if (name && email && password && Confpassword) {
+                        register(
+                          name,
+                          email,
+                          password,
+                          Confpassword,
+                          navigation,
+                        );
+                      } else {
+                        Toast.show({
+                          type: 'error',
+                          text1: 'Warning',
+                          text2: 'Name / email / password is required!',
+                        });
+                      }
                     }}>
                     <Text style={styles.text_button}>Register</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <Text
-                    style={[
-                      styles.text_forgot,
-                      {
-                        fontFamily: 'MyriadPro-Regular',
-                      },
-                    ]}>
+                  <Text style={styles.text_forgot}>
                     Already have an account?{' '}
                   </Text>
                   <TouchableOpacity
@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: widthPixel(20),
     padding: heightPixel(15),
-    borderWidth: 1,
+    borderWidth: heightPixel(1),
     borderColor: '#72a045',
-    borderRadius: 10,
+    borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
     color: '#72a045',
     textAlign: 'center',
@@ -153,9 +153,9 @@ const styles = StyleSheet.create({
   input_password: {
     marginBottom: widthPixel(5),
     padding: heightPixel(15),
-    borderWidth: 1,
+    borderWidth: heightPixel(1),
     borderColor: '#72a045',
-    borderRadius: 10,
+    borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
     color: '#72a045',
     textAlign: 'center',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '50%',
-    height: 100,
+    height: heightPixel(100),
     resizeMode: 'contain',
   },
   text0: {
@@ -222,9 +222,9 @@ const styles = StyleSheet.create({
   button: {
     marginTop: heightPixel(20),
     backgroundColor: '#428242',
-    borderRadius: 5,
+    borderRadius: heightPixel(5),
     paddingVertical: widthPixel(15),
-    paddingHorizontal: 20,
+    paddingHorizontal: heightPixel(20),
     marginBottom: heightPixel(20),
     alignItems: 'center',
     justifyContent: 'center',

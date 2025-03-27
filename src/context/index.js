@@ -2,7 +2,7 @@ import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import client from '../config';
 import {baseURL} from '../config';
-import {showAlert, closeAlert} from 'react-native-customisable-alert';
+import Toast from 'react-native-toast-message';
 import NetInfo from '@react-native-community/netinfo';
 
 export const GlobalContext = createContext({});
@@ -28,6 +28,202 @@ export const GlobalContextProvider = ({children}) => {
       unsubscribe();
     };
   }, []);
+
+  const register = async (name, email, password, Confpassword, navigation) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/create-user', {
+        fullname: name,
+        email,
+        password,
+        confirmPassword: Confpassword,
+      });
+
+      if (data.success) {
+        let userInfo = data;
+        setUserInfo(userInfo);
+        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        setIsLoading(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Alert',
+          text2: 'Your account has been successfully created',
+        });
+        navigation.replace('Login');
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
+  const login = async (email, password) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/sign-in', {
+        email,
+        password,
+      });
+
+      if (data.success) {
+        let userInfo = data;
+        setUserInfo(userInfo);
+        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        if (data.token) {
+          client.defaults.headers.common.authorization = data.token;
+        }
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  const logout = () => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    client
+      .post('/sign-out', {})
+      .then(res => {
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      })
+      .catch(e => {
+        setIsLoading(false);
+      });
+  };
+
+  const uploadAvata = async (...photodata) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const responseData = await fetch(baseURL + '/upload-avata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: client.defaults.headers.common.authorization,
+        },
+        body: photodata[0],
+      });
+      let data = await responseData.json();
+      if (data.success) {
+        setIsLoading(false);
+        userInfo.user = data.user;
+        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        setCheckEvent(!checkEvent);
+        Toast.show({
+          type: 'success',
+          text1: 'Alert',
+          text2: 'Profile picture has been updated.',
+        });
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
+  const saveProfile = async (...profile) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/save-profile', {
+        ...profile,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        userInfo.user = data.user;
+        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        setCheckEvent(!checkEvent);
+        Toast.show({
+          type: 'success',
+          text1: 'Alert',
+          text2: 'Updates saved!',
+        });
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
 
   const isLoggedIn = async () => {
     try {
@@ -66,6 +262,11 @@ export const GlobalContextProvider = ({children}) => {
         setSelectedDiets,
         selectedMeal,
         setSelectedMeal,
+        register,
+        login,
+        logout,
+        uploadAvata,
+        saveProfile,
       }}>
       {children}
     </GlobalContext.Provider>
