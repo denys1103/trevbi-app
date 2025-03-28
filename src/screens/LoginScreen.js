@@ -17,6 +17,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import {stringMd5} from 'react-native-quick-md5';
 import Toast from 'react-native-toast-message';
+import CheckBox from '@react-native-community/checkbox';
 import client from '../config';
 import {fontPixel, heightPixel, widthPixel} from '../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -34,6 +35,7 @@ const LoginScreen = ({navigation}) => {
   const [code_1, setCode_1] = useState('');
   const [step, setStep] = useState(0);
   const [indicator, showIndicator] = useState(false);
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const onClickSend = () => {
     if (!isConnected) {
@@ -186,19 +188,42 @@ const LoginScreen = ({navigation}) => {
               <View style={styles.logo_view}>
                 <Image
                   style={styles.logo}
-                  source={require('../../assets/images/TREVBI_Transparent_Logo.png')}
+                  source={require('../../assets/images/TREVBI_Transparent_Login_Logo.png')}
                 />
                 <Text
+                  allowFontScaling={false}
                   style={[
                     styles.text_welcome,
                     {
-                      fontFamily: 'MyriadPro-Regular',
+                      fontFamily: 'LEMONMILK-Bold',
                     },
                   ]}>
-                  Welcome!
+                  Welcome back
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.text_welcome_description,
+                    {
+                      fontFamily: 'LEMONMILK-Light',
+                      paddingTop: heightPixel(10),
+                    },
+                  ]}>
+                  Food for thought
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.text_welcome_description,
+                    {
+                      fontFamily: 'LEMONMILK-Light',
+                      paddingBottom: heightPixel(10),
+                    },
+                  ]}>
+                  And transparency
                 </Text>
               </View>
-              <View style={{height: '5%'}} />
+              <View style={{height: '2%'}} />
               <View style={(styles.input_view, {width: '65%'})}>
                 <TextInput
                   style={styles.input}
@@ -206,7 +231,7 @@ const LoginScreen = ({navigation}) => {
                   onChangeText={text => setEmail(text)}
                   label="Email"
                   placeholder="example@email.com"
-                  placeholderTextColor="#72a045aa"
+                  placeholderTextColor="#000000aa"
                   autoCapitalize="none"
                 />
 
@@ -217,11 +242,11 @@ const LoginScreen = ({navigation}) => {
                   label="Password"
                   placeholder="password"
                   autoCapitalize="none"
-                  placeholderTextColor="#72a045aa"
+                  placeholderTextColor="#000000aa"
                   secureTextEntry
                 />
                 {/* <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <Text
+                  <Text allowFontScaling={false}
                     style={[
                       styles.text_forgot,
                       {
@@ -234,7 +259,7 @@ const LoginScreen = ({navigation}) => {
                     onPress={() => {
                       setPopupVisible(true);
                     }}>
-                    <Text style={styles.link}>Click Here</Text>
+                    <Text allowFontScaling={false} style={styles.link}>Click Here</Text>
                   </TouchableOpacity>
                 </View> */}
                 <View style={{alignItems: 'center'}}>
@@ -252,39 +277,68 @@ const LoginScreen = ({navigation}) => {
                         });
                       }
                     }}>
-                    <Text style={styles.text_button}>Login</Text>
+                    <Text allowFontScaling={false} style={styles.text_button}>
+                      Login
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <View
                   style={{
-                    flexDirection: 'column',
+                    flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    paddingTop: heightPixel(20),
                   }}>
                   <Text
+                    allowFontScaling={false}
                     style={[
                       styles.text_forgot,
                       {
-                        fontFamily: 'MyriadPro-Regular',
+                        fontFamily: 'LEMONMILK-Medium',
                       },
                     ]}>
-                    Don't have an account?{' '}
+                    Don't have an account{' '}
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Register')}>
-                    <Text style={styles.link}>Register Here</Text>
+                    <Text allowFontScaling={false} style={styles.link}>
+                      Sign up Here
+                    </Text>
                   </TouchableOpacity>
+                </View>
+                <View style={styles.checkboxContainer}>
+                  <CheckBox
+                    disabled={false}
+                    value={toggleCheckBox}
+                    onValueChange={newValue => setToggleCheckBox(newValue)}
+                    style={
+                      Platform.OS === 'ios'
+                        ? styles.checkbox
+                        : styles.checkboxAndroid
+                    }
+                    boxType={'square'}
+                  />
+                  <Text
+                    allowFontScaling={false}
+                    style={[
+                      styles.text_forgot,
+                      {
+                        fontFamily: 'LEMONMILK-Light',
+                      },
+                    ]}>
+                    Send me tips & food alerts
+                  </Text>
                 </View>
               </View>
               <View
                 style={{
-                  height: '25%',
+                  height: '20%',
                   width: '90%',
                   flexDirection: 'column',
                   justifyContent: 'space-evenly',
                 }}>
                 {/* <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <Text
+                  <Text allowFontScaling={false}
                     style={[
                       styles.text_forgot,
                       {
@@ -299,11 +353,11 @@ const LoginScreen = ({navigation}) => {
                     flexDirection: 'row',
                     justifyContent: 'space-evenly',
                   }}></View>
-                <View
+                {/* <View
                   style={{flexDirection: 'column', justifyContent: 'center'}}>
                   <View
                     style={{flexDirection: 'row', justifyContent: 'center'}}>
-                    <Text
+                    <Text allowFontScaling={false}
                       style={[
                         styles.text_forgot,
                         {
@@ -313,9 +367,9 @@ const LoginScreen = ({navigation}) => {
                       By Signing In, you agree with our{' '}
                     </Text>
                     <TouchableOpacity onPress={() => console.log('Terms')}>
-                      <Text style={styles.link_white}>Terms</Text>
+                      <Text allowFontScaling={false} style={styles.link_white}>Terms</Text>
                     </TouchableOpacity>
-                    <Text
+                    <Text allowFontScaling={false}
                       style={[
                         styles.text_forgot,
                         {
@@ -327,7 +381,7 @@ const LoginScreen = ({navigation}) => {
                   </View>
                   <View
                     style={{flexDirection: 'row', justifyContent: 'center'}}>
-                    <Text
+                    <Text allowFontScaling={false}
                       style={[
                         styles.text_forgot,
                         {
@@ -338,9 +392,9 @@ const LoginScreen = ({navigation}) => {
                     </Text>
                     <TouchableOpacity
                       onPress={() => console.log('Privacy Policy')}>
-                      <Text style={styles.link_white}>Privacy Policy</Text>
+                      <Text allowFontScaling={false} style={styles.link_white}>Privacy Policy</Text>
                     </TouchableOpacity>
-                    <Text
+                    <Text allowFontScaling={false}
                       style={[
                         styles.text_forgot,
                         {
@@ -352,10 +406,10 @@ const LoginScreen = ({navigation}) => {
                     </Text>
                     <TouchableOpacity
                       onPress={() => console.log('Cookies Policy')}>
-                      <Text style={styles.link_white}>Cookies Policy</Text>
+                      <Text allowFontScaling={false} style={styles.link_white}>Cookies Policy</Text>
                     </TouchableOpacity>
                   </View>
-                </View>
+                </View> */}
               </View>
             </View>
           </ImageBackground>
@@ -364,10 +418,13 @@ const LoginScreen = ({navigation}) => {
       {popupVisible && (
         <View style={styles.popup_view}>
           <View style={styles.popup_header_view}>
-            <Text style={styles.popup_header_text}>Password Recovery</Text>
+            <Text allowFontScaling={false} style={styles.popup_header_text}>
+              Password Recovery
+            </Text>
           </View>
           <View style={styles.popup_body_view}>
             <Text
+              allowFontScaling={false}
               style={[
                 styles.label,
                 {
@@ -416,6 +473,7 @@ const LoginScreen = ({navigation}) => {
             )}
             {step == 2 && (
               <Text
+                allowFontScaling={false}
                 style={[
                   styles.label,
                   {
@@ -450,7 +508,9 @@ const LoginScreen = ({navigation}) => {
                   onPress={() => {
                     onClickSend();
                   }}>
-                  <Text style={styles.text_button}>Send</Text>
+                  <Text allowFontScaling={false} style={styles.text_button}>
+                    Send
+                  </Text>
                 </TouchableOpacity>
               )}
               {step == 1 && (
@@ -460,7 +520,9 @@ const LoginScreen = ({navigation}) => {
                   onPress={() => {
                     onClickVerify();
                   }}>
-                  <Text style={styles.text_button}>Verify</Text>
+                  <Text allowFontScaling={false} style={styles.text_button}>
+                    Verify
+                  </Text>
                 </TouchableOpacity>
               )}
               {step == 2 && (
@@ -470,7 +532,9 @@ const LoginScreen = ({navigation}) => {
                   onPress={() => {
                     onClickReset();
                   }}>
-                  <Text style={styles.text_button}>Reset</Text>
+                  <Text allowFontScaling={false} style={styles.text_button}>
+                    Reset
+                  </Text>
                 </TouchableOpacity>
               )}
               <TouchableOpacity
@@ -490,7 +554,9 @@ const LoginScreen = ({navigation}) => {
                   setCode_1('');
                   setEmailAddress('');
                 }}>
-                <Text style={styles.text_button}>Cancel</Text>
+                <Text allowFontScaling={false} style={styles.text_button}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -512,22 +578,22 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: widthPixel(20),
-    padding: heightPixel(15),
+    padding: heightPixel(10),
     borderWidth: heightPixel(1),
-    borderColor: '#72a045',
+    borderColor: 'black',
     borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
-    color: '#72a045',
+    color: 'black',
     textAlign: 'center',
   },
   input_password: {
     marginBottom: widthPixel(5),
-    padding: heightPixel(15),
+    padding: heightPixel(10),
     borderWidth: heightPixel(1),
-    borderColor: '#72a045',
+    borderColor: 'black',
     borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
-    color: '#72a045',
+    color: 'black',
     textAlign: 'center',
   },
   wrapper: {
@@ -541,47 +607,53 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(12),
     color: '#205020',
     textDecorationLine: 'underline',
+    fontFamily: 'LEMONMILK-Medium',
   },
   link_white: {
     fontSize: fontPixel(12),
-    color: 'white',
+    color: '#205020',
     textDecorationLine: 'underline',
+    fontFamily: 'LEMONMILK-Medium',
   },
   logo_view: {
-    height: SCREEN_HEIGHT / 4,
+    height: SCREEN_HEIGHT / 3,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
   },
   input_view: {
-    height: '35%',
+    height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {
-    width: '50%',
-    height: heightPixel(100),
+    width: '100%',
     resizeMode: 'contain',
-    marginTop: heightPixel(20),
   },
   text_welcome: {
     fontSize: fontPixel(28),
-    color: 'white',
-    paddingTop: heightPixel(12),
+    color: 'black',
+    marginTop: heightPixel(-20),
+  },
+  text_welcome_description: {
+    fontSize: fontPixel(16),
+    color: 'black',
+    padding: heightPixel(2),
   },
   text_forgot: {
     fontSize: fontPixel(12),
-    color: 'white',
+    color: 'black',
   },
   text_button: {
     fontSize: fontPixel(20),
     color: 'white',
+    fontFamily: 'LEMONMILK-Medium',
   },
   button: {
     marginTop: heightPixel(20),
-    backgroundColor: '#428242',
-    borderRadius: 5,
-    paddingVertical: widthPixel(15),
+    backgroundColor: '#063225',
+    borderRadius: heightPixel(5),
+    paddingVertical: widthPixel(10),
     paddingHorizontal: heightPixel(20),
     marginBottom: heightPixel(20),
     alignItems: 'center',
@@ -644,6 +716,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '40%',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginVertical: heightPixel(2),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkbox: {
+    alignSelf: 'center',
+  },
+  checkboxAndroid: {
+    alignSelf: 'center',
+    // transform: [{scale: 1.5}],
   },
 });
 

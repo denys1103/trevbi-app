@@ -37,7 +37,7 @@ export function Profile({setEditVisible, navigation}) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${day}/${month}/${year}`;
+    return `${month}/${day}/${year}`;
   };
 
   const handleSubmit = () => {
@@ -83,25 +83,6 @@ export function Profile({setEditVisible, navigation}) {
             </Text>
             <Text allowFontScaling={false} style={styles.profileDataStyle}>
               {profile?.fullname ? profile.fullname : ''}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.box}>
-          <MaterialCommunityIcons
-            color={'#7d7d7d'}
-            name="gender-male-female"
-            size={fontPixel(32)}
-          />
-          <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={styles.label}>
-              Gender
-            </Text>
-            <Text allowFontScaling={false} style={styles.profileDataStyle}>
-              {profile?.gender
-                ? profile.gender === '0'
-                  ? 'Male'
-                  : 'Female'
-                : 'Male'}
             </Text>
           </View>
         </View>

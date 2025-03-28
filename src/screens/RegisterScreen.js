@@ -15,6 +15,7 @@ import {
 import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
+import CheckBox from '@react-native-community/checkbox';
 
 import {
   fontPixel,
@@ -30,7 +31,7 @@ const RegisterScreen = ({navigation}) => {
   const [password, setPassword] = useState(null);
   const [Confpassword, setConfPassword] = useState(null);
   const {isLoading, register} = useContext(GlobalContext);
-
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
   // useEffect(() => {
   //   LogBox.ignoreLogs([
   //     '[notifee] no background event handler has been set. Set a handler via the "onBackgroundEvent" method.',
@@ -52,16 +53,36 @@ const RegisterScreen = ({navigation}) => {
               <View style={styles.logo_view}>
                 <Image
                   style={styles.logo}
-                  source={require('../../assets/images/TREVBI_Transparent_Logo.png')}
+                  source={require('../../assets/images/TREVBI_Transparent_Login_Logo.png')}
                 />
-                <Text style={styles.text_welcome}>Sign Up</Text>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.text_welcome,
+                    {
+                      fontFamily: 'LEMONMILK-Bold',
+                    },
+                  ]}>
+                  Welcome
+                </Text>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.text_welcome_description,
+                    {
+                      fontFamily: 'LEMONMILK-Light',
+                      paddingTop: heightPixel(10),
+                    },
+                  ]}>
+                  Create my account
+                </Text>
               </View>
               <View style={(styles.input_view, {width: '65%'})}>
                 <TextInput
                   style={styles.input}
                   value={name}
                   placeholder="username"
-                  placeholderTextColor="#72a045aa"
+                  placeholderTextColor="#000000aa"
                   onChangeText={text => setName(text)}
                 />
                 <TextInput
@@ -69,21 +90,21 @@ const RegisterScreen = ({navigation}) => {
                   value={email}
                   onChangeText={text => setEmail(text)}
                   placeholder="e-mail"
-                  placeholderTextColor="#72a045aa"
+                  placeholderTextColor="#000000aa"
                 />
                 <TextInput
                   style={styles.input}
                   value={password}
                   onChangeText={text => setPassword(text)}
                   placeholder="create password"
-                  placeholderTextColor="#72a045aa"
+                  placeholderTextColor="#000000aa"
                   secureTextEntry
                 />
                 <TextInput
                   style={styles.input}
                   value={Confpassword}
                   placeholder="verify your password"
-                  placeholderTextColor="#72a045aa"
+                  placeholderTextColor="#000000aa"
                   onChangeText={text => setConfPassword(text)}
                   secureTextEntry
                 />
@@ -108,17 +129,56 @@ const RegisterScreen = ({navigation}) => {
                         });
                       }
                     }}>
-                    <Text style={styles.text_button}>Register</Text>
+                    <Text allowFontScaling={false} style={styles.text_button}>
+                      Sign me up
+                    </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <Text style={styles.text_forgot}>
-                    Already have an account?{' '}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    paddingTop: heightPixel(20),
+                  }}>
+                  <Text
+                    allowFontScaling={false}
+                    style={[
+                      styles.text_forgot,
+                      {
+                        fontFamily: 'LEMONMILK-Medium',
+                      },
+                    ]}>
+                    Already have an account{' '}
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.link}>Login Here</Text>
+                    <Text allowFontScaling={false} style={styles.link}>
+                      Login Here
+                    </Text>
                   </TouchableOpacity>
+                </View>
+                <View style={styles.checkboxContainer}>
+                  <CheckBox
+                    disabled={false}
+                    value={toggleCheckBox}
+                    onValueChange={newValue => setToggleCheckBox(newValue)}
+                    style={
+                      Platform.OS === 'ios'
+                        ? styles.checkbox
+                        : styles.checkboxAndroid
+                    }
+                    boxType={'square'}
+                  />
+                  <Text
+                    allowFontScaling={false}
+                    style={[
+                      styles.text_forgot,
+                      {
+                        fontFamily: 'LEMONMILK-Light',
+                      },
+                    ]}>
+                    Send me tips & food alerts
+                  </Text>
                 </View>
               </View>
               <View style={{height: '10%'}} />
@@ -142,22 +202,22 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: widthPixel(20),
-    padding: heightPixel(15),
+    padding: heightPixel(10),
     borderWidth: heightPixel(1),
-    borderColor: '#72a045',
+    borderColor: 'black',
     borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
-    color: '#72a045',
+    color: 'black',
     textAlign: 'center',
   },
   input_password: {
     marginBottom: widthPixel(5),
-    padding: heightPixel(15),
+    padding: heightPixel(10),
     borderWidth: heightPixel(1),
-    borderColor: '#72a045',
+    borderColor: 'black',
     borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
-    color: '#72a045',
+    color: 'black',
     textAlign: 'center',
   },
   wrapper: {
@@ -171,14 +231,16 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(12),
     color: '#205020',
     textDecorationLine: 'underline',
+    fontFamily: 'LEMONMILK-Medium',
   },
   link_white: {
     fontSize: fontPixel(12),
-    color: 'white',
+    color: '205020',
     textDecorationLine: 'underline',
+    fontFamily: 'LEMONMILK-Medium',
   },
   logo_view: {
-    height: SCREEN_HEIGHT / 4,
+    height: SCREEN_HEIGHT / 3,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
@@ -189,46 +251,51 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: '50%',
-    height: heightPixel(100),
+    width: '100%',
     resizeMode: 'contain',
   },
-  text0: {
-    fontSize: fontPixel(48),
-    color: 'white',
-    paddingHorizontal: pixelSizeHorizontal(40),
-  },
-  text1: {
-    fontSize: fontPixel(48),
-    color: 'white',
-  },
-  text2: {
-    fontSize: fontPixel(20),
-    color: 'white',
-  },
   text_welcome: {
-    fontSize: fontPixel(36),
-    color: 'white',
-    paddingTop: heightPixel(8),
+    fontSize: fontPixel(28),
+    color: 'black',
+    marginTop: heightPixel(-20),
+  },
+  text_welcome_description: {
+    fontSize: fontPixel(16),
+    color: 'black',
+    padding: heightPixel(2),
   },
   text_forgot: {
     fontSize: fontPixel(12),
-    color: 'white',
+    color: 'black',
   },
   text_button: {
     fontSize: fontPixel(20),
     color: 'white',
+    fontFamily: 'LEMONMILK-Medium',
   },
   button: {
     marginTop: heightPixel(20),
-    backgroundColor: '#428242',
+    backgroundColor: '#063225',
     borderRadius: heightPixel(5),
-    paddingVertical: widthPixel(15),
+    paddingVertical: widthPixel(10),
     paddingHorizontal: heightPixel(20),
     marginBottom: heightPixel(20),
     alignItems: 'center',
     justifyContent: 'center',
     width: '70%',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginVertical: heightPixel(2),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkbox: {
+    alignSelf: 'center',
+  },
+  checkboxAndroid: {
+    alignSelf: 'center',
+    // transform: [{scale: 1.5}],
   },
 });
 

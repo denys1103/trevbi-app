@@ -302,6 +302,76 @@ const DietsScreen = ({navigation}) => {
         },
       ],
     },
+    {
+      name: 'DASH (Dietary Approaches to Stop Hypertension) Diet',
+      icon: '',
+      childs: [
+        {
+          name: 'Emphasizes fruits, vegetables, whole grains, low-fat dairy, and limits sodium intake.',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Flexitarian Diet',
+      icon: '',
+      childs: [
+        {
+          name: 'Semi-vegetarian diet that allows occasional meat consumption.',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Macro Diet',
+      icon: '',
+      childs: [
+        {
+          name: 'Dietary approach that focuses on tracking the intake of macronutrients.',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Intermittent Fasting',
+      icon: '',
+      childs: [
+        {
+          name: 'Alternating periods of eating and fasting.',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Mind Diet',
+      icon: '',
+      childs: [
+        {
+          name: 'Combines elements of the Mediterranean and DASH diets to improve brain health.',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Anti-Inflammatory',
+      icon: '',
+      childs: [
+        {
+          name: 'Foods that reduce inflammation, such as fruits, vegetables, and omega-3 fatty acids.',
+          icon: '',
+        },
+      ],
+    },
+    {
+      name: 'Gut Health',
+      icon: '',
+      childs: [
+        {
+          name: 'Focus on foods that promote a healthy gut microbiome, such as fermented foods and prebiotics.',
+          icon: '',
+        },
+      ],
+    },
   ];
 
   const ref = useRef(null);
@@ -585,7 +655,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     alignItems: 'center',
     width: '100%',
   },
