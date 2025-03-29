@@ -604,13 +604,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   link: {
-    fontSize: fontPixel(12),
+    fontSize: fontPixel(15),
     color: '#205020',
     textDecorationLine: 'underline',
     fontFamily: 'LEMONMILK-Medium',
   },
   link_white: {
-    fontSize: fontPixel(12),
+    fontSize: fontPixel(15),
     color: '#205020',
     textDecorationLine: 'underline',
     fontFamily: 'LEMONMILK-Medium',
@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
     padding: heightPixel(2),
   },
   text_forgot: {
-    fontSize: fontPixel(12),
+    fontSize: fontPixel(15),
     color: 'black',
   },
   text_button: {
@@ -719,12 +719,15 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginVertical: heightPixel(2),
+    marginVertical: heightPixel(10),
     justifyContent: 'center',
     alignItems: 'center',
   },
   checkbox: {
     alignSelf: 'center',
+    width: heightPixel(20),
+    height: heightPixel(20),
+    marginRight: heightPixel(10),
   },
   checkboxAndroid: {
     alignSelf: 'center',
