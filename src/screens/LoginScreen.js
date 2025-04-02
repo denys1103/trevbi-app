@@ -198,7 +198,7 @@ const LoginScreen = ({navigation}) => {
                       fontFamily: 'LEMONMILK-Bold',
                     },
                   ]}>
-                  Welcome back
+                  Welcome
                 </Text>
                 <Text
                   allowFontScaling={false}
@@ -281,6 +281,11 @@ const LoginScreen = ({navigation}) => {
                       Login
                     </Text>
                   </TouchableOpacity>
+                  <Text
+                    allowFontScaling={false}
+                    style={[styles.text_button, {color: 'black'}]}>
+                    Or
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -306,7 +311,9 @@ const LoginScreen = ({navigation}) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View style={styles.checkboxContainer}>
+                <TouchableOpacity
+                  style={styles.checkboxContainer}
+                  onPress={() => navigation.navigate('SplashThird')}>
                   <CheckBox
                     disabled={false}
                     value={toggleCheckBox}
@@ -323,16 +330,16 @@ const LoginScreen = ({navigation}) => {
                     style={[
                       styles.text_forgot,
                       {
-                        fontFamily: 'LEMONMILK-Light',
+                        fontFamily: 'LEMONMILK-Medium',
                       },
                     ]}>
-                    Send me tips & food alerts
+                    Continue as guest
                   </Text>
-                </View>
+                </TouchableOpacity>
               </View>
               <View
                 style={{
-                  height: '20%',
+                  height: '10%',
                   width: '90%',
                   flexDirection: 'column',
                   justifyContent: 'space-evenly',
@@ -605,13 +612,13 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: fontPixel(15),
-    color: '#205020',
+    color: '#218d02',
     textDecorationLine: 'underline',
     fontFamily: 'LEMONMILK-Medium',
   },
   link_white: {
     fontSize: fontPixel(15),
-    color: '#205020',
+    color: '#218d02',
     textDecorationLine: 'underline',
     fontFamily: 'LEMONMILK-Medium',
   },
@@ -622,7 +629,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   input_view: {
-    height: '40%',
+    height: '50%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -636,7 +643,7 @@ const styles = StyleSheet.create({
     marginTop: heightPixel(-20),
   },
   text_welcome_description: {
-    fontSize: fontPixel(16),
+    fontSize: fontPixel(18),
     color: 'black',
     padding: heightPixel(2),
   },

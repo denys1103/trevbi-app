@@ -45,7 +45,7 @@ const WelcomeScreen = ({navigation}) => {
                   fontFamily: 'LEMONMILK-Bold',
                 },
               ]}>
-              Know your food—scan
+              Food labels can be tricky
             </Text>
             <Text
               allowFontScaling={false}
@@ -55,17 +55,7 @@ const WelcomeScreen = ({navigation}) => {
                   fontFamily: 'LEMONMILK-Bold',
                 },
               ]}>
-              Ingredients, find better
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={[
-                styles.titleStyle,
-                {
-                  fontFamily: 'LEMONMILK-Bold',
-                },
-              ]}>
-              Choices, get ai recipes
+              We make it easy!
             </Text>
           </View>
           <View style={{alignItems: 'flex-start'}}>
@@ -116,7 +106,7 @@ const WelcomeScreen = ({navigation}) => {
               style={styles.button}
               activeOpacity={0.7}
               onPress={async () => {
-                navigation.navigate('SplashSecond');
+                navigation.navigate('Login');
               }}>
               <Text
                 allowFontScaling={false}

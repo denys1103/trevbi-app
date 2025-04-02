@@ -643,14 +643,14 @@ const RecipeScanScreen = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.9}
               style={styles.tabItemStyle}
-              onPress={() => navigation.navigate('Profile')}>
+              onPress={() => navigation.navigate('Menu')}>
               <Image
                 style={{
                   width: widthPixel(40),
                   height: widthPixel(40),
                   resizeMode: 'contain',
                 }}
-                source={require('../../../assets/images/profile.png')}
+                source={require('../../../assets/images/menu.png')}
               />
               <Text
                 allowFontScaling={false}
@@ -658,7 +658,7 @@ const RecipeScanScreen = ({navigation}) => {
                   fontSize: fontPixel(11),
                   color: '#000000',
                 }}>
-                PROFILE
+                MENU
               </Text>
             </TouchableOpacity>
           </View>

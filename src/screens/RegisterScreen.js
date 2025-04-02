@@ -229,13 +229,13 @@ const styles = StyleSheet.create({
   },
   link: {
     fontSize: fontPixel(15),
-    color: '#205020',
+    color: '#218d02',
     textDecorationLine: 'underline',
     fontFamily: 'LEMONMILK-Medium',
   },
   link_white: {
     fontSize: fontPixel(15),
-    color: '205020',
+    color: '218d02',
     textDecorationLine: 'underline',
     fontFamily: 'LEMONMILK-Medium',
   },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     marginTop: heightPixel(-20),
   },
   text_welcome_description: {
-    fontSize: fontPixel(16),
+    fontSize: fontPixel(18),
     color: 'black',
     padding: heightPixel(2),
   },

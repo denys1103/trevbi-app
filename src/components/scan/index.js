@@ -674,22 +674,22 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                     allowFontScaling={false}
                     style={{
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(16),
+                      paddingTop: heightPixel(5),
                       color: 'black',
-                      fontSize: fontPixel(22),
+                      fontSize: fontPixel(16),
                     }}>
-                    See Beyond the Label—But
+                    Make sure your lens is focused
                   </Text>
                   <Text
                     allowFontScaling={false}
                     style={{
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(5),
-                      paddingBottom: heightPixel(16),
+                      paddingTop: heightPixel(2),
+                      paddingBottom: heightPixel(5),
                       color: 'black',
-                      fontSize: fontPixel(22),
+                      fontSize: fontPixel(16),
                     }}>
-                    First, Focus Your Lens
+                    You may need to tap the screen
                   </Text>
                 </>
               ) : (
