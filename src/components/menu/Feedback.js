@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
   text_label: {
     fontFamily: 'LEMONMILK-Medium',
     paddingVertical: heightPixel(5),
+    paddingLeft: SCREEN_WIDTH * 0.05,
     color: 'black',
     fontSize: fontPixel(13),
     alignSelf: 'left',
