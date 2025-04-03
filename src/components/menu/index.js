@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {ProfileMenu} from '../profile/index';
 import {MenuList} from './MenuList';
 import Feedback from './Feedback';
+import HowItWork from './HowItWork';
 import {HeaderBackButton} from '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,11 @@ export function Menu() {
         name="MenuList"
         component={MenuList}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="HowItWork"
+        component={HowItWork}
+        options={{headerShown: true}}
       />
       <Stack.Screen
         name="Feedback"

@@ -311,7 +311,7 @@ const LoginScreen = ({navigation}) => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={styles.checkboxContainer}
                   onPress={() => navigation.navigate('SplashThird')}>
                   <CheckBox
@@ -335,7 +335,7 @@ const LoginScreen = ({navigation}) => {
                     ]}>
                     Continue as guest
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <View
                 style={{

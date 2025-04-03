@@ -225,6 +225,46 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const saveFeedback = async (...feedback) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/save-feedback', {
+        ...feedback,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Alert',
+          text2: 'Feedback shared!',
+        });
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -267,6 +307,7 @@ export const GlobalContextProvider = ({children}) => {
         logout,
         uploadAvata,
         saveProfile,
+        saveFeedback,
       }}>
       {children}
     </GlobalContext.Provider>

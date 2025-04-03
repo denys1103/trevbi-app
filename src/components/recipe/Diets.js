@@ -32,6 +32,7 @@ const DietsScreen = ({navigation}) => {
     {key: 'breakfast', label: 'Breakfast'},
     {key: 'lunch', label: 'Lunch'},
     {key: 'dinner', label: 'Dinner'},
+    {key: 'bake', label: 'Bake'},
   ];
   const recursiveData = [
     {
@@ -506,7 +507,7 @@ const DietsScreen = ({navigation}) => {
                     <Text
                       allowFontScaling={false}
                       style={{
-                        fontSize: fontPixel(16),
+                        fontSize: fontPixel(14),
                         color: 'black',
                         fontFamily: 'LEMONMILK-Light',
                         marginLeft: heightPixel(5),

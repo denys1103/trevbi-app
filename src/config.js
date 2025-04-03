@@ -34,10 +34,16 @@ const pixelSizeVertical = size => {
 const pixelSizeHorizontal = size => {
   return widthPixel(size);
 };
-
+const VERSION = '1.0';
 const baseURL = HOST_URL + '/api';
 const imageURL = HOST_URL + '/uploads/images/';
-export default axios.create({baseURL: HOST_URL + '/api'});
+const client = axios.create({
+  baseURL: HOST_URL + '/api',
+  headers: {
+    'App-Version': VERSION,
+  },
+});
+export default client;
 const theme = {
   aliases: {
     bg: 'backgroundColor',

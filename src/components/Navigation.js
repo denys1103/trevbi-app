@@ -28,7 +28,12 @@ const Navigation = () => {
       ) : userInfo?.token ? (
         <>
           <Stack.Screen
-            name="Tabs"
+            name="SplashThird"
+            component={WelcomeThird}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Dashboard"
             component={Tabs}
             options={{headerShown: false}}
           />
@@ -60,7 +65,7 @@ const Navigation = () => {
             component={WelcomeSecond}
             options={{headerShown: false}}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="SplashThird"
             component={WelcomeThird}
             options={{headerShown: false}}
@@ -84,7 +89,7 @@ const Navigation = () => {
             name="Dashboard"
             component={Tabs}
             options={{headerShown: false}}
-          />
+          /> */}
           <Stack.Screen
             name="Login"
             component={LoginScreen}

@@ -29,6 +29,14 @@ export function MenuList({navigation}) {
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
+            onPress={() => navigation.replace('HowItWork')}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              How It Work
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
             onPress={() => navigation.replace('Profile')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               Profile
