@@ -72,6 +72,7 @@ const Feedback = ({navigation}) => {
               style={{
                 fontFamily: 'LEMONMILK-Medium',
                 paddingTop: heightPixel(10),
+                paddingLeft: SCREEN_WIDTH * 0.05,
                 color: 'black',
                 fontSize: fontPixel(18),
                 alignSelf: 'left',
