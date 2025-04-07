@@ -317,7 +317,7 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
               <View style={styles.modalImageStyle}>
                 {modalData.description != 'There is no the bad ingredients' ? (
                   <>
-                    <Text
+                    {/* <Text
                       allowFontScaling={false}
                       style={{
                         fontSize: heightPixel(18),
@@ -327,18 +327,18 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
                         paddingBottom: heightPixel(5),
                       }}>
                       "WANT HEALTHIER, ASK TREVBI"
-                    </Text>
+                    </Text> */}
                     <TouchableOpacity style={styles.AIButton} onPress={askAI}>
                       {/* <Image source={require('../../../assets/images/ASK_TREVBI.jpg')} style={{width:heightPixel(155), height:heightPixel(80)}} /> */}
                       <Text
                         allowFontScaling={false}
                         style={{
-                          fontSize: heightPixel(16),
-                          fontFamily: 'LEMONMILK-Light',
+                          fontSize: heightPixel(18),
+                          fontFamily: 'LEMONMILK-Medium',
                           color: 'black',
                           paddingVertical: heightPixel(10),
                         }}>
-                        SEE BETTER INGREDIENTS
+                        HEALTHIER CHOICES
                       </Text>
                     </TouchableOpacity>
                   </>

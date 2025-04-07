@@ -72,7 +72,7 @@ const Feedback = ({navigation}) => {
               style={{
                 fontFamily: 'LEMONMILK-Medium',
                 paddingTop: heightPixel(10),
-                paddingLeft: SCREEN_WIDTH * 0.05,
+                paddingLeft: Platform.OS === 'ios' ? SCREEN_WIDTH * 0.05 : 0,
                 color: 'black',
                 fontSize: fontPixel(18),
                 alignSelf: 'left',
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   text_label: {
     fontFamily: 'LEMONMILK-Medium',
     paddingVertical: heightPixel(5),
-    paddingLeft: SCREEN_WIDTH * 0.05,
+    paddingLeft: Platform.OS === 'ios' ? SCREEN_WIDTH * 0.05 : 0,
     color: 'black',
     fontSize: fontPixel(13),
     alignSelf: 'left',
