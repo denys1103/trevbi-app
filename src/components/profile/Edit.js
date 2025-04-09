@@ -149,129 +149,133 @@ export function ProfileEdit({setEditVisible, navigation}) {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <Spinner visible={isLoading} />
-      <View style={styles.pencilContainer}>
-        <TouchableOpacity onPress={() => setEditVisible(false)}>
-          <MaterialCommunityIcons
-            color={'#72a045'}
-            name="arrow-left-bold-box-outline"
-            size={fontPixel(28)}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={
-            filePath
-              ? {
-                  uri: filePath,
-                }
-              : require('../../../assets/images/free_user.png')
-          }
-        />
-        <TouchableOpacity
-          style={styles.changeAvatarButton}
-          onPress={chooseAvataPhotoFile}>
-          <Text allowFontScaling={false} style={styles.changeAvatarButtonText}>
-            Change Avatar
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.form}>
-        <Text allowFontScaling={false} style={styles.label}>
-          Name
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Name"
-          value={fullname}
-          onChangeText={setName}
-        />
-        <Text allowFontScaling={false} style={styles.label}>
-          Date of Birth
-        </Text>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            setOpenBirth(true);
-          }}>
-          <View
-            pointerEvents="none"
-            style={{
-              flexDirection: 'row',
-              borderColor: '#c0c0c0',
-              borderWidth: heightPixel(1),
-              borderRadius: heightPixel(5),
-            }}>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  flex: 1,
-                  borderColor: 'white',
-                  fontFamily: 'LEMONMILK-Light',
-                  fontSize: fontPixel(18),
-                },
-              ]}
-              placeholder="Enter Date of Birth"
-              value={format_date(birth)}
-              editable={false}
-            />
+    <ScrollView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <Spinner visible={isLoading} />
+        <View style={styles.pencilContainer}>
+          <TouchableOpacity onPress={() => setEditVisible(false)}>
             <MaterialCommunityIcons
-              style={{marginTop: heightPixel(3)}}
-              color={'#7d7d7d'}
-              name="calendar-month"
-              size={fontPixel(32)}
+              color={'#72a045'}
+              name="arrow-left-bold-box-outline"
+              size={fontPixel(28)}
             />
-          </View>
-        </TouchableOpacity>
-        <DatePicker
-          modal
-          open={openBirth}
-          mode="date"
-          date={new Date(birth)}
-          onConfirm={date => {
-            setBirth(format(date));
-            setOpenBirth(false);
-          }}
-          onCancel={() => {
-            setOpenBirth(false);
-          }}
-        />
-        <Text allowFontScaling={false} style={styles.label}>
-          Phone Number
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder=""
-          keyboardType="phone-pad"
-          value={phone_num}
-          onChangeText={handlePhoneNumChange}
-          maxLength={15}
-          returnKeyType="done"
-          autoCapitalize="none"
-        />
-        <Text allowFontScaling={false} style={styles.label}>
-          Email address
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder=""
-          value={email}
-          onChangeText={setEmail}
-          editable={false}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text allowFontScaling={false} style={styles.buttonText}>
-            Save
+          </TouchableOpacity>
+        </View>
+        <View style={styles.avatarContainer}>
+          <Image
+            style={styles.avatar}
+            source={
+              filePath
+                ? {
+                    uri: filePath,
+                  }
+                : require('../../../assets/images/free_user.png')
+            }
+          />
+          <TouchableOpacity
+            style={styles.changeAvatarButton}
+            onPress={chooseAvataPhotoFile}>
+            <Text
+              allowFontScaling={false}
+              style={styles.changeAvatarButtonText}>
+              Change Avatar
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.form}>
+          <Text allowFontScaling={false} style={styles.label}>
+            Name
           </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Name"
+            value={fullname}
+            onChangeText={setName}
+          />
+          <Text allowFontScaling={false} style={styles.label}>
+            Date of Birth
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              setOpenBirth(true);
+            }}>
+            <View
+              pointerEvents="none"
+              style={{
+                flexDirection: 'row',
+                borderColor: '#c0c0c0',
+                borderWidth: heightPixel(1),
+                borderRadius: heightPixel(5),
+              }}>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    flex: 1,
+                    borderColor: 'white',
+                    fontFamily: 'LEMONMILK-Light',
+                    fontSize: fontPixel(18),
+                  },
+                ]}
+                placeholder="Enter Date of Birth"
+                value={format_date(birth)}
+                editable={false}
+              />
+              <MaterialCommunityIcons
+                style={{marginTop: heightPixel(3)}}
+                color={'#7d7d7d'}
+                name="calendar-month"
+                size={fontPixel(32)}
+              />
+            </View>
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            open={openBirth}
+            mode="date"
+            date={new Date(birth)}
+            onConfirm={date => {
+              setBirth(format(date));
+              setOpenBirth(false);
+            }}
+            onCancel={() => {
+              setOpenBirth(false);
+            }}
+          />
+          <Text allowFontScaling={false} style={styles.label}>
+            Phone Number
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            keyboardType="phone-pad"
+            value={phone_num}
+            onChangeText={handlePhoneNumChange}
+            maxLength={15}
+            returnKeyType="done"
+            autoCapitalize="none"
+          />
+          <Text allowFontScaling={false} style={styles.label}>
+            Email address
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            value={email}
+            onChangeText={setEmail}
+            editable={false}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Save
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 

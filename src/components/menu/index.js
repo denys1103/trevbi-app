@@ -28,7 +28,7 @@ export function Menu() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="HowItWork"
+        name="HowItWorks"
         component={HowItWork}
         options={{headerShown: true}}
       />

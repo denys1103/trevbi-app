@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {ProfileEdit} from './Edit';
 import {Profile} from './Profile';
 
@@ -16,16 +16,11 @@ export function ProfileMenu({navigation, route}) {
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        {editVisible ? (
-          <ProfileEdit
-            setEditVisible={setEditVisible}
-            navigation={navigation}
-          />
-        ) : (
-          <Profile setEditVisible={setEditVisible} navigation={navigation} />
-        )}
-      </ScrollView>
+      {editVisible ? (
+        <ProfileEdit setEditVisible={setEditVisible} navigation={navigation} />
+      ) : (
+        <Profile setEditVisible={setEditVisible} navigation={navigation} />
+      )}
     </SafeAreaView>
   );
 }

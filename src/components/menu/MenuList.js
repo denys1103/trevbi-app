@@ -26,20 +26,28 @@ export function MenuList({navigation}) {
         style={styles.container}>
         <Spinner visible={isLoading} />
         <View style={styles.form}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
-            onPress={() => navigation.replace('HowItWork')}>
+            onPress={() => navigation.replace('HowItWorks')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
-              How It Work
+              How It Works
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
             onPress={() => navigation.replace('Profile')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               Profile
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
+            onPress={() => console.log('')}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Message Board
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

@@ -5,9 +5,9 @@ import {
   View,
   TouchableOpacity,
   Image,
-  TextInput,
+  Dimensions,
   Platform,
-  SafeAreaView,
+  FlatList,
   KeyboardAvoidingView,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -16,12 +16,16 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 
 import {GlobalContext} from '../../context';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export function Profile({setEditVisible, navigation}) {
-  const {isLoading, userInfo, logout} = useContext(GlobalContext);
+  const {isLoading, userInfo, getUserList, userList, logout} = useContext(GlobalContext);
+  const [profileVisibleStatus, setProfileVisibleStatus] = useState(true);
+  const [followVisibleStatus, setFollowVisibleStatus] = useState(false);
   useEffect(() => {
     if (!userInfo.token) {
       navigation.replace('Login');
@@ -40,8 +44,10 @@ export function Profile({setEditVisible, navigation}) {
     return `${month}/${day}/${year}`;
   };
 
-  const handleSubmit = () => {
-    const temp_profile = {};
+  const clickFollowBtn = () => {
+    getUserList();
+    setProfileVisibleStatus(false);
+    setFollowVisibleStatus(true);
   };
 
   return (
@@ -49,96 +55,199 @@ export function Profile({setEditVisible, navigation}) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <Spinner visible={isLoading} />
-      <View style={styles.pencilContainer}>
-        <TouchableOpacity onPress={() => setEditVisible(true)}>
-          <MaterialCommunityIcons
-            color={'#72a045'}
-            name="account-edit"
-            size={fontPixel(28)}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={
-            profile?.avatar
-              ? {
-                  uri: imageURL + profile.avatar,
-                }
-              : require('../../../assets/images/free_user.png')
-          }
-        />
-      </View>
-      <View style={styles.form}>
-        <View style={styles.box}>
-          <MaterialCommunityIcons
-            color={'#7d7d7d'}
-            name="account"
-            size={fontPixel(32)}
-          />
-          <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={styles.label}>
-              Name
-            </Text>
-            <Text allowFontScaling={false} style={styles.profileDataStyle}>
-              {profile?.fullname ? profile.fullname : ''}
-            </Text>
+      {profileVisibleStatus && (
+        <>
+          <View style={styles.pencilContainer}>
+            <TouchableOpacity onPress={() => setEditVisible(true)}>
+              <MaterialCommunityIcons
+                color={'#72a045'}
+                name="account-edit"
+                size={fontPixel(28)}
+              />
+            </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.box}>
-          <MaterialCommunityIcons
-            color={'#7d7d7d'}
-            name="calendar-month"
-            size={fontPixel(32)}
-          />
-          <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={styles.label}>
-              Date of Birth
-            </Text>
-            <Text allowFontScaling={false} style={styles.profileDataStyle}>
-              {profile?.birth
-                ? format_date(profile.birth)
-                : format_date(new Date())}
-            </Text>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.avatar}
+              source={
+                profile?.avatar
+                  ? {
+                      uri: imageURL + profile.avatar,
+                    }
+                  : require('../../../assets/images/free_user.png')
+              }
+            />
           </View>
-        </View>
-        <View style={styles.box}>
-          <MaterialCommunityIcons
-            color={'#7d7d7d'}
-            name="phone"
-            size={fontPixel(32)}
-          />
-          <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={styles.label}>
-              Phone Number
-            </Text>
-            <Text allowFontScaling={false} style={styles.profileDataStyle}>
-              {profile?.phone_num ? profile.phone_num : ''}
-            </Text>
+          <View style={styles.form}>
+            <View style={styles.box}>
+              <MaterialCommunityIcons
+                color={'#7d7d7d'}
+                name="account"
+                size={fontPixel(32)}
+              />
+              <View style={styles.boxContent}>
+                <Text allowFontScaling={false} style={styles.label}>
+                  Name
+                </Text>
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  {profile?.fullname ? profile.fullname : ''}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.box}>
+              <MaterialCommunityIcons
+                color={'#7d7d7d'}
+                name="calendar-month"
+                size={fontPixel(32)}
+              />
+              <View style={styles.boxContent}>
+                <Text allowFontScaling={false} style={styles.label}>
+                  Date of Birth
+                </Text>
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  {profile?.birth
+                    ? format_date(profile.birth)
+                    : format_date(new Date())}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.box}>
+              <MaterialCommunityIcons
+                color={'#7d7d7d'}
+                name="phone"
+                size={fontPixel(32)}
+              />
+              <View style={styles.boxContent}>
+                <Text allowFontScaling={false} style={styles.label}>
+                  Phone Number
+                </Text>
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  {profile?.phone_num ? profile.phone_num : ''}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.box}>
+              <MaterialCommunityIcons
+                color={'#7d7d7d'}
+                name="email"
+                size={fontPixel(32)}
+              />
+              <View style={styles.boxContent}>
+                <Text allowFontScaling={false} style={styles.label}>
+                  Email address
+                </Text>
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  {profile?.email ? profile.email : ''}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: heightPixel(20),
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.button, {flexDirection: 'row'}]}
+                onPress={() => console.log('')}>
+                <FontAwesome5
+                  size={fontPixel(18)}
+                  name={'users'}
+                  style={{color: 'white', paddingRight: heightPixel(5)}}
+                />
+                <Text allowFontScaling={false} style={styles.buttonText}>
+                  Friends
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.button, {flexDirection: 'row'}]}
+                onPress={clickFollowBtn}>
+                <FontAwesome5
+                  size={fontPixel(18)}
+                  name={'plus-circle'}
+                  style={{color: 'white', paddingRight: heightPixel(5)}}
+                />
+                <Text allowFontScaling={false} style={styles.buttonText}>
+                  Follow
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.button}
+              onPress={() => console.log('')}>
+              <Text allowFontScaling={false} style={styles.buttonText}>
+                Cookbook
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.button}
+              onPress={logout}>
+              <Text allowFontScaling={false} style={styles.buttonText}>
+                Logout
+              </Text>
+            </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.box}>
-          <MaterialCommunityIcons
-            color={'#7d7d7d'}
-            name="email"
-            size={fontPixel(32)}
-          />
-          <View style={styles.boxContent}>
-            <Text allowFontScaling={false} style={styles.label}>
-              Email address
-            </Text>
-            <Text allowFontScaling={false} style={styles.profileDataStyle}>
-              {profile?.email ? profile.email : ''}
-            </Text>
+        </>
+      )}
+      {followVisibleStatus && (
+        <>
+          <View style={styles.pencilContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                setProfileVisibleStatus(true);
+                setFollowVisibleStatus(false);
+              }}>
+              <MaterialCommunityIcons
+                color={'#72a045'}
+                name="close"
+                size={fontPixel(28)}
+              />
+            </TouchableOpacity>
           </View>
-        </View>
-        <TouchableOpacity style={styles.button} onPress={logout}>
-          <Text allowFontScaling={false} style={styles.buttonText}>
-            Logout
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <FlatList
+            enableEmptySections={true}
+            data={userList}
+            keyExtractor={item => item._id}
+            renderItem={({item}) => {
+              return (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() => {
+                      // setSelectedTraveler(item);
+                      // isSendRequest(item.user._id);
+                      // setPhotosSource(photo_array);
+                      // setModalVisibleStatus(true);
+                    }}>
+                    <View style={styles.userBox}>
+                      <Image
+                        style={styles.userAvatar}
+                        source={
+                          item?.avatar
+                            ? {
+                                uri: imageURL + item.avatar,
+                              }
+                            : require('../../../assets/images/free_user.png')
+                        }
+                      />
+                      <View style={styles.userBoxContent}>
+                        <Text style={{fontSize: fontPixel(18), color: 'black'}}>
+                          {item?.fullname ? item.fullname : ''},{' '}
+                          {/* {getAge(item.user.birth) ? getAge(item.user.birth) : ''} */}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+          />
+        </>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -150,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   form: {
-    width: '80%',
+    width: '85%',
   },
   label: {
     paddingBottom: heightPixel(2),
@@ -161,7 +270,6 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
   },
   button: {
-    marginTop: heightPixel(20),
     backgroundColor: '#063225',
     borderRadius: heightPixel(5),
     paddingVertical: heightPixel(8),
@@ -190,16 +298,34 @@ const styles = StyleSheet.create({
     height: heightPixel(100),
     borderRadius: heightPixel(50),
   },
+  userAvatar: {
+    width: heightPixel(60),
+    height: heightPixel(60),
+    borderRadius: heightPixel(30),
+  },
   box: {
     padding: heightPixel(6),
-    marginTop: 1,
-    marginBottom: 1,
+    marginVertical: heightPixel(1),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   boxContent: {
     flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginLeft: heightPixel(10),
+  },
+  userBox: {
+    padding: heightPixel(6),
+    marginVertical: heightPixel(1),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: SCREEN_WIDTH * 0.9,
+  },
+  userBoxContent: {
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'center',
