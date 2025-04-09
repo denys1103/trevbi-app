@@ -1,5 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {CommonActions} from '@react-navigation/native';
 import {getHeaderTitle} from '@react-navigation/elements';
 import {Home} from './home';
 import ScanComponent from './scan/index';
@@ -150,6 +151,20 @@ function CustomTabs() {
               />
             ),
         }}
+        listeners={({navigation, route}) => ({
+          tabPress: e => {
+            const state = navigation.getState();
+            const tabIndex = state.routes.findIndex(r => r.key === route.key);
+            const tabState = state.routes[tabIndex]?.state;
+
+            if (tabState && tabState.name !== 'MenuList') {
+              e.preventDefault();
+              navigation.dispatch(
+                CommonActions.navigate({name: 'MenuList', params: {}}),
+              );
+            }
+          },
+        })}
       />
     </Tab.Navigator>
   );

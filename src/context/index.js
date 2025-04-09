@@ -18,6 +18,7 @@ export const GlobalContextProvider = ({children}) => {
   const [selectedDiets, setSelectedDiets] = useState('');
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [userList, setUserList] = useState([]);
+  const [friendList, setFriendList] = useState([]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -300,6 +301,78 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const getFriendList = async () => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-friends', {});
+
+      if (data.success) {
+        setIsLoading(false);
+        setFriendList(data.friends);
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
+  const followRequest = async id => {
+    setIsLoading(true);
+    if (!isConnected) {
+      Toast.show({
+        type: 'error',
+        text1: 'Warning',
+        text2: 'Check your internet connection.',
+      });
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/follow-request', {id});
+
+      if (data.success) {
+        setIsLoading(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Alert',
+          text2: 'Followed!',
+        });
+      } else {
+        setIsLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: data.message,
+        });
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -345,6 +418,9 @@ export const GlobalContextProvider = ({children}) => {
         saveFeedback,
         userList,
         getUserList,
+        followRequest,
+        friendList,
+        getFriendList,
       }}>
       {children}
     </GlobalContext.Provider>

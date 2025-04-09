@@ -23,9 +23,23 @@ import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export function Profile({setEditVisible, navigation}) {
-  const {isLoading, userInfo, getUserList, userList, logout} = useContext(GlobalContext);
+  const {
+    isLoading,
+    userInfo,
+    getUserList,
+    userList,
+    followRequest,
+    friendList,
+    getFriendList,
+    logout,
+  } = useContext(GlobalContext);
   const [profileVisibleStatus, setProfileVisibleStatus] = useState(true);
   const [followVisibleStatus, setFollowVisibleStatus] = useState(false);
+  const [selectUserModalVisibleStatus, setSelectUserModalVisibleStatus] =
+    useState(false);
+  const [selectedUser, setSelectedUser] = useState({});
+  const [friendsVisibleStatus, setFriendsVisibleStatus] = useState(false);
+  const numColumns = 3;
   useEffect(() => {
     if (!userInfo.token) {
       navigation.replace('Login');
@@ -48,6 +62,64 @@ export function Profile({setEditVisible, navigation}) {
     getUserList();
     setProfileVisibleStatus(false);
     setFollowVisibleStatus(true);
+  };
+  const clickShowFriendsBtn = () => {
+    getFriendList();
+    setProfileVisibleStatus(false);
+    setFriendsVisibleStatus(true);
+  };
+
+  const renderItem = ({item, index}) => {
+    if (item.empty === true) {
+      return <></>;
+    }
+    var itemDimension = SCREEN_WIDTH / numColumns;
+    return (
+      <TouchableOpacity
+        style={[styles.item]}
+        onPress={() => {
+          // setPopupVisible(false);
+          // selectItem(item);
+        }}
+        activeOpacity={0.8}>
+        <View
+          style={{
+            ...styles.renderItemStyle,
+            width: itemDimension - heightPixel(2),
+          }}>
+          <Image
+            style={{
+              width: itemDimension * 0.8,
+              height: itemDimension * 0.8,
+              borderRadius: itemDimension * 0.4,
+            }}
+            source={
+              item?.avatar
+                ? {
+                    uri: imageURL + item.avatar,
+                  }
+                : require('../../../assets/images/free_user.png')
+            }
+          />
+          <Text style={{fontSize: fontPixel(18), color: 'black'}}>
+            {item?.fullname ? item.fullname : ''}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const formatRow = (data, numColumns) => {
+    const numberOfFullRows = Math.floor(data.length / numColumns);
+    let numberOfElementsLastRow = data.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      data.push({id: `blank-${numberOfElementsLastRow}`, empty: true});
+      numberOfElementsLastRow++;
+    }
+    return data;
   };
 
   return (
@@ -150,7 +222,7 @@ export function Profile({setEditVisible, navigation}) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={[styles.button, {flexDirection: 'row'}]}
-                onPress={() => console.log('')}>
+                onPress={clickShowFriendsBtn}>
                 <FontAwesome5
                   size={fontPixel(18)}
                   name={'users'}
@@ -182,14 +254,14 @@ export function Profile({setEditVisible, navigation}) {
                 Cookbook
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
               onPress={logout}>
               <Text allowFontScaling={false} style={styles.buttonText}>
                 Logout
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </>
       )}
@@ -214,37 +286,103 @@ export function Profile({setEditVisible, navigation}) {
             keyExtractor={item => item._id}
             renderItem={({item}) => {
               return (
-                <View>
-                  <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => {
-                      // setSelectedTraveler(item);
-                      // isSendRequest(item.user._id);
-                      // setPhotosSource(photo_array);
-                      // setModalVisibleStatus(true);
-                    }}>
-                    <View style={styles.userBox}>
-                      <Image
-                        style={styles.userAvatar}
-                        source={
-                          item?.avatar
-                            ? {
-                                uri: imageURL + item.avatar,
-                              }
-                            : require('../../../assets/images/free_user.png')
-                        }
-                      />
-                      <View style={styles.userBoxContent}>
-                        <Text style={{fontSize: fontPixel(18), color: 'black'}}>
-                          {item?.fullname ? item.fullname : ''},{' '}
-                          {/* {getAge(item.user.birth) ? getAge(item.user.birth) : ''} */}
-                        </Text>
-                      </View>
+                <>
+                  {item._id !== profile._id && (
+                    <View>
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        onPress={() => {
+                          setSelectedUser(item);
+                          setSelectUserModalVisibleStatus(true);
+                        }}>
+                        <View style={styles.userBox}>
+                          <Image
+                            style={styles.userAvatar}
+                            source={
+                              item?.avatar
+                                ? {
+                                    uri: imageURL + item.avatar,
+                                  }
+                                : require('../../../assets/images/free_user.png')
+                            }
+                          />
+                          <View style={styles.userBoxContent}>
+                            <Text
+                              style={{fontSize: fontPixel(18), color: 'black'}}>
+                              {item?.fullname ? item.fullname : ''}
+                            </Text>
+                          </View>
+                        </View>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
-                </View>
+                  )}
+                </>
               );
             }}
+          />
+        </>
+      )}
+      {selectUserModalVisibleStatus && (
+        <View style={styles.modalStyle}>
+          <View style={styles.pencilContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectUserModalVisibleStatus(false);
+              }}>
+              <MaterialCommunityIcons
+                color={'#72a045'}
+                name="close"
+                size={fontPixel(28)}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.selectedUserAvatar}
+              source={
+                selectedUser?.avatar
+                  ? {
+                      uri: imageURL + selectedUser.avatar,
+                    }
+                  : require('../../../assets/images/free_user.png')
+              }
+            />
+            <Text style={{fontSize: fontPixel(18), color: 'black'}}>
+              {selectedUser?.fullname ? selectedUser.fullname : ''}
+            </Text>
+          </View>
+          <View style={{width: '100%', alignItems: 'center'}}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.button}
+              onPress={() => followRequest(selectedUser._id)}>
+              <Text style={styles.buttonText}>Follow User</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+      {friendsVisibleStatus && (
+        <>
+          <View style={styles.pencilContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                setProfileVisibleStatus(true);
+                setFriendsVisibleStatus(false);
+              }}>
+              <MaterialCommunityIcons
+                color={'#72a045'}
+                name="close"
+                size={fontPixel(28)}
+              />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={formatRow(friendList, numColumns)}
+            keyExtractor={item => {
+              return item._id;
+            }}
+            renderItem={renderItem}
+            numColumns={numColumns}
           />
         </>
       )}
@@ -303,6 +441,11 @@ const styles = StyleSheet.create({
     height: heightPixel(60),
     borderRadius: heightPixel(30),
   },
+  selectedUserAvatar: {
+    width: heightPixel(180),
+    height: heightPixel(180),
+    borderRadius: heightPixel(90),
+  },
   box: {
     padding: heightPixel(6),
     marginVertical: heightPixel(1),
@@ -330,5 +473,21 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     marginLeft: heightPixel(10),
+  },
+  modalStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    top: heightPixel(0),
+    width: '100%',
+  },
+  renderItemStyle: {
+    backgroundColor: 'transparent',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: heightPixel(3),
   },
 });
