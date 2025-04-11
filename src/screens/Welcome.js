@@ -45,7 +45,7 @@ const WelcomeScreen = ({navigation}) => {
                   fontFamily: 'LEMONMILK-Bold',
                 },
               ]}>
-              Food labels can be tricky
+              Know your food—scan
             </Text>
             <Text
               allowFontScaling={false}
@@ -55,7 +55,17 @@ const WelcomeScreen = ({navigation}) => {
                   fontFamily: 'LEMONMILK-Bold',
                 },
               ]}>
-              We make it easy!
+              Ingredients, find better
+            </Text>
+            <Text
+              allowFontScaling={false}
+              style={[
+                styles.titleStyle,
+                {
+                  fontFamily: 'LEMONMILK-Bold',
+                },
+              ]}>
+              Choices, get ai recipes
             </Text>
           </View>
           <View style={{alignItems: 'flex-start'}}>
@@ -241,7 +251,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fontPixel(24),
     color: 'black',
-    padding: heightPixel(5),
+    padding: heightPixel(3),
   },
 });
 

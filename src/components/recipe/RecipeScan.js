@@ -222,7 +222,7 @@ const RecipeScanScreen = ({navigation}) => {
                 }).promise;
 
                 if (downloadResult.statusCode === 200) {
-                  console.log('Download success:', photoPath);
+                  // console.log('Download success:', photoPath);
                   const photoURI =
                     Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
                   setLocalRecipeResultImgUrl(photoURI);
@@ -834,7 +834,7 @@ const styles = StyleSheet.create({
   },
   goToHomePanel: {
     position: 'absolute',
-    top: heightPixel(20),
+    top: heightPixel(10),
     left: heightPixel(20),
     flexDirection: 'row',
     alignSelf: 'flex-start',

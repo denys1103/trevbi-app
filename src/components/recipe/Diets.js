@@ -638,6 +638,92 @@ const DietsScreen = ({navigation}) => {
             </View>
           </View>
         </View>
+        <View style={styles.tabBarContainer}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.tabItemStyle}
+            onPress={() => navigation.navigate('Scan')}>
+            <Image
+              style={{
+                width: widthPixel(40),
+                height: widthPixel(40),
+                resizeMode: 'contain',
+              }}
+              source={require('../../../assets/images/scan_active.png')}
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(11),
+                color: '#61a148',
+              }}>
+              SCAN
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.tabItemStyle}
+            onPress={() => navigation.navigate('Recipes')}>
+            <Image
+              style={{
+                width: widthPixel(40),
+                height: widthPixel(40),
+                resizeMode: 'contain',
+              }}
+              source={require('../../../assets/images/recipes.png')}
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(11),
+                color: '#000000',
+              }}>
+              RECIPES
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.tabItemStyle}
+            onPress={() => navigation.navigate('History')}>
+            <Image
+              style={{
+                width: widthPixel(40),
+                height: widthPixel(40),
+                resizeMode: 'contain',
+              }}
+              source={require('../../../assets/images/history.png')}
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(11),
+                color: '#000000',
+              }}>
+              HISTORY
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.tabItemStyle}
+            onPress={() => navigation.navigate('Menu')}>
+            <Image
+              style={{
+                width: widthPixel(40),
+                height: widthPixel(40),
+                resizeMode: 'contain',
+              }}
+              source={require('../../../assets/images/menu.png')}
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(11),
+                color: '#000000',
+              }}>
+              MENU
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -652,11 +738,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: heightPixel(70),
   },
   wrapper: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
   },
@@ -667,6 +754,7 @@ const styles = StyleSheet.create({
     padding: heightPixel(0),
   },
   titleView: {
+    paddingTop: heightPixel(10),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -705,8 +793,8 @@ const styles = StyleSheet.create({
     marginLeft: heightPixel(8),
   },
   logoStyle: {
-    width: SCREEN_WIDTH * 0.6,
-    height: SCREEN_WIDTH * 0.28 * 0.6,
+    width: SCREEN_WIDTH * 0.4,
+    height: SCREEN_WIDTH * 0.28 * 0.4,
     resizeMode: 'cover',
     marginTop: heightPixel(10),
   },
@@ -720,6 +808,26 @@ const styles = StyleSheet.create({
     paddingRight: heightPixel(10),
     alignSelf: 'flex-start',
     justifyContent: 'center',
+  },
+  tabBarContainer: {
+    position: 'absolute',
+    bottom: heightPixel(0),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#efefef',
+    paddingLeft: widthPixel(10),
+    paddingRight: widthPixel(10),
+    paddingBottom: heightPixel(12),
+    paddingTop: heightPixel(5),
+    height: heightPixel(70),
+    borderTopColor: '#bbbbbb',
+  },
+  tabItemStyle: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -208,7 +208,7 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
                   activeOpacity={0.5}
                   style={[
                     styles.goToBackBtnStyle,
-                    {width: heightPixel(80), marginBottom: heightPixel(5)},
+                    {width: heightPixel(80), marginBottom: heightPixel(10)},
                   ]}
                   onPress={onGoBack}>
                   <Ionicons
@@ -460,6 +460,7 @@ const styles = StyleSheet.create({
   },
   scanPanelStyle: {
     padding: heightPixel(20),
+    paddingTop: heightPixel(10),
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },

@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   Linking,
+  Image,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {fontPixel, heightPixel} from '../../config';
@@ -25,29 +26,25 @@ export function MenuList({navigation}) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
         <Spinner visible={isLoading} />
+        <Image
+          style={styles.logoStyle}
+          source={require('../../../assets/images/TREVBI_Logo.jpg')}
+        />
         <View style={styles.form}>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
             onPress={() => navigation.replace('HowItWorks')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               How It Works
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
             onPress={() => navigation.replace('Profile')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               Profile
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.8}
-            onPress={() => console.log('')}>
-            <Text allowFontScaling={false} style={styles.buttonText}>
-              Message Board
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -78,6 +75,14 @@ export function MenuList({navigation}) {
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
+            onPress={() => navigation.replace('SocialWelcome')}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Trevbi Social
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
             onPress={logout}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               Logout
@@ -98,6 +103,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '80%',
+    paddingVertical: heightPixel(60),
   },
   button: {
     marginTop: heightPixel(20),
@@ -124,5 +130,10 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
     color: 'black',
     fontFamily: 'LEMONMILK-Medium',
+  },
+  logoStyle: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH * 0.28,
+    resizeMode: 'cover',
   },
 });

@@ -10,12 +10,13 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   ScrollView,
-  Linking,
+  Dimensions,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import client, {fontPixel, heightPixel} from '../../config';
 import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const ViewDetailsScreen = ({item, onGoBack}) => {
   const {height, width, scale} = useWindowDimensions();
@@ -82,7 +83,8 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
                   paddingVertical: heightPixel(5),
                 }}
                 style={{
-                  maxHeight: height - heightPixel(100),
+                  maxHeight:
+                    height - heightPixel(100) - SCREEN_WIDTH * 0.28 * 0.6,
                 }}>
                 {recipeResult.split('\n').map((recipeItem, index) => (
                   <Text
@@ -94,6 +96,28 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
                 ))}
               </ScrollView>
             )}
+            <View
+              style={{
+                width: SCREEN_WIDTH,
+                paddingHorizontal: heightPixel(8),
+                marginTop: heightPixel(-10),
+                backgroundColor: 'transparent',
+              }}>
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(30),
+                  textAlign: 'left',
+                  color: 'black',
+                  padding: heightPixel(0),
+                }}>
+                &#8595;
+              </Text>
+            </View>
+            <Image
+              style={styles.logoStyle}
+              source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+            />
           </View>
         </View>
       </View>
@@ -105,6 +129,7 @@ const styles = StyleSheet.create({
   container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   scanPanelStyle: {
     padding: heightPixel(20),
+    paddingTop: heightPixel(10),
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
@@ -127,6 +152,13 @@ const styles = StyleSheet.create({
     paddingRight: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logoStyle: {
+    width: SCREEN_WIDTH * 0.6,
+    height: SCREEN_WIDTH * 0.28 * 0.6,
+    resizeMode: 'cover',
+    marginTop: heightPixel(0),
+    alignSelf: 'center',
   },
 });
 

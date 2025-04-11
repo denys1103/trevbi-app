@@ -16,9 +16,11 @@ import {
   heightPixel,
   appDir,
   indexRecipeFilePath,
+  widthPixel,
 } from '../../config';
 import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CheckBox from '@react-native-community/checkbox';
 import ViewDetailsComponent from './ViewDetails';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -30,6 +32,7 @@ const RecipesHistory = ({navigation}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const {checkEvent} = useContext(GlobalContext);
   const [search, setSearch] = useState('');
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const createAppDir = async () => {
     if (!(await RNFS.exists(appDir))) {
@@ -209,30 +212,32 @@ const RecipesHistory = ({navigation}) => {
           clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
           value={search}
         /> */}
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={[
-            styles.goToBackBtnStyle,
-            {width: heightPixel(120), marginBottom: heightPixel(5)},
-          ]}
-          onPress={() => {
-            navigation.navigate('Diets');
-          }}>
-          <Ionicons
-            size={fontPixel(18)}
-            name={'caret-back'}
-            style={{color: 'white'}}
-          />
-          <Text
-            allowFontScaling={false}
-            style={{
-              fontSize: fontPixel(14),
-              color: 'white',
-              fontFamily: 'LEMONMILK-Medium',
+        {searchHistoryData.length > 0 && (
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={[
+              styles.goToBackBtnStyle,
+              {width: heightPixel(120), marginBottom: heightPixel(5)},
+            ]}
+            onPress={() => {
+              navigation.navigate('Diets');
             }}>
-            Let's cook
-          </Text>
-        </TouchableOpacity>
+            <Ionicons
+              size={fontPixel(18)}
+              name={'caret-back'}
+              style={{color: 'white'}}
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(14),
+                color: 'white',
+                fontFamily: 'LEMONMILK-Medium',
+              }}>
+              Let's cook
+            </Text>
+          </TouchableOpacity>
+        )}
         <Image
           style={styles.logoStyle}
           source={require('../../../assets/images/TREVBI_Logo.jpg')}
@@ -251,43 +256,103 @@ const RecipesHistory = ({navigation}) => {
           }
         />
       ) : (
-        <View style={styles.wrapper}>
-          <Image
-            style={styles.recipeImgStyle}
-            source={require('../../../assets/images/recipes.png')}
-          />
-          <Text
-            allowFontScaling={false}
-            style={[
-              styles.titleStyle,
-              {
-                fontFamily: 'LEMONMILK-Light',
-              },
-            ]}>
-            {`You have not saved\nany recipes yet.`}
-          </Text>
+        <>
           <Image
             style={styles.recipeScreenStyle}
             source={require('../../../assets/images/AI_RECIPE_SCREENS.jpg')}
           />
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.7}
-            onPress={() => {
-              navigation.navigate('Diets');
-            }}>
-            <Text
-              allowFontScaling={false}
-              style={[
-                styles.text_button,
-                {
-                  fontFamily: 'LEMONMILK-Medium',
-                },
-              ]}>
-              Let's cook
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.wrapper}>
+            <View style={styles.descriptionView}>
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.titleStyle,
+                  {
+                    fontFamily: 'LEMONMILK-Bold',
+                    paddingTop: heightPixel(10),
+                  },
+                ]}>
+                No recipe? no problem!
+              </Text>
+            </View>
+            <View style={styles.descriptionView}>
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'LEMONMILK-Regular',
+                  fontSize: fontPixel(18),
+                  textAlign: 'center',
+                  color: 'black',
+                }}>
+                Snap a pic of your fridge or
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'LEMONMILK-Regular',
+                  fontSize: fontPixel(18),
+                  textAlign: 'center',
+                  color: 'black',
+                  paddingTop: heightPixel(10),
+                }}>
+                pantry—TREVBI AI will whip up the
+              </Text>
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontFamily: 'LEMONMILK-Regular',
+                  fontSize: fontPixel(18),
+                  textAlign: 'center',
+                  color: 'black',
+                  paddingTop: heightPixel(10),
+                }}>
+                perfect recipe for you!
+              </Text>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.7}
+                onPress={() => {
+                  navigation.navigate('Diets');
+                }}>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.text_button,
+                    {
+                      fontFamily: 'LEMONMILK-Medium',
+                    },
+                  ]}>
+                  Let's cook with ai
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.checkboxContainer}>
+                <CheckBox
+                  disabled={false}
+                  value={toggleCheckBox}
+                  onValueChange={newValue => setToggleCheckBox(newValue)}
+                  style={
+                    Platform.OS === 'ios'
+                      ? styles.checkbox
+                      : styles.checkboxAndroid
+                  }
+                  boxType={'square'}
+                />
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.label,
+                    {
+                      fontFamily: 'LEMONMILK-Light',
+                    },
+                  ]}>
+                  DON'T SHOW THIS SCREEN AGAIN
+                </Text>
+              </View>
+            </View>
+          </View>
+        </>
       )}
     </SafeAreaView>
   );
@@ -296,7 +361,7 @@ const RecipesHistory = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: heightPixel(20),
+    // paddingVertical: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     // alignItems: 'center',
@@ -347,18 +412,13 @@ const styles = StyleSheet.create({
     height: SCREEN_WIDTH * 0.28,
     resizeMode: 'cover',
   },
-  recipeImgStyle: {
-    width: SCREEN_WIDTH * 0.2,
-    height: SCREEN_WIDTH * 0.2,
-    resizeMode: 'cover',
-    marginVertical: heightPixel(30),
-  },
   wrapper: {
+    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-space',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '100%',
-    height: SCREEN_HEIGHT - SCREEN_WIDTH * 0.4 - heightPixel(150),
+    paddingTop: heightPixel(10),
   },
   titleStyle: {
     textAlign: 'center',
@@ -367,22 +427,24 @@ const styles = StyleSheet.create({
     padding: heightPixel(5),
   },
   recipeScreenStyle: {
-    width: SCREEN_WIDTH * 0.85,
-    height: SCREEN_WIDTH * 0.6,
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH * 0.77,
     resizeMode: 'cover',
   },
   text_button: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(20),
     color: 'white',
   },
   button: {
-    marginTop: heightPixel(50),
+    marginTop: heightPixel(10),
     backgroundColor: '#063225',
-    borderRadius: heightPixel(25),
+    borderRadius: heightPixel(20),
     paddingVertical: heightPixel(15),
-    paddingHorizontal: heightPixel(20),
+    paddingHorizontal: widthPixel(20),
+    marginBottom: heightPixel(20),
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   goToBackBtnStyle: {
     flexDirection: 'row',
@@ -394,6 +456,22 @@ const styles = StyleSheet.create({
     paddingRight: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  descriptionView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginVertical: heightPixel(10),
+  },
+  label: {
+    fontSize: fontPixel(18),
+    color: 'black',
+    alignSelf: 'center',
+    paddingLeft: widthPixel(5),
   },
 });
 

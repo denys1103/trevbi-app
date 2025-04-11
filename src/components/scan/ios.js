@@ -415,7 +415,9 @@ const ScanAndRecognizeScreen = ({navigation}) => {
             JSON.stringify({textBlocks: ocrResults}),
           );
           const newEntry = {photoPath, avoidPath, blockPath};
-          await updateIndexFile(newEntry);
+          if (avoidIngredients.length > 0) {
+            await updateIndexFile(newEntry);
+          }
           // console.log(JSON.stringify(ocrResults, null, 2))
           setCheckEvent(!checkEvent);
           setIsScanning(false);
