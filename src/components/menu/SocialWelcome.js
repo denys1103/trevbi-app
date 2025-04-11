@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import {GlobalContext} from '../../context';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -20,7 +21,7 @@ const SocialWelcomeScreen = ({navigation}) => {
   const {isLoading} = useContext(GlobalContext);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
         <Text
@@ -211,7 +212,7 @@ const SocialWelcomeScreen = ({navigation}) => {
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
