@@ -101,7 +101,9 @@ export function Profile({setEditVisible, navigation}) {
                 : require('../../../assets/images/free_user.png')
             }
           />
-          <Text style={{fontSize: fontPixel(18), color: 'black'}}>
+          <Text
+            allowFontScaling={false}
+            style={{fontSize: fontPixel(18), color: 'black'}}>
             {item?.fullname ? item.fullname : ''}
           </Text>
         </View>
@@ -308,6 +310,7 @@ export function Profile({setEditVisible, navigation}) {
                           />
                           <View style={styles.userBoxContent}>
                             <Text
+                              allowFontScaling={false}
                               style={{fontSize: fontPixel(18), color: 'black'}}>
                               {item?.fullname ? item.fullname : ''}
                             </Text>
@@ -347,7 +350,9 @@ export function Profile({setEditVisible, navigation}) {
                   : require('../../../assets/images/free_user.png')
               }
             />
-            <Text style={{fontSize: fontPixel(18), color: 'black'}}>
+            <Text
+              allowFontScaling={false}
+              style={{fontSize: fontPixel(18), color: 'black'}}>
               {selectedUser?.fullname ? selectedUser.fullname : ''}
             </Text>
           </View>
@@ -356,7 +361,9 @@ export function Profile({setEditVisible, navigation}) {
               activeOpacity={0.8}
               style={styles.button}
               onPress={() => followRequest(selectedUser._id)}>
-              <Text style={styles.buttonText}>Follow User</Text>
+              <Text allowFontScaling={false} style={styles.buttonText}>
+                Follow User
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

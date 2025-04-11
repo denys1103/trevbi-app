@@ -37,6 +37,7 @@ const pixelSizeHorizontal = size => {
 const VERSION = '1.0';
 const baseURL = HOST_URL + '/api';
 const imageURL = HOST_URL + '/uploads/images/';
+const recipeImageRootURL = HOST_URL + '/uploads/recipeImgs/';
 const client = axios.create({
   baseURL: HOST_URL + '/api',
   headers: {
@@ -832,4 +833,5 @@ export {
   appDir,
   indexFilePath,
   indexRecipeFilePath,
+  recipeImageRootURL,
 };

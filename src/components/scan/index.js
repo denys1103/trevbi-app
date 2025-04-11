@@ -53,6 +53,7 @@ import client, {
 import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {WebView} from 'react-native-webview';
+import Toast from 'react-native-toast-message';
 import {GlobalContext} from '../../context';
 import WhiteCross from './WhiteCross';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -133,7 +134,6 @@ const ScanAndRecognizeScreen = ({navigation}) => {
         novaGroup: foodFactsData.product?.nova_group || 'unknown',
         category: category,
       };
-
       setProduct(productInfo);
       fetchHealthierAlternatives(category);
     } catch (error) {
@@ -145,6 +145,11 @@ const ScanAndRecognizeScreen = ({navigation}) => {
     try {
       if (!category || category === 'unknown') {
         setRecommendations([]);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: 'Barcode not detected.',
+        });
         return;
       }
       setOkBtnStatus(false);

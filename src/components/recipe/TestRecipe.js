@@ -37,6 +37,7 @@ import client, {
   widthPixel,
   appDir,
   indexRecipeFilePath,
+  recipeImageRootURL,
 } from '../../config';
 import RNFS from 'react-native-fs';
 import {GlobalContext} from '../../context';
@@ -59,6 +60,9 @@ const RecipeScanScreen = ({navigation}) => {
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const [recipeIngredients, setRecipeIngredients] = useState(null);
   const [recipeResult, setRecipeResult] = useState(null);
+  const [recipeResultImg, setRecipeResultImg] = useState(null);
+  const [localRecipeResultImgUrl, setLocalRecipeResultImgUrl] = useState(null);
+
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
   const {selectedDiets, selectedMeal, setCheckEvent, checkEvent} =
     useContext(GlobalContext);
@@ -193,13 +197,35 @@ const RecipeScanScreen = ({navigation}) => {
           formData.append('meal', selectedMeal);
           formData.append('ingredients', recipeIngredients);
 
-          const response = await client.post('/makeMealRecipe', formData, {
+          const response = await client.post('/makeMealRecipeV2', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           });
           if (response.data.success) {
-            setRecipeResult(response.data.results);
+            if (response.data.results.recipeText) {
+              setRecipeResult(response.data.results.recipeText);
+            }
+            if (response.data.results.recipeImg) {
+              setRecipeResultImg(response.data.results.recipeImg);
+              const photoPath = `${appDir}/recipe_img_${Date.now()}.jpg`;
+              const recipeImageURl =
+                recipeImageRootURL + response.data.results.recipeImg;
+
+              const downloadResult = await RNFS.downloadFile({
+                fromUrl: recipeImageURl,
+                toFile: photoPath,
+              }).promise;
+
+              if (downloadResult.statusCode === 200) {
+                console.log('Download success:', photoPath);
+                const photoURI =
+                  Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
+                setLocalRecipeResultImgUrl(photoURI);
+              } else {
+                console.error('Download failed:', downloadResult.statusCode);
+              }
+            }
           } else {
             console.log('server error!');
           }
@@ -223,7 +249,12 @@ const RecipeScanScreen = ({navigation}) => {
     const recipePath = `${appDir}/recipe_${Date.now()}.json`;
     if (capturedPhoto && recipeResult) {
       await RNFS.writeFile(recipePath, JSON.stringify({recipe: recipeResult}));
-      const newEntry = {photoPath: capturedPhoto, recipePath};
+      const newEntry = {
+        photoPath: localRecipeResultImgUrl
+          ? localRecipeResultImgUrl
+          : capturedPhoto,
+        recipePath,
+      };
       await updateRecipeIndexFile(newEntry);
       setCheckEvent(!checkEvent);
       Alert.alert('Success', 'The recipe has been saved.');
@@ -240,6 +271,8 @@ const RecipeScanScreen = ({navigation}) => {
     setRecipeIngredients(null);
     setEditRecipeIngredients(null);
     setRecipeResult(null);
+    setRecipeResultImg(null);
+    setLocalRecipeResultImgUrl(null);
   };
 
   if (!hasPermission) {
@@ -319,12 +352,12 @@ const RecipeScanScreen = ({navigation}) => {
                     Back
                   </Text>
                 </TouchableOpacity>
-                <Image
-                  source={{uri: capturedPhoto}}
-                  style={styles.capturedImage}
-                />
                 {recipeIngredients && !recipeResult && (
                   <>
+                    <Image
+                      source={{uri: capturedPhoto}}
+                      style={styles.capturedImage}
+                    />
                     <View style={styles.recipeIngredientsViewStyle}>
                       <Text
                         allowFontScaling={false}
@@ -406,6 +439,14 @@ const RecipeScanScreen = ({navigation}) => {
                 )}
                 {recipeResult && (
                   <>
+                    <Image
+                      source={{
+                        uri: recipeResultImg
+                          ? recipeImageRootURL + recipeResultImg
+                          : capturedPhoto,
+                      }}
+                      style={styles.capturedImage}
+                    />
                     <ScrollView
                       contentContainerStyle={{
                         paddingVertical: heightPixel(5),
