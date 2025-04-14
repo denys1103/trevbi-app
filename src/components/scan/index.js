@@ -713,7 +713,10 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                 <>
                   <View style={styles.scanGroupStyle}>
                     <TouchableOpacity
-                      style={styles.scanButton}
+                      style={[
+                        styles.scanButton,
+                        {marginBottom: heightPixel(0)},
+                      ]}
                       onPress={captureAndRecognizeText}>
                       <Text
                         allowFontScaling={false}
@@ -726,7 +729,7 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                         Ingredients
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       activeOpacity={0.9}
                       style={styles.scanButton}
                       onPress={() => navigation.navigate('RecipeWelcome')}>
@@ -740,18 +743,12 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                         style={styles.scanButtonText}>
                         recipes
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
-                  <Text
-                    allowFontScaling={false}
-                    style={{
-                      fontFamily: 'LEMONMILK-Regular',
-                      paddingTop: heightPixel(8),
-                      color: 'black',
-                      fontSize: fontPixel(18),
-                    }}>
-                    App camera
-                  </Text>
+                  <Image
+                    style={[styles.logoStyle, {marginTop: heightPixel(0)}]}
+                    source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  />
                 </>
               ) : (
                 <></>
@@ -1052,7 +1049,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: heightPixel(40),
+    bottom: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1235,7 +1232,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#063225',
     paddingVertical: heightPixel(5),
     paddingHorizontal: heightPixel(20),
-    borderRadius: heightPixel(14),
+    borderRadius: heightPixel(24),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: heightPixel(10),

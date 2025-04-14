@@ -37,21 +37,21 @@ const Navigation = () => {
             component={Tabs}
             options={{headerShown: false}}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="RecipeWelcome"
             component={RecipeWelcome}
             options={{headerShown: false}}
-          />
-          <Stack.Screen
+          /> */}
+          {/* <Stack.Screen
             name="Diets"
             component={Diets}
             options={{headerShown: false}}
-          />
-          <Stack.Screen
+          /> */}
+          {/* <Stack.Screen
             name="RecipeScan"
             component={RecipeScan}
             options={{headerShown: false}}
-          />
+          /> */}
         </>
       ) : (
         <>

@@ -395,7 +395,7 @@ const DietsScreen = ({navigation}) => {
                   {width: heightPixel(80), marginBottom: heightPixel(5)},
                 ]}
                 onPress={() => {
-                  navigation.navigate('Scan');
+                  navigation.replace('RecipeWelcome');
                 }}>
                 <Ionicons
                   size={fontPixel(18)}
@@ -638,11 +638,11 @@ const DietsScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-        <View style={styles.tabBarContainer}>
+        {/* <View style={styles.tabBarContainer}>
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.tabItemStyle}
-            onPress={() => navigation.navigate('Scan')}>
+            onPress={() => navigation.replace('Dashboard', {screen: 'Scan'})}>
             <Image
               style={{
                 width: widthPixel(40),
@@ -663,14 +663,16 @@ const DietsScreen = ({navigation}) => {
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.tabItemStyle}
-            onPress={() => navigation.navigate('Recipes')}>
+            onPress={() =>
+              navigation.replace('Dashboard', {screen: 'AIRecipes'})
+            }>
             <Image
               style={{
                 width: widthPixel(40),
                 height: widthPixel(40),
                 resizeMode: 'contain',
               }}
-              source={require('../../../assets/images/recipes.png')}
+              source={require('../../../assets/images/ai_recipes.png')}
             />
             <Text
               allowFontScaling={false}
@@ -678,13 +680,15 @@ const DietsScreen = ({navigation}) => {
                 fontSize: fontPixel(11),
                 color: '#000000',
               }}>
-              RECIPES
+              AI RECIPES
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.tabItemStyle}
-            onPress={() => navigation.navigate('History')}>
+            onPress={() =>
+              navigation.replace('Dashboard', {screen: 'History'})
+            }>
             <Image
               style={{
                 width: widthPixel(40),
@@ -705,7 +709,7 @@ const DietsScreen = ({navigation}) => {
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.tabItemStyle}
-            onPress={() => navigation.navigate('Menu')}>
+            onPress={() => navigation.replace('Dashboard', {screen: 'Menu'})}>
             <Image
               style={{
                 width: widthPixel(40),
@@ -723,7 +727,7 @@ const DietsScreen = ({navigation}) => {
               MENU
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );
@@ -738,7 +742,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: heightPixel(70),
+    paddingBottom: heightPixel(10),
   },
   wrapper: {
     flex: 1,

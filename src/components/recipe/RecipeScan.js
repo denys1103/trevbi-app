@@ -475,7 +475,7 @@ const RecipeScanScreen = ({navigation}) => {
                         {
                           width: heightPixel(80),
                           marginTop: heightPixel(10),
-                          marginBottom: heightPixel(5),
+                          // marginBottom: heightPixel(5),
                           alignSelf: 'center',
                         },
                       ]}
@@ -509,22 +509,22 @@ const RecipeScanScreen = ({navigation}) => {
                     allowFontScaling={false}
                     style={{
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(16),
+                      paddingTop: heightPixel(5),
                       color: 'black',
-                      fontSize: fontPixel(22),
+                      fontSize: fontPixel(16),
                     }}>
-                    A clear pic means a better
+                    Make sure your lens is focused
                   </Text>
                   <Text
                     allowFontScaling={false}
                     style={{
                       fontFamily: 'LEMONMILK-Bold',
-                      paddingTop: heightPixel(5),
-                      paddingBottom: heightPixel(16),
+                      paddingTop: heightPixel(2),
+                      paddingBottom: heightPixel(5),
                       color: 'black',
-                      fontSize: fontPixel(22),
+                      fontSize: fontPixel(16),
                     }}>
-                    recipe-steady that shot!
+                    You may need to tap the screen
                   </Text>
                 </>
               ) : (
@@ -584,7 +584,7 @@ const RecipeScanScreen = ({navigation}) => {
                       <Text
                         allowFontScaling={false}
                         style={styles.scanButtonText}>
-                        Food
+                        My Food
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -607,6 +607,10 @@ const RecipeScanScreen = ({navigation}) => {
                     }}>
                     TREVBI will create your recipe
                   </Text> */}
+                  <Image
+                    style={[styles.logoStyle, {marginTop: heightPixel(0)}]}
+                    source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
+                  />
                 </>
               ) : (
                 <></>
@@ -616,7 +620,7 @@ const RecipeScanScreen = ({navigation}) => {
             )}
           </View>
 
-          <View style={styles.tabBarContainer}>
+          {/* <View style={styles.tabBarContainer}>
             <TouchableOpacity
               activeOpacity={0.9}
               style={styles.tabItemStyle}
@@ -641,14 +645,14 @@ const RecipeScanScreen = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.9}
               style={styles.tabItemStyle}
-              onPress={() => navigation.navigate('Recipes')}>
+              onPress={() => navigation.navigate('AIRecipes')}>
               <Image
                 style={{
                   width: widthPixel(40),
                   height: widthPixel(40),
                   resizeMode: 'contain',
                 }}
-                source={require('../../../assets/images/recipes.png')}
+                source={require('../../../assets/images/ai_recipes.png')}
               />
               <Text
                 allowFontScaling={false}
@@ -656,7 +660,7 @@ const RecipeScanScreen = ({navigation}) => {
                   fontSize: fontPixel(11),
                   color: '#000000',
                 }}>
-                RECIPES
+                AI RECIPES
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -701,7 +705,7 @@ const RecipeScanScreen = ({navigation}) => {
                 MENU
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           {modalVisibleStatus && (
             <View style={styles.modalStyle}>
@@ -763,7 +767,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: heightPixel(80),
+    bottom: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -789,7 +793,7 @@ const styles = StyleSheet.create({
   },
   scanPanelStyle: {
     padding: heightPixel(20),
-    paddingBottom: heightPixel(80),
+    // paddingBottom: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
@@ -806,7 +810,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#063225',
     paddingVertical: heightPixel(5),
     paddingHorizontal: heightPixel(20),
-    borderRadius: heightPixel(14),
+    borderRadius: heightPixel(24),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: heightPixel(10),

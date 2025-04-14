@@ -1,13 +1,14 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, useRoute} from '@react-navigation/native';
 import {getHeaderTitle} from '@react-navigation/elements';
 import {Home} from './home';
 import ScanComponent from './scan/index';
 import IosScanComponent from './scan/ios';
 import IosScanTestComponent from './scan/test';
 import HistoryComponent from './scan/History';
-import RecipesComponent from './recipe/Recipes';
+// import RecipesComponent from './recipe/Recipes';
+import {RecipeIndex} from './recipe/index';
 import {Menu} from './menu/index';
 import {Image, Platform} from 'react-native';
 
@@ -16,9 +17,11 @@ import {widthPixel, heightPixel} from '../config';
 const Tab = createBottomTabNavigator();
 
 function CustomTabs() {
+  const route = useRoute();
+  const initialTab = route.params?.screen || 'Scan';
   return (
     <Tab.Navigator
-      initialRouteName="Scan"
+      initialRouteName={initialTab}
       backBehaviour="initialRoute"
       screenOptions={{
         tabBarActiveTintColor: '#61a148',
@@ -72,10 +75,10 @@ function CustomTabs() {
         }}
       />
       <Tab.Screen
-        name="Recipes"
-        component={RecipesComponent}
+        name="AIRecipes"
+        component={RecipeIndex}
         options={{
-          tabBarLabel: 'RECIPES',
+          tabBarLabel: 'AI RECIPES',
           tabBarIcon: ({focused, color, size}) =>
             focused ? (
               <Image
@@ -84,7 +87,7 @@ function CustomTabs() {
                   height: widthPixel(40),
                   resizeMode: 'contain',
                 }}
-                source={require('../../assets/images/recipes_active.png')}
+                source={require('../../assets/images/ai_recipes_active.png')}
               />
             ) : (
               <Image
@@ -93,7 +96,7 @@ function CustomTabs() {
                   height: widthPixel(40),
                   resizeMode: 'contain',
                 }}
-                source={require('../../assets/images/recipes.png')}
+                source={require('../../assets/images/ai_recipes.png')}
               />
             ),
         }}
