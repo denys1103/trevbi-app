@@ -34,7 +34,7 @@ export function MenuList({navigation}) {
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
-            onPress={() => navigation.replace('HowItWorks')}>
+            onPress={() => navigation.replace('SplashThird')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               How It Works
             </Text>
@@ -53,6 +53,14 @@ export function MenuList({navigation}) {
             onPress={() => navigation.replace('Feedback')}>
             <Text allowFontScaling={false} style={styles.buttonText}>
               Feedback
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
+            onPress={() => navigation.replace('Recipes')}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Recipes
             </Text>
           </TouchableOpacity>
           <View

@@ -16,6 +16,7 @@ import {GlobalContext} from '../context';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
 import CheckBox from '@react-native-community/checkbox';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   fontPixel,
@@ -32,6 +33,9 @@ const RegisterScreen = ({navigation}) => {
   const [Confpassword, setConfPassword] = useState(null);
   const {isLoading, register} = useContext(GlobalContext);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [secureTextEntryPass, setSecureTextEntryPass] = useState(true);
+  const [secureTextEntryRePass, setSecureTextEntryRePass] = useState(true);
+
   // useEffect(() => {
   //   LogBox.ignoreLogs([
   //     '[notifee] no background event handler has been set. Set a handler via the "onBackgroundEvent" method.',
@@ -78,36 +82,70 @@ const RegisterScreen = ({navigation}) => {
                 </Text>
               </View>
               <View style={(styles.input_view, {width: '65%'})}>
-                <TextInput
-                  style={styles.input}
-                  value={name}
-                  placeholder="username"
-                  placeholderTextColor="#000000aa"
-                  onChangeText={text => setName(text)}
-                />
-                <TextInput
-                  style={styles.input}
-                  value={email}
-                  onChangeText={text => setEmail(text)}
-                  placeholder="e-mail"
-                  placeholderTextColor="#000000aa"
-                />
-                <TextInput
-                  style={styles.input}
-                  value={password}
-                  onChangeText={text => setPassword(text)}
-                  placeholder="create password"
-                  placeholderTextColor="#000000aa"
-                  secureTextEntry
-                />
-                <TextInput
-                  style={styles.input}
-                  value={Confpassword}
-                  placeholder="verify your password"
-                  placeholderTextColor="#000000aa"
-                  onChangeText={text => setConfPassword(text)}
-                  secureTextEntry
-                />
+                <View style={styles.input_box}>
+                  <TextInput
+                    style={styles.input}
+                    value={name}
+                    placeholder="username"
+                    placeholderTextColor="#000000aa"
+                    onChangeText={text => setName(text)}
+                  />
+                  <MaterialCommunityIcons
+                    color={'#7d7d7d'}
+                    name="account"
+                    size={fontPixel(20)}
+                  />
+                </View>
+                <View style={styles.input_box}>
+                  <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                    placeholder="e-mail"
+                    placeholderTextColor="#000000aa"
+                  />
+                  <MaterialCommunityIcons
+                    color={'#7d7d7d'}
+                    name="email"
+                    size={fontPixel(20)}
+                  />
+                </View>
+                <View style={styles.input_box}>
+                  <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    placeholder="create password"
+                    placeholderTextColor="#000000aa"
+                    autoCapitalize="none"
+                    secureTextEntry={secureTextEntryPass}
+                  />
+                  <MaterialCommunityIcons
+                    color={'#7d7d7d'}
+                    name={secureTextEntryPass ? 'eye-off' : 'eye'}
+                    size={fontPixel(20)}
+                    onPress={() => setSecureTextEntryPass(!secureTextEntryPass)}
+                  />
+                </View>
+                <View style={styles.input_box}>
+                  <TextInput
+                    style={styles.input}
+                    value={Confpassword}
+                    placeholder="verify your password"
+                    placeholderTextColor="#000000aa"
+                    onChangeText={text => setConfPassword(text)}
+                    autoCapitalize="none"
+                    secureTextEntry={secureTextEntryRePass}
+                  />
+                  <MaterialCommunityIcons
+                    color={'#7d7d7d'}
+                    name={secureTextEntryRePass ? 'eye-off' : 'eye'}
+                    size={fontPixel(20)}
+                    onPress={() =>
+                      setSecureTextEntryRePass(!secureTextEntryRePass)
+                    }
+                  />
+                </View>
                 <View style={{alignItems: 'center'}}>
                   <TouchableOpacity
                     style={styles.button}
@@ -201,24 +239,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    marginBottom: widthPixel(20),
-    padding: heightPixel(10),
-    borderWidth: heightPixel(1),
-    borderColor: 'black',
-    borderRadius: heightPixel(10),
-    backgroundColor: '#ffffff',
+    paddingLeft: 0,
+    backgroundColor: '#fff',
     color: 'black',
-    textAlign: 'center',
+    fontFamily: 'LEMONMILK-Light',
+    flex: 1,
   },
-  input_password: {
-    marginBottom: widthPixel(5),
-    padding: heightPixel(10),
+  input_box: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: heightPixel(10),
     borderWidth: heightPixel(1),
     borderColor: 'black',
     borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
-    color: 'black',
-    textAlign: 'center',
+    marginBottom: widthPixel(20),
   },
   wrapper: {
     flex: 1,

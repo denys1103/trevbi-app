@@ -18,6 +18,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {stringMd5} from 'react-native-quick-md5';
 import Toast from 'react-native-toast-message';
 import CheckBox from '@react-native-community/checkbox';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import client from '../config';
 import {fontPixel, heightPixel, widthPixel} from '../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -35,6 +36,7 @@ const LoginScreen = ({navigation}) => {
   const [code_1, setCode_1] = useState('');
   const [step, setStep] = useState(0);
   const [indicator, showIndicator] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const onClickSend = () => {
@@ -53,47 +55,44 @@ const LoginScreen = ({navigation}) => {
         text2: 'Please enter email',
       });
     } else {
-      // showIndicator(true);
-      // client
-      //   .post('/forgot-password', { email: emailAddress, verify: true })
-      //   .then(response => {
-      //     showIndicator(false);
-      //     var data = response.data;
-      //     console.log(data)
-      //     if (data.success) {
-      //       setStep((step + 1) % 3);
-      //       if (data.code != '') {
-      //         setCode_1(data.code);
-      //         Toast.show({
-      //           type: 'success',
-      //           text1: 'Warning',
-      //           text2: 'Please check your email for verification code.',
-      //         });
-      //       }
-      //     } else {
-      //       Toast.show({
-      //         type: 'error',
-      //         text1: 'Warning',
-      //         text2: 'This is an unregistered email',
-      //       });
-      //     }
-      //   })
-      //   .catch(error => {
-      //     showIndicator(false);
-      //     console.log(error.response.data);
-      //     Toast.show({
-      //       type: 'error',
-      //       text1: 'Warning',
-      //       text2: 'Email not sent, please try again later',
-      //     });
-      //   });
-      // showIndicator(false);
+      showIndicator(true);
+      client
+        .post('/forgot-password', {email: emailAddress, verify: true})
+        .then(response => {
+          showIndicator(false);
+          var data = response.data;
+          if (data.success) {
+            setStep((step + 1) % 3);
+            if (data.code != '') {
+              setCode_1(data.code);
+              Toast.show({
+                type: 'success',
+                text1: 'Warning',
+                text2: 'Please check your email for verification code.',
+              });
+            }
+          } else {
+            Toast.show({
+              type: 'error',
+              text1: 'Warning',
+              text2: 'This is an unregistered email',
+            });
+          }
+        })
+        .catch(error => {
+          showIndicator(false);
+          Toast.show({
+            type: 'error',
+            text1: 'Warning',
+            text2: 'Email not sent, please try again later',
+          });
+        });
+      showIndicator(false);
     }
   };
 
   const onClickVerify = () => {
     const enc = stringMd5(code);
-    console.log(enc, code_1, code);
     if (code === '' || enc !== code_1) {
       Toast.show({
         type: 'error',
@@ -133,43 +132,47 @@ const LoginScreen = ({navigation}) => {
       return;
     }
     showIndicator(true);
-    // client
-    //   .post('/forgot-password', { email: emailAddress, verify: false, password: rePassword })
-    //   .then(response => {
-    //     var data = response.data;
-    //     if (data.success) {
-    //       showIndicator(false);
-    //       if (data.code == '') {
-    //         setPopupVisible(false);
-    //         setStep(0);
-    //         setRePassword('');
-    //         setConfirmPassword('');
-    //         setCode('');
-    //         setCode_1('');
-    //         setEmailAddress('');
-    //         Toast.show({
-    //           type: 'success',
-    //           text1: 'Alert',
-    //           text2: 'Successfully reset password.',
-    //         });
-    //       }
-    //     } else {
-    //       showIndicator(false);
-    //       Toast.show({
-    //         type: 'error',
-    //         text1: 'Warning',
-    //         text2: 'Failed, please try again later!',
-    //       });
-    //     }
-    //   })
-    //   .catch(error => {
-    //     showIndicator(false);
-    //     Toast.show({
-    //       type: 'error',
-    //       text1: 'Warning',
-    //       text2: 'Failed to reset password, please try again later.',
-    //     });
-    //   })
+    client
+      .post('/forgot-password', {
+        email: emailAddress,
+        verify: false,
+        password: rePassword,
+      })
+      .then(response => {
+        var data = response.data;
+        if (data.success) {
+          showIndicator(false);
+          if (data.code == '') {
+            setPopupVisible(false);
+            setStep(0);
+            setRePassword('');
+            setConfirmPassword('');
+            setCode('');
+            setCode_1('');
+            setEmailAddress('');
+            Toast.show({
+              type: 'success',
+              text1: 'Alert',
+              text2: 'Successfully reset password.',
+            });
+          }
+        } else {
+          showIndicator(false);
+          Toast.show({
+            type: 'error',
+            text1: 'Warning',
+            text2: 'Failed, please try again later!',
+          });
+        }
+      })
+      .catch(error => {
+        showIndicator(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Warning',
+          text2: 'Failed to reset password, please try again later.',
+        });
+      });
     showIndicator(false);
   };
 
@@ -225,43 +228,64 @@ const LoginScreen = ({navigation}) => {
               </View>
               <View style={{height: '2%'}} />
               <View style={(styles.input_view, {width: '65%'})}>
-                <TextInput
-                  style={styles.input}
-                  value={email}
-                  onChangeText={text => setEmail(text)}
-                  label="Email"
-                  placeholder="example@email.com"
-                  placeholderTextColor="#000000aa"
-                  autoCapitalize="none"
-                />
-
-                <TextInput
-                  style={styles.input_password}
-                  value={password}
-                  onChangeText={text => setPassword(text)}
-                  label="Password"
-                  placeholder="password"
-                  autoCapitalize="none"
-                  placeholderTextColor="#000000aa"
-                  secureTextEntry
-                />
-                {/* <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <Text allowFontScaling={false}
+                <View
+                  style={[styles.input_box, {marginBottom: widthPixel(20)}]}>
+                  <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={text => setEmail(text)}
+                    label="Email"
+                    placeholder="example@email.com"
+                    placeholderTextColor="#000000aa"
+                    autoCapitalize="none"
+                  />
+                  <MaterialCommunityIcons
+                    color={'#7d7d7d'}
+                    name="email"
+                    size={fontPixel(20)}
+                  />
+                </View>
+                <View style={styles.input_box}>
+                  <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                    label="Password"
+                    placeholder="password"
+                    autoCapitalize="none"
+                    placeholderTextColor="#000000aa"
+                    secureTextEntry={secureTextEntry}
+                  />
+                  <MaterialCommunityIcons
+                    color={'#7d7d7d'}
+                    name={secureTextEntry ? 'eye-off' : 'eye'}
+                    size={fontPixel(20)}
+                    onPress={() => setSecureTextEntry(!secureTextEntry)}
+                  />
+                </View>
+                <View style={styles.checkboxContainer}>
+                  <CheckBox
+                    disabled={false}
+                    value={toggleCheckBox}
+                    onValueChange={newValue => setToggleCheckBox(newValue)}
+                    style={
+                      Platform.OS === 'ios'
+                        ? styles.checkbox
+                        : styles.checkboxAndroid
+                    }
+                    boxType={'square'}
+                  />
+                  <Text
+                    allowFontScaling={false}
                     style={[
                       styles.text_forgot,
                       {
-                        fontFamily: 'MyriadPro-Regular',
+                        fontFamily: 'LEMONMILK-Medium',
                       },
                     ]}>
-                    forgot password?{' '}
+                    Remember me
                   </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setPopupVisible(true);
-                    }}>
-                    <Text allowFontScaling={false} style={styles.link}>Click Here</Text>
-                  </TouchableOpacity>
-                </View> */}
+                </View>
                 <View style={{alignItems: 'center'}}>
                   <TouchableOpacity
                     style={styles.button}
@@ -277,13 +301,25 @@ const LoginScreen = ({navigation}) => {
                         });
                       }
                     }}>
-                    <Text allowFontScaling={false} style={styles.text_button}>
+                    <Text
+                      allowFontScaling={false}
+                      style={[styles.text_button, {fontSize: fontPixel(20)}]}>
                       Login
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.checkboxContainer}
+                    onPress={() => setPopupVisible(true)}>
+                    <Text allowFontScaling={false} style={styles.link}>
+                      Forgot password?
                     </Text>
                   </TouchableOpacity>
                   <Text
                     allowFontScaling={false}
-                    style={[styles.text_button, {color: 'black'}]}>
+                    style={[
+                      styles.text_button,
+                      {color: 'black', fontSize: fontPixel(20)},
+                    ]}>
                     Or
                   </Text>
                 </View>
@@ -430,76 +466,46 @@ const LoginScreen = ({navigation}) => {
             </Text>
           </View>
           <View style={styles.popup_body_view}>
-            <Text
-              allowFontScaling={false}
-              style={[
-                styles.label,
-                {
-                  fontFamily: 'MyriadPro-Regular',
-                },
-              ]}>
+            <Text allowFontScaling={false} style={styles.label}>
               {step == 0 && 'Email address'}
               {step == 1 && 'Code'}
               {step == 2 && 'New Password'}
             </Text>
             {step == 0 && (
               <TextInput
-                style={[
-                  styles.popup_input,
-                  {
-                    fontFamily: 'MyriadPro-Regular',
-                  },
-                ]}
+                style={styles.popup_input}
                 value={emailAddress}
                 onChangeText={setEmailAddress}
               />
             )}
             {step == 1 && (
               <TextInput
-                style={[
-                  styles.popup_input,
-                  {
-                    fontFamily: 'MyriadPro-Regular',
-                  },
-                ]}
+                style={styles.popup_input}
                 value={code}
                 onChangeText={setCode}
               />
             )}
             {step == 2 && (
               <TextInput
-                style={[
-                  styles.popup_input,
-                  {
-                    fontFamily: 'MyriadPro-Regular',
-                  },
-                ]}
+                style={styles.popup_input}
                 value={rePassword}
                 onChangeText={setRePassword}
+                secureTextEntry={true}
+                autoCapitalize="none"
               />
             )}
             {step == 2 && (
-              <Text
-                allowFontScaling={false}
-                style={[
-                  styles.label,
-                  {
-                    fontFamily: 'MyriadPro-Regular',
-                  },
-                ]}>
+              <Text allowFontScaling={false} style={styles.label}>
                 Confirm Password
               </Text>
             )}
             {step == 2 && (
               <TextInput
-                style={[
-                  styles.popup_input,
-                  {
-                    fontFamily: 'MyriadPro-Regular',
-                  },
-                ]}
+                style={styles.popup_input}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
+                secureTextEntry={true}
+                autoCapitalize="none"
               />
             )}
             <View
@@ -512,9 +518,7 @@ const LoginScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.popup_button}
                   activeOpacity={0.7}
-                  onPress={() => {
-                    onClickSend();
-                  }}>
+                  onPress={onClickSend}>
                   <Text allowFontScaling={false} style={styles.text_button}>
                     Send
                   </Text>
@@ -524,9 +528,7 @@ const LoginScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.popup_button}
                   activeOpacity={0.7}
-                  onPress={() => {
-                    onClickVerify();
-                  }}>
+                  onPress={onClickVerify}>
                   <Text allowFontScaling={false} style={styles.text_button}>
                     Verify
                   </Text>
@@ -536,9 +538,7 @@ const LoginScreen = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.popup_button}
                   activeOpacity={0.7}
-                  onPress={() => {
-                    onClickReset();
-                  }}>
+                  onPress={onClickReset}>
                   <Text allowFontScaling={false} style={styles.text_button}>
                     Reset
                   </Text>
@@ -584,24 +584,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    marginBottom: widthPixel(20),
-    padding: heightPixel(10),
-    borderWidth: heightPixel(1),
-    borderColor: 'black',
-    borderRadius: heightPixel(10),
-    backgroundColor: '#ffffff',
+    paddingLeft: 0,
+    backgroundColor: '#fff',
     color: 'black',
-    textAlign: 'center',
+    fontFamily: 'LEMONMILK-Light',
+    flex: 1,
   },
-  input_password: {
-    marginBottom: widthPixel(5),
-    padding: heightPixel(10),
+  input_box: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: heightPixel(10),
     borderWidth: heightPixel(1),
     borderColor: 'black',
     borderRadius: heightPixel(10),
     backgroundColor: '#ffffff',
-    color: 'black',
-    textAlign: 'center',
+    marginBottom: widthPixel(5),
   },
   wrapper: {
     flex: 1,
@@ -652,17 +650,17 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   text_button: {
-    fontSize: fontPixel(20),
+    fontSize: fontPixel(18),
     color: 'white',
     fontFamily: 'LEMONMILK-Medium',
   },
   button: {
-    marginTop: heightPixel(20),
+    // marginTop: heightPixel(20),
     backgroundColor: '#063225',
     borderRadius: heightPixel(5),
     paddingVertical: widthPixel(10),
     paddingHorizontal: heightPixel(20),
-    marginBottom: heightPixel(20),
+    // marginBottom: heightPixel(20),
     alignItems: 'center',
     justifyContent: 'center',
     width: '70%',
@@ -692,7 +690,8 @@ const styles = StyleSheet.create({
   popup_header_text: {
     alignSelf: 'center',
     color: 'white',
-    fontSize: fontPixel(24),
+    fontSize: fontPixel(22),
+    fontFamily: 'LEMONMILK-Light',
   },
   popup_body_view: {
     alignSelf: 'center',
@@ -705,6 +704,7 @@ const styles = StyleSheet.create({
     marginBottom: heightPixel(5),
     fontSize: fontPixel(16),
     color: '#72a045',
+    fontFamily: 'LEMONMILK-Light',
   },
   popup_input: {
     borderColor: '#72a045',
@@ -713,13 +713,14 @@ const styles = StyleSheet.create({
     padding: heightPixel(6),
     fontSize: fontPixel(21),
     color: '#72a045',
+    fontFamily: 'LEMONMILK-Light',
   },
   popup_button: {
     marginTop: heightPixel(20),
     backgroundColor: '#428242',
     borderRadius: heightPixel(5),
     paddingVertical: widthPixel(10),
-    paddingHorizontal: heightPixel(20),
+    paddingHorizontal: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
     width: '40%',

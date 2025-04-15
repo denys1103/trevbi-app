@@ -2,12 +2,12 @@ import React, {useState, useContext} from 'react';
 import {
   Text,
   TouchableOpacity,
+  ImageBackground,
   Image,
   View,
   StyleSheet,
   Dimensions,
   Platform,
-  SafeAreaView,
 } from 'react-native';
 import {GlobalContext} from '../../context';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -21,83 +21,66 @@ const WelcomeScreen = ({navigation}) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={{flex: 1}}>
         <Spinner visible={isLoading} />
-        <View style={styles.overlay}>
-          <Image
-            style={styles.logoStyle}
-            source={require('../../../assets/images/TREVBI_Logo.jpg')}
-          />
-          <Image
-            style={styles.recipeScreenStyle}
-            source={require('../../../assets/images/AI_RECIPE_SCREENS.jpg')}
-          />
-        </View>
-        <View style={styles.wrapper}>
+        <ImageBackground
+          source={require('../../../assets/images/vegetables.jpg')}
+          resizeMode="cover"
+          style={styles.vegetablesStyle}>
+          <View style={styles.overlay}>
+            <Image
+              style={styles.logoStyle}
+              source={require('../../../assets/images/TREVBI_Logo.jpg')}
+            />
+          </View>
+        </ImageBackground>
+        <ImageBackground
+          source={require('../../../assets/images/girl.jpg')}
+          resizeMode="cover"
+          style={styles.wrapper}>
           <View style={styles.descriptionView}>
+            <Text allowFontScaling={false} style={styles.titleStyle}>
+              Scan your fridge or
+            </Text>
+            <Text allowFontScaling={false} style={styles.titleStyle}>
+              Pantry - instantly
+            </Text>
+            <Text allowFontScaling={false} style={styles.titleStyle}>
+              Get AI recipe.
+            </Text>
+          </View>
+          <View style={{paddingVertical: heightPixel(20)}}>
             <Text
               allowFontScaling={false}
               style={[
-                styles.titleStyle,
+                styles.descriptionStyle,
                 {
-                  fontFamily: 'LEMONMILK-Bold',
                   paddingTop: heightPixel(10),
                 },
               ]}>
-              No recipe? no problem!
+              {`You can also lay your\ningredients on your counter`}
             </Text>
           </View>
           <View style={styles.descriptionView}>
             <Text
               allowFontScaling={false}
-              style={{
-                fontFamily: 'LEMONMILK-Regular',
-                fontSize: fontPixel(18),
-                textAlign: 'center',
-                color: 'black',
-              }}>
-              Snap a pic of your fridge or
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'LEMONMILK-Regular',
-                fontSize: fontPixel(18),
-                textAlign: 'center',
-                color: 'black',
-                paddingTop: heightPixel(10),
-              }}>
-              pantry—TREVBI AI will whip up the
-            </Text>
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontFamily: 'LEMONMILK-Regular',
-                fontSize: fontPixel(18),
-                textAlign: 'center',
-                color: 'black',
-                paddingTop: heightPixel(10),
-              }}>
-              perfect recipe for you!
+              style={[styles.titleStyle, {fontSize: fontPixel(28)}]}>
+              {`Dinner just\ngot smarter!`}
             </Text>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <TouchableOpacity
               style={styles.button}
               activeOpacity={0.7}
-              onPress={() => {
+              onPress={async () => {
                 navigation.navigate('Diets');
               }}>
-              <Text
-                allowFontScaling={false}
-                style={[
-                  styles.text_button,
-                  {
-                    fontFamily: 'LEMONMILK-Medium',
-                  },
-                ]}>
-                Let's cook with ai
+              <Text allowFontScaling={false} style={styles.text_button}>
+                TREVBI
+              </Text>
+              <Text allowFontScaling={false} style={styles.text_button}>
+                AI RECIPES
               </Text>
             </TouchableOpacity>
             <View style={styles.checkboxContainer}>
@@ -105,6 +88,8 @@ const WelcomeScreen = ({navigation}) => {
                 disabled={false}
                 value={toggleCheckBox}
                 onValueChange={newValue => setToggleCheckBox(newValue)}
+                tintColor={'white'}
+                tintColors={'white'}
                 style={
                   Platform.OS === 'ios'
                     ? styles.checkbox
@@ -124,9 +109,9 @@ const WelcomeScreen = ({navigation}) => {
               </Text>
             </View>
           </View>
-        </View>
+        </ImageBackground>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -135,16 +120,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: SCREEN_HEIGHT,
   },
-  recipeScreenStyle: {
+  vegetablesStyle: {
     width: SCREEN_WIDTH,
-    height: SCREEN_WIDTH * 0.77,
-    resizeMode: 'cover',
+    height: SCREEN_WIDTH * 0.7,
   },
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingTop: heightPixel(50),
   },
   logoStyle: {
     width: SCREEN_WIDTH,
@@ -167,9 +150,10 @@ const styles = StyleSheet.create({
   },
   descriptionStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(24),
-    color: 'black',
+    fontSize: fontPixel(18),
+    color: 'white',
     padding: heightPixel(8),
+    fontFamily: 'LEMONMILK-Regular'
   },
   buzz_text_button: {
     fontSize: fontPixel(18),
@@ -186,23 +170,24 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   text_button: {
-    fontSize: fontPixel(20),
+    fontSize: fontPixel(16),
     color: 'white',
+    fontFamily: 'LEMONMILK-Medium',
   },
   button: {
     marginTop: heightPixel(10),
     backgroundColor: '#063225',
-    borderRadius: heightPixel(20),
-    paddingVertical: heightPixel(15),
+    borderRadius: heightPixel(24),
+    paddingVertical: heightPixel(5),
     paddingHorizontal: widthPixel(20),
-    marginBottom: heightPixel(20),
+    marginBottom: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginVertical: heightPixel(10),
+    marginVertical: heightPixel(0),
   },
   checkbox: {
     alignSelf: 'center',
@@ -210,10 +195,11 @@ const styles = StyleSheet.create({
   checkboxAndroid: {
     alignSelf: 'center',
     transform: [{scale: 1.5}],
+    borderColor: 'white',
   },
   label: {
     fontSize: fontPixel(18),
-    color: 'black',
+    color: 'white',
     alignSelf: 'center',
     paddingLeft: widthPixel(5),
   },
@@ -223,8 +209,9 @@ const styles = StyleSheet.create({
   titleStyle: {
     textAlign: 'center',
     fontSize: fontPixel(24),
-    color: 'black',
-    padding: heightPixel(5),
+    color: 'white',
+    padding: heightPixel(3),
+    fontFamily: 'LEMONMILK-Medium',
   },
 });
 
