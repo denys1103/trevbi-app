@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
     color: 'white',
     padding: heightPixel(8),
-    fontFamily: 'LEMONMILK-Regular'
+    fontFamily: 'LEMONMILK-Regular',
   },
   buzz_text_button: {
     fontSize: fontPixel(18),

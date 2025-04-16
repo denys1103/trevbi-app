@@ -24,7 +24,7 @@ import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export function ProfileEdit({setEditVisible, navigation}) {
-  const {isLoading, userInfo, uploadAvata, saveProfile} =
+  const {isLoading, userInfo, uploadAvata, saveProfile, showModal} =
     useContext(GlobalContext);
   useEffect(() => {
     if (!userInfo.token) {
@@ -139,11 +139,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
           uploadAvata(data);
         }
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: 'File size should not exceed 10 MB.',
-        });
+        showModal('File size should not exceed 10 MB.');
       }
     });
   };
@@ -303,6 +299,7 @@ const styles = StyleSheet.create({
     padding: heightPixel(6),
     fontSize: fontPixel(20),
     color: '#4b4b4b',
+    fontFamily: 'LEMONMILK-Light',
   },
   button: {
     marginTop: heightPixel(20),
@@ -339,5 +336,6 @@ const styles = StyleSheet.create({
   changeAvatarButtonText: {
     color: '#72a045',
     fontSize: fontPixel(18),
+    fontFamily: 'LEMONMILK-Light',
   },
 });

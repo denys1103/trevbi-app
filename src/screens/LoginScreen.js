@@ -26,7 +26,7 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const {isLoading, login, isConnected} = useContext(GlobalContext);
+  const {isLoading, login, isConnected, showModal} = useContext(GlobalContext);
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
@@ -41,19 +41,11 @@ const LoginScreen = ({navigation}) => {
 
   const onClickSend = () => {
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       return;
     }
     if (emailAddress === '') {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Please enter email',
-      });
+      showModal('Please enter email');
     } else {
       showIndicator(true);
       client
@@ -65,27 +57,15 @@ const LoginScreen = ({navigation}) => {
             setStep((step + 1) % 3);
             if (data.code != '') {
               setCode_1(data.code);
-              Toast.show({
-                type: 'success',
-                text1: 'Warning',
-                text2: 'Please check your email for verification code.',
-              });
+              showModal('Please check your email for verification code.');
             }
           } else {
-            Toast.show({
-              type: 'error',
-              text1: 'Warning',
-              text2: 'This is an unregistered email',
-            });
+            showModal('This is an unregistered email');
           }
         })
         .catch(error => {
           showIndicator(false);
-          Toast.show({
-            type: 'error',
-            text1: 'Warning',
-            text2: 'Email not sent, please try again later',
-          });
+          showModal('Email not sent, please try again later');
         });
       showIndicator(false);
     }
@@ -94,11 +74,7 @@ const LoginScreen = ({navigation}) => {
   const onClickVerify = () => {
     const enc = stringMd5(code);
     if (code === '' || enc !== code_1) {
-      Toast.show({
-        type: 'error',
-        text1: 'Alert',
-        text2: 'This is an invalid code.',
-      });
+      showModal('This is an invalid code.');
       return;
     }
 
@@ -107,28 +83,16 @@ const LoginScreen = ({navigation}) => {
 
   const onClickReset = () => {
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       return;
     }
     if (rePassword.length < 8 || rePassword.length > 20) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Password length between 8 and 20',
-      });
+      showModal('Password length between 8 and 20');
       return;
     }
 
     if (rePassword !== confirmPassword) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Confirm password should be same',
-      });
+      showModal('Confirm password should be same');
       return;
     }
     showIndicator(true);
@@ -150,28 +114,16 @@ const LoginScreen = ({navigation}) => {
             setCode('');
             setCode_1('');
             setEmailAddress('');
-            Toast.show({
-              type: 'success',
-              text1: 'Alert',
-              text2: 'Successfully reset password.',
-            });
+            showModal('Successfully reset password.');
           }
         } else {
           showIndicator(false);
-          Toast.show({
-            type: 'error',
-            text1: 'Warning',
-            text2: 'Failed, please try again later!',
-          });
+          showModal('Failed, please try again later!');
         }
       })
       .catch(error => {
         showIndicator(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: 'Failed to reset password, please try again later.',
-        });
+        showModal('Failed to reset password, please try again later.');
       });
     showIndicator(false);
   };
@@ -294,11 +246,7 @@ const LoginScreen = ({navigation}) => {
                       if (email && password) {
                         login(email, password);
                       } else {
-                        Toast.show({
-                          type: 'error',
-                          text1: 'Warning',
-                          text2: 'Email / password is required!',
-                        });
+                        showModal('Email / password is required!');
                       }
                     }}>
                     <Text

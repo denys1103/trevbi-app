@@ -31,7 +31,7 @@ const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [Confpassword, setConfPassword] = useState(null);
-  const {isLoading, register} = useContext(GlobalContext);
+  const {isLoading, register, showModal} = useContext(GlobalContext);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [secureTextEntryPass, setSecureTextEntryPass] = useState(true);
   const [secureTextEntryRePass, setSecureTextEntryRePass] = useState(true);
@@ -160,11 +160,7 @@ const RegisterScreen = ({navigation}) => {
                           navigation,
                         );
                       } else {
-                        Toast.show({
-                          type: 'error',
-                          text1: 'Warning',
-                          text2: 'Name / email / password is required!',
-                        });
+                        showModal('Name / email / password is required!');
                       }
                     }}>
                     <Text allowFontScaling={false} style={styles.text_button}>

@@ -1,6 +1,14 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
+import {
+  Modal,
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import client from '../config';
+import client, {fontPixel, heightPixel} from '../config';
 import {baseURL} from '../config';
 import Toast from 'react-native-toast-message';
 import NetInfo from '@react-native-community/netinfo';
@@ -19,6 +27,20 @@ export const GlobalContextProvider = ({children}) => {
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [userList, setUserList] = useState([]);
   const [friendList, setFriendList] = useState([]);
+  //modal setting start
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  const showModal = message => {
+    setModalMessage(message);
+    setModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
+    setModalMessage('');
+  };
+  //modal setting end
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -34,11 +56,7 @@ export const GlobalContextProvider = ({children}) => {
   const register = async (name, email, password, Confpassword, navigation) => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -55,19 +73,11 @@ export const GlobalContextProvider = ({children}) => {
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
-        Toast.show({
-          type: 'success',
-          text1: 'Alert',
-          text2: 'Your account has been successfully created',
-        });
+        showModal('Your account has been successfully created');
         navigation.replace('Login');
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
       }
     } catch (e) {
       setIsLoading(false);
@@ -77,11 +87,7 @@ export const GlobalContextProvider = ({children}) => {
   const login = async (email, password) => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -101,11 +107,7 @@ export const GlobalContextProvider = ({children}) => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
       }
     } catch (error) {
       setIsLoading(false);
@@ -115,11 +117,7 @@ export const GlobalContextProvider = ({children}) => {
   const logout = () => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -139,11 +137,7 @@ export const GlobalContextProvider = ({children}) => {
   const uploadAvata = async (...photodata) => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -162,18 +156,10 @@ export const GlobalContextProvider = ({children}) => {
         userInfo.user = data.user;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setCheckEvent(!checkEvent);
-        Toast.show({
-          type: 'success',
-          text1: 'Alert',
-          text2: 'Profile picture has been updated.',
-        });
+        showModal('Profile picture has been updated.');
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
         setIsLoading(false);
@@ -187,11 +173,7 @@ export const GlobalContextProvider = ({children}) => {
   const saveProfile = async (...profile) => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -205,18 +187,10 @@ export const GlobalContextProvider = ({children}) => {
         userInfo.user = data.user;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setCheckEvent(!checkEvent);
-        Toast.show({
-          type: 'success',
-          text1: 'Alert',
-          text2: 'Updates saved!',
-        });
+        showModal('Updates saved!');
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
         setIsLoading(false);
@@ -230,11 +204,7 @@ export const GlobalContextProvider = ({children}) => {
   const saveFeedback = async (...feedback) => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -245,18 +215,10 @@ export const GlobalContextProvider = ({children}) => {
 
       if (data.success) {
         setIsLoading(false);
-        Toast.show({
-          type: 'success',
-          text1: 'Alert',
-          text2: 'Feedback shared!',
-        });
+        showModal('Feedback shared!');
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
         setIsLoading(false);
@@ -270,11 +232,7 @@ export const GlobalContextProvider = ({children}) => {
   const getUserList = async () => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -286,11 +244,7 @@ export const GlobalContextProvider = ({children}) => {
         setUserList(data.users);
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
         setIsLoading(false);
@@ -304,11 +258,7 @@ export const GlobalContextProvider = ({children}) => {
   const getFriendList = async () => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -320,11 +270,7 @@ export const GlobalContextProvider = ({children}) => {
         setFriendList(data.friends);
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
         setIsLoading(false);
@@ -338,11 +284,7 @@ export const GlobalContextProvider = ({children}) => {
   const followRequest = async id => {
     setIsLoading(true);
     if (!isConnected) {
-      Toast.show({
-        type: 'error',
-        text1: 'Warning',
-        text2: 'Check your internet connection.',
-      });
+      showModal('Check your internet connection.');
       setIsLoading(false);
       return;
     }
@@ -351,18 +293,10 @@ export const GlobalContextProvider = ({children}) => {
 
       if (data.success) {
         setIsLoading(false);
-        Toast.show({
-          type: 'success',
-          text1: 'Alert',
-          text2: 'Followed!',
-        });
+        showModal('Followed!');
       } else {
         setIsLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: data.message,
-        });
+        showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
         setIsLoading(false);
@@ -421,8 +355,68 @@ export const GlobalContextProvider = ({children}) => {
         followRequest,
         friendList,
         getFriendList,
+        showModal,
+        hideModal,
       }}>
       {children}
+      <Modal
+        animationType="fade"
+        transparent
+        visible={modalVisible}
+        onRequestClose={hideModal}>
+        <View style={styles.overlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalImageStyle}>
+              <Image
+                source={require('../../assets/images/TREVBI_Transparent_Logo.png')}
+                style={{width: heightPixel(150), height: heightPixel(41.6)}}
+              />
+            </View>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </GlobalContext.Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    padding: heightPixel(20),
+    borderRadius: heightPixel(12),
+    alignItems: 'center',
+    minWidth: '70%',
+  },
+  modalText: {
+    color: '#000',
+    fontSize: fontPixel(18),
+    marginBottom: heightPixel(16),
+    fontFamily: 'LEMONMILK-Light',
+  },
+  closeButton: {
+    backgroundColor: '#063225',
+    paddingHorizontal: heightPixel(20),
+    paddingVertical: heightPixel(8),
+    borderRadius: heightPixel(8),
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Light',
+  },
+  modalImageStyle: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

@@ -79,7 +79,7 @@ const ScanAndRecognizeScreen = ({navigation}) => {
   const [answerModalVisibleStatus, setAnswerModalVisibleStatus] =
     useState(false);
   const [answerTxt, setAnswerTxt] = useState('');
-  const {setCheckEvent, checkEvent} = useContext(GlobalContext);
+  const {setCheckEvent, checkEvent, showModal} = useContext(GlobalContext);
   const [barcodeScanModalVisibleStatus, setBarcodeScanModalVisibleStatus] =
     useState(false);
   const [
@@ -145,11 +145,7 @@ const ScanAndRecognizeScreen = ({navigation}) => {
     try {
       if (!category || category === 'unknown') {
         setRecommendations([]);
-        Toast.show({
-          type: 'error',
-          text1: 'Warning',
-          text2: 'Barcode not detected.',
-        });
+        showModal('Sorry this barcode was not found in the global system.');
         return;
       }
       setOkBtnStatus(false);
