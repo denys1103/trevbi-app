@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    paddingLeft: 0,
+    padding: heightPixel(10),
     backgroundColor: '#fff',
     color: 'black',
     fontFamily: 'LEMONMILK-Light',
