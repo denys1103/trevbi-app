@@ -296,14 +296,6 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
                     style={styles.modalContentsStyle}>
                     {modalData.description}
                   </Text>
-                  {modalData.source && (
-                    <TouchableOpacity
-                      onPress={() => Linking.openURL(modalData.source)}>
-                      <Text allowFontScaling={false} style={styles.link_blue}>
-                        Source
-                      </Text>
-                    </TouchableOpacity>
-                  )}
                 </Text>
               ) : (
                 <View style={styles.modalEmptyStyle}>
@@ -313,6 +305,26 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
                     {modalData.description}{' '}
                   </Text>
                 </View>
+              )}
+              {modalData.source && (
+                <TouchableOpacity
+                  style={{paddingBottom: heightPixel(10)}}
+                  onPress={() => Linking.openURL(modalData.source)}>
+                  <Text allowFontScaling={false} style={styles.modalTextStyle}>
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(16),
+                        color: 'black',
+                        fontFamily: 'LEMONMILK-Medium',
+                      }}>
+                      CLICK HERE:{' '}
+                    </Text>
+                    <Text allowFontScaling={false} style={styles.link_blue}>
+                      SOURCE
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
               )}
               <View style={styles.modalImageStyle}>
                 {modalData.description != 'There is no the bad ingredients' ? (
@@ -488,7 +500,8 @@ const styles = StyleSheet.create({
   link_blue: {
     fontSize: fontPixel(16),
     color: 'blue',
-    textDecorationLine: 'underline',
+    paddingLeft: heightPixel(8),
+    fontFamily: 'LEMONMILK-Medium',
   },
   goToBackBtnStyle: {
     flexDirection: 'row',

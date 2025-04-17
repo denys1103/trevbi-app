@@ -299,6 +299,7 @@ const ScanAndRecognizeScreen = ({navigation}) => {
       });
       if (!isObjectEmpty(result)) {
         // let IngredientsList = getIngredientsList(result.resultText.toLowerCase().replace(/\n/g, ' '));
+        let isAvoidIngredientList = false;
         let IngredientsList = result.resultText
           .toLowerCase()
           .replace(/\n/g, ' ');
@@ -310,10 +311,13 @@ const ScanAndRecognizeScreen = ({navigation}) => {
 
             if (data.success) {
               setAvoidIngredients(data.results);
-              await RNFS.writeFile(
-                avoidPath,
-                JSON.stringify({avoidIngredients: data.results}),
-              );
+              if (data.results.length > 0) isAvoidIngredientList = true;
+              if (isAvoidIngredientList) {
+                await RNFS.writeFile(
+                  avoidPath,
+                  JSON.stringify({avoidIngredients: data.results}),
+                );
+              }
               // console.log('avoidIngredients:', data.results);
               const nameArray = data.results.map(doc => doc.name);
               setAvoidIngredientsName(nameArray);
@@ -333,10 +337,10 @@ const ScanAndRecognizeScreen = ({navigation}) => {
           }
         } else {
           setAvoidIngredients([]);
-          await RNFS.writeFile(
-            avoidPath,
-            JSON.stringify({avoidIngredients: []}),
-          );
+          // await RNFS.writeFile(
+          //   avoidPath,
+          //   JSON.stringify({avoidIngredients: []}),
+          // );
           setAvoidIngredientsName([]);
           setModalData({
             name: '',
@@ -405,12 +409,12 @@ const ScanAndRecognizeScreen = ({navigation}) => {
         //   Alert.alert('Get Correct Words Data', e);
         // } finally {
         setTextBlocks(ocrResults);
-        await RNFS.writeFile(
-          blockPath,
-          JSON.stringify({textBlocks: ocrResults}),
-        );
-        const newEntry = {photoPath, avoidPath, blockPath};
-        if (avoidIngredients.length > 0) {
+        if (isAvoidIngredientList) {
+          await RNFS.writeFile(
+            blockPath,
+            JSON.stringify({textBlocks: ocrResults}),
+          );
+          const newEntry = {photoPath, avoidPath, blockPath};
           await updateIndexFile(newEntry);
         }
         // console.log(JSON.stringify(ocrResults, null, 2))
@@ -582,7 +586,7 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                       textAlign: 'center',
                     }}>
                     {avoidIngredients.length > 0
-                      ? 'Tap for insights &\nbetter choices'
+                      ? 'Tap for insights & Scan\nBarcode for better choices'
                       : ''}
                   </Text>
                   <ScrollView
