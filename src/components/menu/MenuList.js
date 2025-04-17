@@ -63,6 +63,14 @@ export function MenuList({navigation}) {
               Recipes
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
+            onPress={() => navigation.replace('History')}>
+            <Text allowFontScaling={false} style={styles.buttonText}>
+              Scan History
+            </Text>
+          </TouchableOpacity>
           <View
             style={{
               flexDirection: 'row',
@@ -80,14 +88,6 @@ export function MenuList({navigation}) {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.8}
-            onPress={() => navigation.replace('SocialWelcome')}>
-            <Text allowFontScaling={false} style={styles.buttonText}>
-              Trevbi Social
-            </Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}

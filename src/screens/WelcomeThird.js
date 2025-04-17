@@ -204,16 +204,14 @@ const WelcomeSecondScreen = ({navigation}) => {
           <TouchableOpacity
             activeOpacity={0.9}
             style={styles.tabItemStyle}
-            onPress={() =>
-              navigation.replace('Dashboard', {screen: 'History'})
-            }>
+            onPress={() => navigation.replace('Dashboard', {screen: 'Social'})}>
             <Image
               style={{
                 width: widthPixel(40),
                 height: widthPixel(40),
                 resizeMode: 'contain',
               }}
-              source={require('../../assets/images/history.png')}
+              source={require('../../assets/images/social.png')}
             />
             <Text
               allowFontScaling={false}
@@ -221,7 +219,7 @@ const WelcomeSecondScreen = ({navigation}) => {
                 fontSize: fontPixel(11),
                 color: '#000000',
               }}>
-              HISTORY
+              SOCIAL
             </Text>
           </TouchableOpacity>
           <TouchableOpacity

@@ -4,8 +4,8 @@ import {ProfileMenu} from '../profile/index';
 import {MenuList} from './MenuList';
 import Feedback from './Feedback';
 import HowItWork from './HowItWork';
-import SocialWelcome from './SocialWelcome';
 import RecipesComponent from '../recipe/Recipes';
+import HistoryComponent from '../scan/History';
 import {HeaderBackButton} from '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
@@ -50,9 +50,9 @@ export function Menu() {
         options={{headerShown: true}}
       />
       <Stack.Screen
-        name="SocialWelcome"
-        component={SocialWelcome}
-        options={{headerShown: false}}
+        name="History"
+        component={HistoryComponent}
+        options={{headerShown: true}}
       />
     </Stack.Navigator>
   );

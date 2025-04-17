@@ -638,96 +638,6 @@ const DietsScreen = ({navigation}) => {
             </View>
           </View>
         </View>
-        {/* <View style={styles.tabBarContainer}>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.tabItemStyle}
-            onPress={() => navigation.replace('Dashboard', {screen: 'Scan'})}>
-            <Image
-              style={{
-                width: widthPixel(40),
-                height: widthPixel(40),
-                resizeMode: 'contain',
-              }}
-              source={require('../../../assets/images/scan_active.png')}
-            />
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontSize: fontPixel(11),
-                color: '#61a148',
-              }}>
-              SCAN
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.tabItemStyle}
-            onPress={() =>
-              navigation.replace('Dashboard', {screen: 'AIRecipes'})
-            }>
-            <Image
-              style={{
-                width: widthPixel(40),
-                height: widthPixel(40),
-                resizeMode: 'contain',
-              }}
-              source={require('../../../assets/images/ai_recipes.png')}
-            />
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontSize: fontPixel(11),
-                color: '#000000',
-              }}>
-              AI RECIPES
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.tabItemStyle}
-            onPress={() =>
-              navigation.replace('Dashboard', {screen: 'History'})
-            }>
-            <Image
-              style={{
-                width: widthPixel(40),
-                height: widthPixel(40),
-                resizeMode: 'contain',
-              }}
-              source={require('../../../assets/images/history.png')}
-            />
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontSize: fontPixel(11),
-                color: '#000000',
-              }}>
-              HISTORY
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.tabItemStyle}
-            onPress={() => navigation.replace('Dashboard', {screen: 'Menu'})}>
-            <Image
-              style={{
-                width: widthPixel(40),
-                height: widthPixel(40),
-                resizeMode: 'contain',
-              }}
-              source={require('../../../assets/images/menu.png')}
-            />
-            <Text
-              allowFontScaling={false}
-              style={{
-                fontSize: fontPixel(11),
-                color: '#000000',
-              }}>
-              MENU
-            </Text>
-          </TouchableOpacity>
-        </View> */}
       </View>
     </SafeAreaView>
   );
@@ -812,21 +722,6 @@ const styles = StyleSheet.create({
     paddingRight: heightPixel(10),
     alignSelf: 'flex-start',
     justifyContent: 'center',
-  },
-  tabBarContainer: {
-    position: 'absolute',
-    bottom: heightPixel(0),
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: '#efefef',
-    paddingLeft: widthPixel(10),
-    paddingRight: widthPixel(10),
-    paddingBottom: heightPixel(12),
-    paddingTop: heightPixel(5),
-    height: heightPixel(70),
-    borderTopColor: '#bbbbbb',
   },
   tabItemStyle: {
     flexDirection: 'column',

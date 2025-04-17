@@ -6,9 +6,8 @@ import {Home} from './home';
 import ScanComponent from './scan/index';
 import IosScanComponent from './scan/ios';
 import IosScanTestComponent from './scan/test';
-import HistoryComponent from './scan/History';
-// import RecipesComponent from './recipe/Recipes';
 import {RecipeIndex} from './recipe/index';
+import {SocialIndex} from './social/index';
 import {Menu} from './menu/index';
 import {Image, Platform} from 'react-native';
 
@@ -102,10 +101,10 @@ function CustomTabs() {
         }}
       />
       <Tab.Screen
-        name="History"
-        component={HistoryComponent}
+        name="Social"
+        component={SocialIndex}
         options={{
-          tabBarLabel: 'HISTORY',
+          tabBarLabel: 'SOCIAL',
           tabBarIcon: ({focused, color, size}) =>
             focused ? (
               <Image
@@ -114,7 +113,7 @@ function CustomTabs() {
                   height: widthPixel(40),
                   resizeMode: 'contain',
                 }}
-                source={require('../../assets/images/history_active.png')}
+                source={require('../../assets/images/social_active.png')}
               />
             ) : (
               <Image
@@ -123,7 +122,7 @@ function CustomTabs() {
                   height: widthPixel(40),
                   resizeMode: 'contain',
                 }}
-                source={require('../../assets/images/history.png')}
+                source={require('../../assets/images/social.png')}
               />
             ),
         }}

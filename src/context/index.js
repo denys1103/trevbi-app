@@ -293,6 +293,8 @@ export const GlobalContextProvider = ({children}) => {
 
       if (data.success) {
         setIsLoading(false);
+        userInfo.user = data.user;
+        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         showModal('Followed!');
       } else {
         setIsLoading(false);

@@ -35,7 +35,7 @@ const SocialWelcomeScreen = ({navigation}) => {
           ]}>
           Welcome To
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.5}
           style={[
             styles.goToBackBtnStyle,
@@ -58,7 +58,7 @@ const SocialWelcomeScreen = ({navigation}) => {
             }}>
             Back
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={styles.overlay}>
           <Image
             style={styles.logoStyle}

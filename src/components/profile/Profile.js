@@ -14,6 +14,9 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import {SelectList} from 'react-native-dropdown-select-list';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -39,6 +42,7 @@ export function Profile({setEditVisible, navigation}) {
     useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [friendsVisibleStatus, setFriendsVisibleStatus] = useState(false);
+  const [cookBookVisibleStatus, setCookBookVisibleStatus] = useState(false);
   const numColumns = 3;
   useEffect(() => {
     if (!userInfo.token) {
@@ -59,14 +63,23 @@ export function Profile({setEditVisible, navigation}) {
   };
 
   const clickFollowBtn = () => {
-    getUserList();
+    if (userList.length < 1) {
+      getUserList();
+    }
     setProfileVisibleStatus(false);
     setFollowVisibleStatus(true);
   };
   const clickShowFriendsBtn = () => {
-    getFriendList();
+    if (friendList.length < 1) {
+      getFriendList();
+    }
     setProfileVisibleStatus(false);
     setFriendsVisibleStatus(true);
+  };
+
+  const clickShowCookBookBtn = () => {
+    setProfileVisibleStatus(false);
+    setCookBookVisibleStatus(true);
   };
 
   const renderItem = ({item, index}) => {
@@ -251,7 +264,7 @@ export function Profile({setEditVisible, navigation}) {
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
-              onPress={() => console.log('')}>
+              onPress={clickShowCookBookBtn}>
               <Text allowFontScaling={false} style={styles.buttonText}>
                 Cookbook
               </Text>
@@ -269,18 +282,39 @@ export function Profile({setEditVisible, navigation}) {
       )}
       {followVisibleStatus && (
         <>
-          <View style={styles.pencilContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                setProfileVisibleStatus(true);
-                setFollowVisibleStatus(false);
-              }}>
-              <MaterialCommunityIcons
-                color={'#72a045'}
-                name="close"
-                size={fontPixel(28)}
-              />
-            </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              paddingBottom: heightPixel(5),
+            }}>
+            <View style={styles.refreshContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  getUserList();
+                }}>
+                <Feather
+                  color={'#72a045'}
+                  name="refresh-cw"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.pencilContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setProfileVisibleStatus(true);
+                  setFollowVisibleStatus(false);
+                }}>
+                <MaterialCommunityIcons
+                  color={'#72a045'}
+                  name="close"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <FlatList
             enableEmptySections={true}
@@ -297,24 +331,42 @@ export function Profile({setEditVisible, navigation}) {
                           setSelectedUser(item);
                           setSelectUserModalVisibleStatus(true);
                         }}>
-                        <View style={styles.userBox}>
-                          <Image
-                            style={styles.userAvatar}
-                            source={
-                              item?.avatar
-                                ? {
-                                    uri: imageURL + item.avatar,
-                                  }
-                                : require('../../../assets/images/free_user.png')
-                            }
-                          />
-                          <View style={styles.userBoxContent}>
-                            <Text
-                              allowFontScaling={false}
-                              style={{fontSize: fontPixel(18), color: 'black'}}>
-                              {item?.fullname ? item.fullname : ''}
-                            </Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: SCREEN_WIDTH * 0.9,
+                          }}>
+                          <View style={styles.userBox}>
+                            <Image
+                              style={styles.userAvatar}
+                              source={
+                                item?.avatar
+                                  ? {
+                                      uri: imageURL + item.avatar,
+                                    }
+                                  : require('../../../assets/images/free_user.png')
+                              }
+                            />
+                            <View style={styles.userBoxContent}>
+                              <Text
+                                allowFontScaling={false}
+                                style={{
+                                  fontSize: fontPixel(18),
+                                  color: 'black',
+                                }}>
+                                {item?.fullname ? item.fullname : ''}
+                              </Text>
+                            </View>
                           </View>
+                          {userInfo.user.following.indexOf(item._id) > -1 && (
+                            <SimpleLineIcons
+                              color={'#72a045'}
+                              name="user-following"
+                              size={fontPixel(28)}
+                            />
+                          )}
                         </View>
                       </TouchableOpacity>
                     </View>
@@ -357,31 +409,64 @@ export function Profile({setEditVisible, navigation}) {
             </Text>
           </View>
           <View style={{width: '100%', alignItems: 'center'}}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.button}
-              onPress={() => followRequest(selectedUser._id)}>
-              <Text allowFontScaling={false} style={styles.buttonText}>
-                Follow User
-              </Text>
-            </TouchableOpacity>
+            {userInfo.user.following.indexOf(selectedUser._id) < 0 ? (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.button}
+                onPress={() => followRequest(selectedUser._id)}>
+                <Text allowFontScaling={false} style={styles.buttonText}>
+                  Follow User
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={1}
+                disabled={true}
+                style={[styles.button, {backgroundColor: '#888'}]}
+                onPress={() => followRequest(selectedUser._id)}>
+                <Text allowFontScaling={false} style={styles.buttonText}>
+                  Followed
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       )}
       {friendsVisibleStatus && (
         <>
-          <View style={styles.pencilContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                setProfileVisibleStatus(true);
-                setFriendsVisibleStatus(false);
-              }}>
-              <MaterialCommunityIcons
-                color={'#72a045'}
-                name="close"
-                size={fontPixel(28)}
-              />
-            </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              paddingBottom: heightPixel(15),
+            }}>
+            <View style={styles.refreshContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  getFriendList();
+                }}>
+                <Feather
+                  color={'#72a045'}
+                  name="refresh-cw"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.pencilContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setProfileVisibleStatus(true);
+                  setFriendsVisibleStatus(false);
+                }}>
+                <MaterialCommunityIcons
+                  color={'#72a045'}
+                  name="close"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <FlatList
             data={formatRow(friendList, numColumns)}
@@ -391,6 +476,52 @@ export function Profile({setEditVisible, navigation}) {
             renderItem={renderItem}
             numColumns={numColumns}
           />
+        </>
+      )}
+      {cookBookVisibleStatus && (
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              paddingBottom: heightPixel(15),
+            }}>
+            <View style={styles.refreshContainer}>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity onPress={() => {}}>
+                  <Feather
+                    color={'#72a045'}
+                    name="refresh-cw"
+                    size={fontPixel(28)}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{paddingHorizontal: heightPixel(15)}}
+                  onPress={() => {}}>
+                  <MaterialIcons
+                    color={'#72a045'}
+                    name="add-box"
+                    size={fontPixel(28)}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.pencilContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setProfileVisibleStatus(true);
+                  setCookBookVisibleStatus(false);
+                }}>
+                <MaterialCommunityIcons
+                  color={'#72a045'}
+                  name="close"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
         </>
       )}
     </KeyboardAvoidingView>
@@ -433,6 +564,10 @@ const styles = StyleSheet.create({
     paddingRight: heightPixel(20),
     alignSelf: 'flex-end',
   },
+  refreshContainer: {
+    paddingTop: heightPixel(10),
+    paddingLeft: heightPixel(20),
+  },
   avatarContainer: {
     paddingTop: heightPixel(5),
     paddingBottom: heightPixel(20),
@@ -473,7 +608,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: SCREEN_WIDTH * 0.9,
   },
   userBoxContent: {
     flexDirection: 'column',
