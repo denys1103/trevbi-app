@@ -15,8 +15,7 @@ import {
 import {
   fontPixel,
   heightPixel,
-  appDir,
-  indexRecipeFilePath,
+  recipeImageRootURL,
   widthPixel,
 } from '../../config';
 import RNFS from 'react-native-fs';
@@ -30,62 +29,30 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const RecipesHistory = ({navigation}) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
-  const [validEntriesData, setValidEntriesData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const {checkEvent, isLoading} = useContext(GlobalContext);
+  const {isLoading, getRecipeList, deleteRecipe} = useContext(GlobalContext);
   const [search, setSearch] = useState('');
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-  const createAppDir = async () => {
-    if (!(await RNFS.exists(appDir))) {
-      await RNFS.mkdir(appDir);
-    }
-    if (!(await RNFS.exists(indexRecipeFilePath))) {
-      await RNFS.writeFile(indexRecipeFilePath, JSON.stringify([]));
-    }
-  };
-
   const fetchRecipesHistory = async () => {
     try {
-      await createAppDir();
-      if (await RNFS.exists(indexRecipeFilePath)) {
-        const indexData = JSON.parse(await RNFS.readFile(indexRecipeFilePath));
+      const validEntries = await getRecipeList();
 
-        const validatedHistory = await Promise.all(
-          indexData.map(async entry => {
-            const photoExists = entry.photoPath
-              ? await RNFS.exists(entry.photoPath)
-              : false;
-            const recipeExists = entry.recipePath
-              ? await RNFS.exists(entry.recipePath)
-              : false;
+      const historyEntries = await Promise.all(
+        validEntries.map(async entry => {
+          const recipeText = entry.text;
+          const extractedText = recipeText.split(
+            'the ingredients detected in your photo.',
+          )[1];
+          const textPart = extractedText ? extractedText.slice(0, 100) : '';
+          let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
 
-            return photoExists && recipeExists ? entry : null;
-          }),
-        );
+          return {...entry, textPart: cleanedTextPart};
+        }),
+      );
 
-        const validEntries = validatedHistory.filter(Boolean);
-        setValidEntriesData(validEntries);
-        await RNFS.writeFile(indexRecipeFilePath, JSON.stringify(validEntries));
-
-        const historyEntries = await Promise.all(
-          validEntries.map(async entry => {
-            const recipeContent = await RNFS.readFile(entry.recipePath, 'utf8');
-            const parsedRecipeData = JSON.parse(recipeContent);
-            const extractedText = parsedRecipeData.recipe.split(
-              'the ingredients detected in your photo.',
-            )[1];
-            const textPart = extractedText ? extractedText.slice(0, 100) : '';
-            let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
-
-            return {...entry, textPart: cleanedTextPart};
-          }),
-        );
-
-        historyEntries.reverse();
-        setHistoryData(historyEntries);
-        setSearchHistoryData(historyEntries);
-      }
+      setHistoryData(historyEntries);
+      setSearchHistoryData(historyEntries);
     } catch (error) {
       console.error('Error fetching recipe history:', error);
     }
@@ -93,22 +60,11 @@ const RecipesHistory = ({navigation}) => {
 
   const deleteHistoryItem = async item => {
     try {
-      const updatedValidEntriesData = validEntriesData.filter(
-        entry => entry.photoPath !== item.photoPath,
+      deleteRecipe(item._id);
+      const myRecipes = searchHistoryData.filter(
+        entry => entry._id !== item._id,
       );
-      setValidEntriesData(updatedValidEntriesData);
-      const updatedHistory = historyData.filter(
-        entry => entry.photoPath !== item.photoPath,
-      );
-      await RNFS.writeFile(
-        indexRecipeFilePath,
-        JSON.stringify(updatedValidEntriesData),
-      );
-      setHistoryData(updatedHistory);
-      const updatedSearchHistory = searchHistoryData.filter(
-        entry => entry.photoPath !== item.photoPath,
-      );
-      setSearchHistoryData(updatedSearchHistory);
+      setSearchHistoryData(myRecipes);
     } catch (error) {
       console.error('Error deleting recipe history item:', error);
     }
@@ -128,7 +84,7 @@ const RecipesHistory = ({navigation}) => {
 
   useEffect(() => {
     fetchRecipesHistory();
-  }, [checkEvent]);
+  }, []);
 
   const handleItemClick = item => {
     setSelectedItem(item);
@@ -154,12 +110,13 @@ const RecipesHistory = ({navigation}) => {
         <View style={styles.box}>
           <Image
             style={styles.image}
-            source={{
-              uri:
-                Platform.OS === 'ios'
-                  ? item.photoPath
-                  : `file://${item.photoPath}`,
-            }}
+            source={
+              item.img
+                ? {
+                    uri: recipeImageRootURL + item.img,
+                  }
+                : require('../../../assets/images/no_img.jpg')
+            }
           />
           <View style={styles.boxContent}>
             <Text
@@ -239,7 +196,7 @@ const RecipesHistory = ({navigation}) => {
       {searchHistoryData.length > 0 ? (
         <FlatList
           data={searchHistoryData}
-          keyExtractor={(item, index) => `${item.photoPath}-${index}`}
+          keyExtractor={(item, index) => `${item._id}`}
           renderItem={renderItem}
           // contentContainerStyle={styles.list}
           ListEmptyComponent={
@@ -424,7 +381,7 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
     color: 'white',
     padding: heightPixel(8),
-    fontFamily: 'LEMONMILK-Regular'
+    fontFamily: 'LEMONMILK-Regular',
   },
   text_button: {
     fontSize: fontPixel(16),

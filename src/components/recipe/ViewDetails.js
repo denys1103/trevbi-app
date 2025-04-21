@@ -6,15 +6,12 @@ import {
   StyleSheet,
   Image,
   useWindowDimensions,
-  Platform,
   SafeAreaView,
-  TouchableWithoutFeedback,
   ScrollView,
   Dimensions,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import client, {fontPixel, heightPixel} from '../../config';
-import RNFS from 'react-native-fs';
+import {fontPixel, heightPixel, recipeImageRootURL} from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -26,9 +23,7 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
   const loadData = async () => {
     try {
       setLoading(false);
-      const recipeContent = await RNFS.readFile(item.recipePath, 'utf8');
-      const parsedRecipeData = JSON.parse(recipeContent);
-      setRecipeResult(parsedRecipeData.recipe);
+      setRecipeResult(item.text);
       setLoading(true);
     } catch (error) {
       setLoading(true);
@@ -69,12 +64,13 @@ const ViewDetailsScreen = ({item, onGoBack}) => {
               </Text>
             </TouchableOpacity>
             <Image
-              source={{
-                uri:
-                  Platform.OS === 'ios'
-                    ? item.photoPath
-                    : `file://${item.photoPath}`,
-              }}
+              source={
+                item.img
+                  ? {
+                      uri: recipeImageRootURL + item.img,
+                    }
+                  : require('../../../assets/images/no_img.jpg')
+              }
               style={styles.capturedImage}
             />
             {recipeResult && (

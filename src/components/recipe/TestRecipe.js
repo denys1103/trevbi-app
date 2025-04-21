@@ -56,16 +56,13 @@ const RecipeScanScreen = ({navigation}) => {
   const photoCamera = useRef(null);
   const {height, width} = useWindowDimensions();
   const [okBtnStatus, setOkBtnStatus] = useState(true);
-  const [modalData, setModalData] = useState({});
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
   const [recipeIngredients, setRecipeIngredients] = useState(null);
   const [recipeResult, setRecipeResult] = useState(null);
   const [recipeResultImg, setRecipeResultImg] = useState(null);
-  const [localRecipeResultImgUrl, setLocalRecipeResultImgUrl] = useState(null);
-
+  const [recipeId, setRecipeId] = useState(null);
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
-  const {selectedDiets, selectedMeal, setCheckEvent, checkEvent} =
-    useContext(GlobalContext);
+  const {selectedDiets, selectedMeal, saveRecipe} = useContext(GlobalContext);
 
   const device = useCameraDevice('back', {
     physicalDevices: [
@@ -114,16 +111,6 @@ const RecipeScanScreen = ({navigation}) => {
     }
     if (!(await RNFS.exists(indexRecipeFilePath))) {
       await RNFS.writeFile(indexRecipeFilePath, JSON.stringify([]));
-    }
-  };
-
-  const updateRecipeIndexFile = async newEntry => {
-    try {
-      const currentIndex = JSON.parse(await RNFS.readFile(indexRecipeFilePath));
-      currentIndex.push(newEntry);
-      await RNFS.writeFile(indexRecipeFilePath, JSON.stringify(currentIndex));
-    } catch (error) {
-      console.error('Failed to update recipe index file:', error);
     }
   };
 
@@ -197,34 +184,37 @@ const RecipeScanScreen = ({navigation}) => {
           formData.append('meal', selectedMeal);
           formData.append('ingredients', recipeIngredients);
 
-          const response = await client.post('/makeMealRecipeV2', formData, {
+          const response = await client.post('/makeMealRecipeV3', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           });
           if (response.data.success) {
+            if (response.data.results.recipeId) {
+              setRecipeId(response.data.results.recipeId);
+            }
             if (response.data.results.recipeText) {
               setRecipeResult(response.data.results.recipeText);
             }
             if (response.data.results.recipeImg) {
               setRecipeResultImg(response.data.results.recipeImg);
-              const photoPath = `${appDir}/recipe_img_${Date.now()}.jpg`;
-              const recipeImageURl =
-                recipeImageRootURL + response.data.results.recipeImg;
+              // const photoPath = `${appDir}/recipe_img_${Date.now()}.jpg`;
+              // const recipeImageURl =
+              //   recipeImageRootURL + response.data.results.recipeImg;
 
-              const downloadResult = await RNFS.downloadFile({
-                fromUrl: recipeImageURl,
-                toFile: photoPath,
-              }).promise;
+              // const downloadResult = await RNFS.downloadFile({
+              //   fromUrl: recipeImageURl,
+              //   toFile: photoPath,
+              // }).promise;
 
-              if (downloadResult.statusCode === 200) {
-                // console.log('Download success:', photoPath);
-                const photoURI =
-                  Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
-                setLocalRecipeResultImgUrl(photoURI);
-              } else {
-                console.error('Download failed:', downloadResult.statusCode);
-              }
+              // if (downloadResult.statusCode === 200) {
+              //   // console.log('Download success:', photoPath);
+              //   const photoURI =
+              //     Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
+              //   setLocalRecipeResultImgUrl(photoURI);
+              // } else {
+              //   console.error('Download failed:', downloadResult.statusCode);
+              // }
             }
           } else {
             console.log('server error!');
@@ -245,19 +235,9 @@ const RecipeScanScreen = ({navigation}) => {
     }
   };
 
-  const saveRecipe = async () => {
-    const recipePath = `${appDir}/recipe_${Date.now()}.json`;
-    if (capturedPhoto && recipeResult) {
-      await RNFS.writeFile(recipePath, JSON.stringify({recipe: recipeResult}));
-      const newEntry = {
-        photoPath: localRecipeResultImgUrl
-          ? localRecipeResultImgUrl
-          : capturedPhoto,
-        recipePath,
-      };
-      await updateRecipeIndexFile(newEntry);
-      setCheckEvent(!checkEvent);
-      Alert.alert('Success', 'The recipe has been saved.');
+  const saveRecipeHandle = async () => {
+    if (recipeId) {
+      await saveRecipe(recipeId);
     } else {
       Alert.alert('Failed', 'Failed to save recipe.');
     }
@@ -266,13 +246,12 @@ const RecipeScanScreen = ({navigation}) => {
   const resetScan = () => {
     setCapturedPhoto(null);
     setIsScanning(true);
-    setModalData({});
     setModalVisibleStatus(false);
     setRecipeIngredients(null);
     setEditRecipeIngredients(null);
     setRecipeResult(null);
     setRecipeResultImg(null);
-    setLocalRecipeResultImgUrl(null);
+    setRecipeId(null);
   };
 
   if (!hasPermission) {
@@ -474,7 +453,7 @@ const RecipeScanScreen = ({navigation}) => {
                           alignSelf: 'center',
                         },
                       ]}
-                      onPress={saveRecipe}>
+                      onPress={saveRecipeHandle}>
                       <Ionicons
                         size={fontPixel(18)}
                         name={'save-outline'}

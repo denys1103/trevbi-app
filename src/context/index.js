@@ -155,7 +155,6 @@ export const GlobalContextProvider = ({children}) => {
         setIsLoading(false);
         userInfo.user = data.user;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        setCheckEvent(!checkEvent);
         showModal('Profile picture has been updated.');
       } else {
         setIsLoading(false);
@@ -186,7 +185,6 @@ export const GlobalContextProvider = ({children}) => {
         setIsLoading(false);
         userInfo.user = data.user;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        setCheckEvent(!checkEvent);
         showModal('Updates saved!');
       } else {
         setIsLoading(false);
@@ -309,6 +307,90 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const saveRecipe = async recipeId => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/save-recipe', {
+        recipeId,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        showModal('The recipe has been saved!');
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
+
+  const getRecipeList = async () => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-recipes', {});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.recipes;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return [];
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return [];
+    }
+  };
+
+  const deleteRecipe = async recipeId => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/del-recipe', {
+        recipeId,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        showModal('The recipe has been deleted!');
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -357,6 +439,9 @@ export const GlobalContextProvider = ({children}) => {
         followRequest,
         friendList,
         getFriendList,
+        saveRecipe,
+        getRecipeList,
+        deleteRecipe,
         showModal,
         hideModal,
       }}>
