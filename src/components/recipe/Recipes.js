@@ -260,13 +260,13 @@ const RecipesHistory = ({navigation}) => {
                   navigation.navigate('AIRecipes', {screen: 'Diets'});
                 }}>
                 <Text allowFontScaling={false} style={styles.text_button}>
-                  TREVBI
+                  Create
                 </Text>
                 <Text allowFontScaling={false} style={styles.text_button}>
                   AI RECIPES
                 </Text>
               </TouchableOpacity>
-              <View style={styles.checkboxContainer}>
+              {/* <View style={styles.checkboxContainer}>
                 <CheckBox
                   disabled={false}
                   value={toggleCheckBox}
@@ -290,7 +290,7 @@ const RecipesHistory = ({navigation}) => {
                   ]}>
                   DON'T SHOW THIS SCREEN AGAIN
                 </Text>
-              </View>
+              </View> */}
             </View>
           </ImageBackground>
         </View>

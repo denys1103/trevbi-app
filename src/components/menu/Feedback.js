@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: heightPixel(2),
     paddingVertical: heightPixel(0),
     width: '90%',
+    fontFamily: 'LEMONMILK-Light',
   },
   descriptionPanel: {
     flexDirection: 'column',
