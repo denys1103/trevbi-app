@@ -20,6 +20,7 @@ import {
 } from '../../config';
 import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckBox from '@react-native-community/checkbox';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ViewDetailsComponent from './ViewDetails';
@@ -38,21 +39,21 @@ const RecipesHistory = ({navigation}) => {
     try {
       const validEntries = await getRecipeList();
 
-      const historyEntries = await Promise.all(
-        validEntries.map(async entry => {
-          const recipeText = entry.text;
-          const extractedText = recipeText.split(
-            'the ingredients detected in your photo.',
-          )[1];
-          const textPart = extractedText ? extractedText.slice(0, 100) : '';
-          let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
+      // const historyEntries = await Promise.all(
+      //   validEntries.map(async entry => {
+      //     const recipeText = entry.text;
+      //     const extractedText = recipeText.split(
+      //       'the ingredients detected in your photo.',
+      //     )[1];
+      //     const textPart = extractedText ? extractedText.slice(0, 100) : '';
+      //     let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
 
-          return {...entry, textPart: cleanedTextPart};
-        }),
-      );
+      //     return {...entry, textPart: cleanedTextPart};
+      //   }),
+      // );
 
-      setHistoryData(historyEntries);
-      setSearchHistoryData(historyEntries);
+      setHistoryData(validEntries);
+      setSearchHistoryData(validEntries);
     } catch (error) {
       console.error('Error fetching recipe history:', error);
     }
@@ -96,7 +97,11 @@ const RecipesHistory = ({navigation}) => {
 
   if (selectedItem) {
     return (
-      <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />
+      <ViewDetailsComponent
+        item={selectedItem}
+        onGoBack={goBackToHistory}
+        setRecipes={setSearchHistoryData}
+      />
     );
   }
 
@@ -121,10 +126,39 @@ const RecipesHistory = ({navigation}) => {
           <View style={styles.boxContent}>
             <Text
               allowFontScaling={false}
-              style={styles.noAvoidStyle}
-              numberOfLines={2}>
-              {item.textPart ? item.textPart : 'No recipe'}
+              style={styles.recipeTitleStyle}
+              numberOfLines={1}>
+              {item.title ? item.title : 'No title'}
             </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <MaterialCommunityIcons
+                size={fontPixel(24)}
+                name={'account-supervisor-outline'}
+                style={{color: 'black'}}
+              />
+              <Text
+                allowFontScaling={false}
+                style={styles.recipeServingsStyle}
+                numberOfLines={1}>
+                {item.servings ? item.servings.toString() : '0'}
+              </Text>
+              <MaterialCommunityIcons
+                size={fontPixel(24)}
+                name={'clock-time-three-outline'}
+                style={{color: 'black', paddingLeft:heightPixel(5)}}
+              />
+              <Text
+                allowFontScaling={false}
+                style={styles.recipeServingsStyle}
+                numberOfLines={1}>
+                {item.cookTime ? item.cookTime : ''}
+              </Text>
+            </View>
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -327,9 +361,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: heightPixel(10),
   },
-  noAvoidStyle: {
+  recipeTitleStyle: {
     fontSize: fontPixel(18),
-    color: '#61a148',
+    color: 'black',
+    fontFamily: 'LEMONMILK-Medium',
+  },
+  recipeServingsStyle: {
+    fontSize: fontPixel(16),
+    color: 'black',
+    fontFamily: 'LEMONMILK-Light',
+    paddingHorizontal: heightPixel(5),
   },
   goToBackBtnStyle: {
     flexDirection: 'row',

@@ -261,14 +261,14 @@ export function Profile({setEditVisible, navigation}) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
               onPress={clickShowCookBookBtn}>
               <Text allowFontScaling={false} style={styles.buttonText}>
                 Cookbook
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {/* <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
