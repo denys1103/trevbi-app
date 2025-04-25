@@ -137,7 +137,7 @@ const ScanAndRecognizeScreen = ({navigation}) => {
       setProduct(productInfo);
       fetchHealthierAlternatives(category);
     } catch (error) {
-      Alert.alert('Alert', 'Could not fetch product details.');
+      showModal('Could not fetch product details.');
     }
   };
 
@@ -991,12 +991,12 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                   </TouchableOpacity>
                 )}
               />
-              <View style={styles.modalImageStyle}>
+              {/* <View style={styles.modalImageStyle}>
                 <Image
                   source={require('../../../assets/images/TREVBI_Transparent_Logo.png')}
                   style={{width: heightPixel(150), height: heightPixel(41.6)}}
                 />
-              </View>
+              </View> */}
             </View>
           )}
           {webViewModalVisibleStatus && productUrl && (

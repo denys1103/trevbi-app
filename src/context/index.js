@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: fontPixel(18),
     marginBottom: heightPixel(16),
-    fontFamily: 'LEMONMILK-Light',
+    // fontFamily: 'LEMONMILK-Light',
   },
   closeButton: {
     backgroundColor: '#063225',
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: '#fff',
     fontSize: fontPixel(16),
-    fontFamily: 'LEMONMILK-Light',
+    // fontFamily: 'LEMONMILK-Light',
   },
   modalImageStyle: {
     flexDirection: 'column',

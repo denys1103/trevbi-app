@@ -150,7 +150,7 @@ const RecipesHistory = ({navigation}) => {
               <MaterialCommunityIcons
                 size={fontPixel(24)}
                 name={'clock-time-three-outline'}
-                style={{color: 'black', paddingLeft:heightPixel(5)}}
+                style={{color: 'black', paddingLeft: heightPixel(5)}}
               />
               <Text
                 allowFontScaling={false}

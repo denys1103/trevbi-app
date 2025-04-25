@@ -25,7 +25,11 @@ const DietsScreen = ({navigation}) => {
   } = useContext(GlobalContext);
 
   const toggleMeal = meal => {
-    setSelectedMeal(meal);
+    if (selectedMeal === meal) {
+      setSelectedMeal(null);
+    } else {
+      setSelectedMeal(meal);
+    }
   };
 
   const meals = [
@@ -378,8 +382,8 @@ const DietsScreen = ({navigation}) => {
   const ref = useRef(null);
 
   // useEffect(() => {
-  //   console.log('selectedDiets:', selectedDiets)
-  // }, [selectedDiets]);
+  //   console.log('selectedMeal:', selectedMeal);
+  // }, [selectedMeal]);
 
   return (
     <SafeAreaView style={styles.container}>

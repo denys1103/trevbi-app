@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useCallback} from 'react';
 import {
   Text,
   TextInput,
@@ -38,6 +38,10 @@ const LoginScreen = ({navigation}) => {
   const [indicator, showIndicator] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+  const onChangeEmail = useCallback(text => {
+    setEmail(text);
+  }, []);
 
   const onClickSend = () => {
     if (!isConnected) {
@@ -185,7 +189,7 @@ const LoginScreen = ({navigation}) => {
                   <TextInput
                     style={styles.input}
                     value={email}
-                    onChangeText={text => setEmail(text)}
+                    onChangeText={onChangeEmail}
                     label="Email"
                     placeholder="example@email.com"
                     placeholderTextColor="#000000aa"

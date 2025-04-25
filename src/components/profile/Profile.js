@@ -17,6 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Toast from 'react-native-toast-message';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -145,13 +146,13 @@ export function Profile({setEditVisible, navigation}) {
       {profileVisibleStatus && (
         <>
           <View style={styles.pencilContainer}>
-            <TouchableOpacity onPress={() => setEditVisible(true)}>
+            {/* <TouchableOpacity onPress={() => setEditVisible(true)}>
               <MaterialCommunityIcons
                 color={'#72a045'}
                 name="account-edit"
                 size={fontPixel(28)}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={styles.avatarContainer}>
             <Image
@@ -164,6 +165,50 @@ export function Profile({setEditVisible, navigation}) {
                   : require('../../../assets/images/free_user.png')
               }
             />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '90%',
+            }}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[styles.button, {flexDirection: 'row', width: '45%'}]}
+              onPress={() => console.log('')}>
+              <Image
+                style={{
+                  width: heightPixel(18),
+                  height: heightPixel(18),
+                  resizeMode: 'contain',
+                }}
+                source={require('../../../assets/images/social_profile.png')}
+              />
+              <Text
+                allowFontScaling={false}
+                style={[
+                  styles.buttonText,
+                  {fontSize: fontPixel(12), paddingLeft: heightPixel(5)},
+                ]}>
+                Social Profile
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[styles.button, {flexDirection: 'row', width: '45%'}]}
+              onPress={() => setEditVisible(true)}>
+              <MaterialCommunityIcons
+                size={fontPixel(18)}
+                name={'account-edit'}
+                style={{color: 'white', paddingRight: heightPixel(5)}}
+              />
+              <Text
+                allowFontScaling={false}
+                style={[styles.buttonText, {fontSize: fontPixel(12)}]}>
+                Profile Edit
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.form}>
             <View style={styles.box}>
@@ -228,7 +273,18 @@ export function Profile({setEditVisible, navigation}) {
                 </Text>
               </View>
             </View>
-            <View
+            <View style={[styles.box, {alignItems: 'flex-start'}]}>
+              <AntDesign color={'#7d7d7d'} name="idcard" size={fontPixel(32)} />
+              <View style={styles.boxContent}>
+                <Text allowFontScaling={false} style={styles.label}>
+                  Bio:
+                </Text>
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  {profile?.Bio ? profile.Bio : ''}
+                </Text>
+              </View>
+            </View>
+            {/* <View
               style={{
                 flexDirection: 'row',
                 marginTop: heightPixel(20),
@@ -260,7 +316,7 @@ export function Profile({setEditVisible, navigation}) {
                   Follow
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
             {/* <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
