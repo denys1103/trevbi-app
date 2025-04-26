@@ -37,9 +37,11 @@ const LoginScreen = ({navigation}) => {
   const [step, setStep] = useState(0);
   const [indicator, showIndicator] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [secureEmailEntry, setSecureEmailEntry] = useState(true);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const onChangeEmail = useCallback(text => {
+    setSecureEmailEntry(false);
     setEmail(text);
   }, []);
 
@@ -194,6 +196,7 @@ const LoginScreen = ({navigation}) => {
                     placeholder="example@email.com"
                     placeholderTextColor="#000000aa"
                     autoCapitalize="none"
+                    secureTextEntry={secureEmailEntry}
                   />
                   <MaterialCommunityIcons
                     color={'#7d7d7d'}
