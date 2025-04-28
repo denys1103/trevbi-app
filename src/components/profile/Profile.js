@@ -10,16 +10,11 @@ import {
   FlatList,
   KeyboardAvoidingView,
 } from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
-import DatePicker from 'react-native-date-picker';
-import {SelectList} from 'react-native-dropdown-select-list';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Spinner from 'react-native-loading-spinner-overlay';
-import Toast from 'react-native-toast-message';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 
@@ -28,14 +23,12 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export function Profile({setEditVisible, navigation}) {
   const {
-    isLoading,
     userInfo,
     getUserList,
     userList,
     followRequest,
     friendList,
     getFriendList,
-    logout,
   } = useContext(GlobalContext);
   const [profileVisibleStatus, setProfileVisibleStatus] = useState(true);
   const [followVisibleStatus, setFollowVisibleStatus] = useState(false);
@@ -142,7 +135,6 @@ export function Profile({setEditVisible, navigation}) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <Spinner visible={isLoading} />
       {profileVisibleStatus && (
         <>
           <View style={styles.pencilContainer}>

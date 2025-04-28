@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {default as Tabs} from './Tabs';
 import Welcome from '../screens/Welcome';
 import BuzzAnimation from '../screens/BuzzAnimation';
@@ -16,93 +17,96 @@ import {GlobalContext} from '../context';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const {userInfo, splashLoading} = useContext(GlobalContext);
+  const {isLoading, userInfo, splashLoading} = useContext(GlobalContext);
   return (
-    <Stack.Navigator key={userInfo?.token ? 'authenticated' : 'guest'}>
-      {splashLoading ? (
-        <Stack.Screen
-          name="Splash Screen"
-          component={SplashScreen}
-          options={{headerShown: false}}
-        />
-      ) : userInfo?.token ? (
-        <>
+    <>
+      <Spinner visible={isLoading} />
+      <Stack.Navigator key={userInfo?.token ? 'authenticated' : 'guest'}>
+        {splashLoading ? (
           <Stack.Screen
-            name="SplashThird"
-            component={WelcomeThird}
+            name="Splash Screen"
+            component={SplashScreen}
             options={{headerShown: false}}
           />
-          <Stack.Screen
-            name="Dashboard"
-            component={Tabs}
-            options={{headerShown: false}}
-          />
-          {/* <Stack.Screen
-            name="RecipeWelcome"
-            component={RecipeWelcome}
-            options={{headerShown: false}}
-          /> */}
-          {/* <Stack.Screen
-            name="Diets"
-            component={Diets}
-            options={{headerShown: false}}
-          /> */}
-          {/* <Stack.Screen
-            name="RecipeScan"
-            component={RecipeScan}
-            options={{headerShown: false}}
-          /> */}
-        </>
-      ) : (
-        <>
-          <Stack.Screen
-            name="Splash"
-            component={Welcome}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SplashSecond"
-            component={WelcomeSecond}
-            options={{headerShown: false}}
-          />
-          {/* <Stack.Screen
-            name="SplashThird"
-            component={WelcomeThird}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="RecipeWelcome"
-            component={RecipeWelcome}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Diets"
-            component={Diets}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="RecipeScan"
-            component={RecipeScan}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Dashboard"
-            component={Tabs}
-            options={{headerShown: false}}
-          /> */}
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Register"
-            component={RegisterScreen}
-            options={{headerShown: false}}
-          />
-        </>
-      )}
-    </Stack.Navigator>
+        ) : userInfo?.token ? (
+          <>
+            <Stack.Screen
+              name="SplashThird"
+              component={WelcomeThird}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Dashboard"
+              component={Tabs}
+              options={{headerShown: false}}
+            />
+            {/* <Stack.Screen
+              name="RecipeWelcome"
+              component={RecipeWelcome}
+              options={{headerShown: false}}
+            /> */}
+            {/* <Stack.Screen
+              name="Diets"
+              component={Diets}
+              options={{headerShown: false}}
+            /> */}
+            {/* <Stack.Screen
+              name="RecipeScan"
+              component={RecipeScan}
+              options={{headerShown: false}}
+            /> */}
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Splash"
+              component={Welcome}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="SplashSecond"
+              component={WelcomeSecond}
+              options={{headerShown: false}}
+            />
+            {/* <Stack.Screen
+              name="SplashThird"
+              component={WelcomeThird}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="RecipeWelcome"
+              component={RecipeWelcome}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Diets"
+              component={Diets}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="RecipeScan"
+              component={RecipeScan}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Dashboard"
+              component={Tabs}
+              options={{headerShown: false}}
+            /> */}
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{headerShown: false}}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </>
   );
 };
 

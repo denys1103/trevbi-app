@@ -18,11 +18,9 @@ import {
   recipeImageRootURL,
   widthPixel,
 } from '../../config';
-import RNFS from 'react-native-fs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckBox from '@react-native-community/checkbox';
-import Spinner from 'react-native-loading-spinner-overlay';
 import ViewDetailsComponent from './ViewDetails';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -31,7 +29,7 @@ const RecipesHistory = ({navigation}) => {
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const {isLoading, getRecipeList, deleteRecipe} = useContext(GlobalContext);
+  const {getRecipeList, deleteRecipe} = useContext(GlobalContext);
   const [search, setSearch] = useState('');
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
@@ -194,7 +192,6 @@ const RecipesHistory = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Spinner visible={isLoading} />
       {searchHistoryData.length > 0 && (
         <View style={{paddingVertical: heightPixel(10)}}>
           <TouchableOpacity

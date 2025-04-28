@@ -13,7 +13,6 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {fontPixel, heightPixel, recipeImageRootURL} from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -33,7 +32,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
     item.servings ? item.servings.toString() : '',
   );
   const [cookTime, setCookTime] = useState(item.cookTime ? item.cookTime : '');
-  const {isLoading, uploadRecipeImg, updateRecipeData, showModal} =
+  const {uploadRecipeImg, updateRecipeData, showModal} =
     useContext(GlobalContext);
   const [editRecipeText, setEditRecipeText] = useState(null);
   const loadData = async () => {
@@ -136,7 +135,6 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Spinner visible={!loading || isLoading} />
       {!modalVisibleStatus && (
         <View style={styles.container}>
           <View style={StyleSheet.absoluteFill}>

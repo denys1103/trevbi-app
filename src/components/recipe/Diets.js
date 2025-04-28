@@ -9,20 +9,14 @@ import {
   Image,
 } from 'react-native';
 import {GlobalContext} from '../../context';
-import Spinner from 'react-native-loading-spinner-overlay';
 import CheckboxTree from 'react-native-tree-checkbox';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontPixel, heightPixel, widthPixel} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const DietsScreen = ({navigation}) => {
-  const {
-    isLoading,
-    selectedDiets,
-    setSelectedDiets,
-    selectedMeal,
-    setSelectedMeal,
-  } = useContext(GlobalContext);
+  const {selectedDiets, setSelectedDiets, selectedMeal, setSelectedMeal} =
+    useContext(GlobalContext);
 
   const toggleMeal = meal => {
     if (selectedMeal === meal) {
@@ -388,7 +382,6 @@ const DietsScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
-        <Spinner visible={isLoading} />
         <View style={styles.backgroundStyle}>
           <View style={styles.wrapper}>
             <View style={styles.titleView}>

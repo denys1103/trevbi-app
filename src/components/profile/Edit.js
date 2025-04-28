@@ -7,8 +7,6 @@ import {
   Image,
   TextInput,
   Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Dimensions,
   ScrollView,
@@ -16,15 +14,13 @@ import {
 import {launchImageLibrary} from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Spinner from 'react-native-loading-spinner-overlay';
-import Toast from 'react-native-toast-message';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export function ProfileEdit({setEditVisible, navigation}) {
-  const {isLoading, userInfo, uploadAvata, saveProfile, showModal} =
+  const {userInfo, uploadAvata, saveProfile, showModal} =
     useContext(GlobalContext);
   useEffect(() => {
     if (!userInfo.token) {
@@ -151,7 +147,6 @@ export function ProfileEdit({setEditVisible, navigation}) {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
         style={styles.container}>
-        <Spinner visible={isLoading} />
         <View style={styles.pencilContainer}>
           <TouchableOpacity onPress={() => setEditVisible(false)}>
             <MaterialCommunityIcons

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,13 +13,12 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {fontPixel, heightPixel} from '../../config';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const Feedback = ({navigation}) => {
-  const {isLoading, checkEvent, saveFeedback} = useContext(GlobalContext);
+  const {saveFeedback} = useContext(GlobalContext);
   const [search, setSearch] = useState('');
   const [missingIngredient, setMissingIngredient] = useState('');
   const [challengeIngredient, setChallengeIngredient] = useState('');
@@ -43,7 +42,6 @@ const Feedback = ({navigation}) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
-          <Spinner visible={isLoading} />
           <View style={styles.overlay}>
             <Image
               style={styles.logoStyle}

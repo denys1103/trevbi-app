@@ -13,8 +13,6 @@ import {
   Dimensions,
 } from 'react-native';
 import {GlobalContext} from '../context';
-import Spinner from 'react-native-loading-spinner-overlay';
-import Toast from 'react-native-toast-message';
 import CheckBox from '@react-native-community/checkbox';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -31,7 +29,7 @@ const RegisterScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [Confpassword, setConfPassword] = useState(null);
-  const {isLoading, register, showModal} = useContext(GlobalContext);
+  const {register, showModal} = useContext(GlobalContext);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [secureTextEntryPass, setSecureTextEntryPass] = useState(true);
   const [secureTextEntryRePass, setSecureTextEntryRePass] = useState(true);
@@ -47,7 +45,6 @@ const RegisterScreen = ({navigation}) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
-        <Spinner visible={isLoading} />
         <View style={{flex: 1}}>
           <ImageBackground
             source={require('../../assets/images/background_login.jpg')}

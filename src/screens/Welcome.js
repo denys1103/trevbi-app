@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -9,21 +9,16 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import {GlobalContext} from '../context';
-import Spinner from 'react-native-loading-spinner-overlay';
 import CheckBox from '@react-native-community/checkbox';
 import {fontPixel, heightPixel, widthPixel} from '../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const WelcomeScreen = ({navigation}) => {
-  const {isLoading} = useContext(GlobalContext);
-
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
-        <Spinner visible={isLoading} />
         <ImageBackground
           source={require('../../assets/images/vegetables.jpg')}
           resizeMode="cover"

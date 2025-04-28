@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -9,18 +9,13 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {GlobalContext} from '../context';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {fontPixel, heightPixel, widthPixel} from '../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const WelcomeSecondScreen = ({navigation}) => {
-  const {isLoading} = useContext(GlobalContext);
-
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
-        <Spinner visible={isLoading} />
         <ImageBackground
           source={require('../../assets/images/background_screen1.jpg')}
           resizeMode="cover"

@@ -11,21 +11,19 @@ import {
   Linking,
   Image,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {fontPixel, heightPixel} from '../../config';
 import {GlobalContext} from '../../context';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export function MenuList({navigation}) {
-  const {isLoading, logout} = useContext(GlobalContext);
+  const {logout} = useContext(GlobalContext);
 
   return (
     <SafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
-        <Spinner visible={isLoading} />
         <Image
           style={styles.logoStyle}
           source={require('../../../assets/images/TREVBI_Logo.jpg')}

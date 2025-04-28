@@ -26,7 +26,7 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const {isLoading, login, isConnected, showModal} = useContext(GlobalContext);
+  const {login, isConnected, showModal} = useContext(GlobalContext);
 
   const [popupVisible, setPopupVisible] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
@@ -142,7 +142,7 @@ const LoginScreen = ({navigation}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
         <View style={{flex: 1}}>
-          <Spinner visible={isLoading || indicator} />
+          <Spinner visible={indicator} />
           <ImageBackground
             source={require('../../assets/images/background_login.jpg')}
             resizeMode="cover"

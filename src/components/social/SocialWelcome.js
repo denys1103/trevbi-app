@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,8 +8,6 @@ import {
   Dimensions,
   SafeAreaView,
 } from 'react-native';
-import {GlobalContext} from '../../context';
-import Spinner from 'react-native-loading-spinner-overlay';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,12 +16,9 @@ import {fontPixel, heightPixel} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialWelcomeScreen = ({navigation}) => {
-  const {isLoading} = useContext(GlobalContext);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
-        <Spinner visible={isLoading} />
         <Text
           allowFontScaling={false}
           style={[
