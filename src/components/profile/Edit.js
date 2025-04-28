@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: 'white',
     flex: 1,
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT + heightPixel(70),
   },
   form: {
     width: '80%',
