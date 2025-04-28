@@ -41,7 +41,9 @@ const LoginScreen = ({navigation}) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const onChangeEmail = useCallback(text => {
-    setSecureEmailEntry(false);
+    if (secureEmailEntry) {
+      setSecureEmailEntry(false);
+    }
     setEmail(text);
   }, []);
 

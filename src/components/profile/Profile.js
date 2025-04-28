@@ -280,7 +280,7 @@ export function Profile({setEditVisible, navigation}) {
                   Bio:
                 </Text>
                 <Text allowFontScaling={false} style={styles.profileDataStyle}>
-                  {profile?.Bio ? profile.Bio : ''}
+                  {profile?.bio ? profile.bio : ''}
                 </Text>
               </View>
             </View>

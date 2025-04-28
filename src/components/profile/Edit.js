@@ -64,6 +64,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
   const [phone_num, setPhoneNum] = useState(
     profile.phone_num ? profile.phone_num : '',
   );
+  const [bio, setBio] = useState(profile.bio ? profile.bio : '');
 
   const [genderValue, setGenderValue] = useState(
     profile.gender ? profile.gender : '0',
@@ -91,6 +92,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
     temp_profile.email = userInfo.user.email;
     temp_profile.birth = birth;
     temp_profile.phone_num = phone_num;
+    temp_profile.bio = bio;
     saveProfile(temp_profile);
   };
 
@@ -147,7 +149,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
   return (
     <ScrollView>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
         style={styles.container}>
         <Spinner visible={isLoading} />
         <View style={styles.pencilContainer}>
@@ -255,6 +257,19 @@ export function ProfileEdit({setEditVisible, navigation}) {
             autoCapitalize="none"
           />
           <Text allowFontScaling={false} style={styles.label}>
+            Bio
+          </Text>
+          <TextInput
+            textAlignVertical="top"
+            allowFontScaling={false}
+            multiline={true}
+            numberOfLines={6}
+            placeholder="Enter Bio"
+            style={styles.bioInputStyle}
+            value={bio}
+            onChangeText={setBio}
+          />
+          <Text allowFontScaling={false} style={styles.label}>
             Email address
           </Text>
           <TextInput
@@ -287,8 +302,8 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   label: {
-    paddingTop: heightPixel(15),
-    paddingBottom: heightPixel(10),
+    paddingTop: heightPixel(10),
+    paddingBottom: heightPixel(5),
     fontSize: fontPixel(16),
     fontFamily: 'LEMONMILK-Medium',
   },
@@ -297,7 +312,7 @@ const styles = StyleSheet.create({
     borderWidth: heightPixel(1),
     borderRadius: heightPixel(5),
     padding: heightPixel(6),
-    fontSize: fontPixel(20),
+    fontSize: fontPixel(18),
     color: '#4b4b4b',
     fontFamily: 'LEMONMILK-Light',
   },
@@ -337,5 +352,15 @@ const styles = StyleSheet.create({
     color: '#72a045',
     fontSize: fontPixel(18),
     fontFamily: 'LEMONMILK-Light',
+  },
+  bioInputStyle: {
+    borderColor: '#c0c0c0',
+    borderWidth: heightPixel(1),
+    borderRadius: heightPixel(5),
+    color: '#4b4b4b',
+    fontFamily: 'LEMONMILK-Light',
+    fontSize: fontPixel(16),
+    height: heightPixel(96),
+    padding: heightPixel(6),
   },
 });
