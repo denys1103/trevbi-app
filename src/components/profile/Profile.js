@@ -138,13 +138,13 @@ export function Profile({setEditVisible, navigation}) {
       {profileVisibleStatus && (
         <>
           <View style={styles.pencilContainer}>
-            {/* <TouchableOpacity onPress={() => setEditVisible(true)}>
+            <TouchableOpacity onPress={() => setEditVisible(true)}>
               <MaterialCommunityIcons
                 color={'#72a045'}
                 name="account-edit"
                 size={fontPixel(28)}
               />
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
           <View style={styles.avatarContainer}>
             <Image
@@ -158,7 +158,7 @@ export function Profile({setEditVisible, navigation}) {
               }
             />
           </View>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -201,7 +201,7 @@ export function Profile({setEditVisible, navigation}) {
                 Profile Edit
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.form}>
             <View style={styles.box}>
               <MaterialCommunityIcons
