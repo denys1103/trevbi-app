@@ -1,6 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SocialWelcome from './SocialWelcome';
+import SocialProfile from './SocialProfile';
 import {HeaderBackButton} from '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
@@ -15,10 +16,15 @@ export function SocialIndex() {
           <HeaderBackButton
             labelVisible={false}
             tintColor={'#222'}
-            onPress={() => navigation.replace('SocialWelcome')}
+            onPress={() => navigation.replace('SocialProfile')}
           />
         ),
       })}>
+      <Stack.Screen
+        name="SocialProfile"
+        component={SocialProfile}
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         name="SocialWelcome"
         component={SocialWelcome}
