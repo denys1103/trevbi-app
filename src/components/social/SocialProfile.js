@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,25 +8,20 @@ import {
   Dimensions,
   SafeAreaView,
   FlatList,
+  ScrollView,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
-  const {
-    userInfo,
-    myPostList,
-    getUserList,
-    userList,
-    followRequest,
-    friendList,
-    getFriendList,
-  } = useContext(GlobalContext);
+  const {userInfo, myPostList, getMyPostList, getUserList, userList} =
+    useContext(GlobalContext);
+  const [selectedPost, setSelectedPost] = useState({});
+  const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
+    useState(false);
   const numColumns = 2;
 
   useEffect(() => {
@@ -34,6 +29,10 @@ const SocialProfileScreen = ({navigation}) => {
       navigation.replace('Login');
     }
   }, [navigation, userInfo.token]);
+
+  useEffect(() => {
+    getMyPostList();
+  }, []);
   const profile = userInfo.user;
 
   const renderItem = ({item, index}) => {
@@ -44,8 +43,8 @@ const SocialProfileScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          // setPopupVisible(false);
-          // selectItem(item);
+          setSelectedPost(item);
+          setSelectPostModalVisibleStatus(true);
         }}
         activeOpacity={0.8}>
         <View style={styles.renderItemStyle}>
@@ -63,7 +62,33 @@ const SocialProfileScreen = ({navigation}) => {
                 : require('../../../assets/images/no_img.jpg')
             }
           />
-          <Text allowFontScaling={false}>text text</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              paddingVertical: heightPixel(2),
+              width: '100%',
+            }}>
+            <FontAwesome
+              size={fontPixel(20)}
+              name={'heart-o'}
+              color={'black'}
+              style={{paddingHorizontal: heightPixel(8)}}
+            />
+            <FontAwesome
+              size={fontPixel(20)}
+              name={'comment-o'}
+              color={'black'}
+              style={{paddingHorizontal: heightPixel(8)}}
+            />
+            <FontAwesome
+              size={fontPixel(20)}
+              name={'share-square-o'}
+              color={'black'}
+              style={{paddingHorizontal: heightPixel(8)}}
+            />
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -97,7 +122,9 @@ const SocialProfileScreen = ({navigation}) => {
                   : require('../../../assets/images/free_user.png')
               }
             />
-            <Text allowFontScaling={false} style={styles.fullnameStyle}>
+            <Text
+              allowFontScaling={false}
+              style={[styles.fullnameStyle, {maxWidth: SCREEN_WIDTH * 0.9}]}>
               {profile?.fullname ? profile.fullname : ''}
             </Text>
           </View>
@@ -214,6 +241,106 @@ const SocialProfileScreen = ({navigation}) => {
           />
         </View>
       </View>
+      {selectPostModalVisibleStatus && (
+        <View style={styles.modalStyle}>
+          <ScrollView style={{height: SCREEN_HEIGHT - heightPixel(120)}}>
+            <View style={styles.pencilContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectPostModalVisibleStatus(false);
+                }}>
+                <MaterialCommunityIcons
+                  color={'#72a045'}
+                  name="close"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
+            <Image
+              style={[styles.logoStyle, {alignSelf: 'center'}]}
+              source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
+            />
+            <View style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
+              <Image
+                style={styles.avatar}
+                source={
+                  profile?.avatar
+                    ? {
+                        uri: imageURL + profile.avatar,
+                      }
+                    : require('../../../assets/images/free_user.png')
+                }
+              />
+              <Text allowFontScaling={false} style={styles.fullnameStyle}>
+                {profile?.fullname ? profile.fullname : ''}
+              </Text>
+            </View>
+            <Image
+              style={{
+                width: SCREEN_WIDTH,
+                height: SCREEN_WIDTH,
+                resizeMode: 'cover',
+              }}
+              source={
+                selectedPost?.photo
+                  ? {
+                      uri: postImageRootURL + selectedPost.photo,
+                    }
+                  : require('../../../assets/images/no_img.jpg')
+              }
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                paddingVertical: heightPixel(5),
+                width: '100%',
+              }}>
+              <FontAwesome
+                size={fontPixel(24)}
+                name={'heart-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(10)}}
+              />
+              <FontAwesome
+                size={fontPixel(24)}
+                name={'comment-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(10)}}
+              />
+              <FontAwesome
+                size={fontPixel(24)}
+                name={'share-square-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(10)}}
+              />
+            </View>
+            {selectedPost.title && (
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(22),
+                  color: 'black',
+                  paddingHorizontal: heightPixel(15),
+                  paddingBottom: heightPixel(10),
+                }}>
+                {selectedPost?.title ? selectedPost.title : ''}
+              </Text>
+            )}
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(18),
+                color: 'black',
+                paddingHorizontal: heightPixel(15),
+                paddingBottom: heightPixel(20),
+              }}>
+              {selectedPost?.note ? selectedPost.note : ''}
+            </Text>
+          </ScrollView>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -292,6 +419,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     borderWidth: heightPixel(1),
+  },
+  pencilContainer: {
+    paddingTop: heightPixel(10),
+    paddingRight: heightPixel(20),
+    alignSelf: 'flex-end',
+  },
+  modalStyle: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    top: heightPixel(0),
+    width: SCREEN_WIDTH,
   },
 });
 

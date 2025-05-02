@@ -522,6 +522,32 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const getMyPostList = async () => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-myposts', {});
+
+      if (data.success) {
+        setIsLoading(false);
+        setMyPostList(data.myposts);
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -578,6 +604,7 @@ export const GlobalContextProvider = ({children}) => {
         savePost,
         saveTxtPost,
         myPostList,
+        getMyPostList,
         showModal,
         hideModal,
       }}>
