@@ -243,7 +243,7 @@ const SocialProfileScreen = ({navigation}) => {
       </View>
       {selectPostModalVisibleStatus && (
         <View style={styles.modalStyle}>
-          <ScrollView style={{height: SCREEN_HEIGHT - heightPixel(120)}}>
+          <ScrollView style={{height: SCREEN_HEIGHT - heightPixel(70)}}>
             <View style={styles.pencilContainer}>
               <TouchableOpacity
                 onPress={() => {
@@ -356,6 +356,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: heightPixel(15),
   },
   avatarContainer: {
     flexDirection: 'row',
@@ -386,8 +387,10 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingTop: heightPixel(8),
     minHeight: heightPixel(60),
+    paddingHorizontal: heightPixel(15),
   },
   wrapper: {
+    paddingHorizontal: heightPixel(15),
     paddingTop: heightPixel(5),
     maxHeight: SCREEN_HEIGHT - SCREEN_WIDTH * 0.15 - heightPixel(280),
   },
@@ -421,7 +424,7 @@ const styles = StyleSheet.create({
     borderWidth: heightPixel(1),
   },
   pencilContainer: {
-    paddingTop: heightPixel(10),
+    paddingTop: heightPixel(50),
     paddingRight: heightPixel(20),
     alignSelf: 'flex-end',
   },
