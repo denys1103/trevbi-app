@@ -27,6 +27,7 @@ export const GlobalContextProvider = ({children}) => {
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [userList, setUserList] = useState([]);
   const [friendList, setFriendList] = useState([]);
+  const [myPostList, setMyPostList] = useState([]);
   //modal setting start
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -457,6 +458,70 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const savePost = async (...photodata) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const responseData = await fetch(baseURL + '/upload-post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: client.defaults.headers.common.authorization,
+        },
+        body: photodata[0],
+      });
+      let data = await responseData.json();
+      if (data.success) {
+        setIsLoading(false);
+        setMyPostList(data.myposts);
+        showModal('Your post has been successfully posted!');
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        setMyPostList([]);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
+  const saveTxtPost = async (...photodata) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/upload-txtpost', {
+        ...photodata,
+      });
+      if (data.success) {
+        setIsLoading(false);
+        showModal('Your post has been successfully posted!');
+        setMyPostList(data.myposts);
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        setMyPostList([]);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -510,6 +575,9 @@ export const GlobalContextProvider = ({children}) => {
         deleteRecipe,
         uploadRecipeImg,
         updateRecipeData,
+        savePost,
+        saveTxtPost,
+        myPostList,
         showModal,
         hideModal,
       }}>

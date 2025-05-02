@@ -7,24 +7,27 @@ import {
   StyleSheet,
   Dimensions,
   SafeAreaView,
+  FlatList,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {fontPixel, heightPixel, imageURL} from '../../config';
+import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
   const {
     userInfo,
+    myPostList,
     getUserList,
     userList,
     followRequest,
     friendList,
     getFriendList,
   } = useContext(GlobalContext);
+  const numColumns = 2;
 
   useEffect(() => {
     if (!userInfo.token) {
@@ -32,6 +35,52 @@ const SocialProfileScreen = ({navigation}) => {
     }
   }, [navigation, userInfo.token]);
   const profile = userInfo.user;
+
+  const renderItem = ({item, index}) => {
+    if (item.empty === true) {
+      return <></>;
+    }
+    var itemDimension = (SCREEN_WIDTH - heightPixel(30)) / numColumns;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          // setPopupVisible(false);
+          // selectItem(item);
+        }}
+        activeOpacity={0.8}>
+        <View style={styles.renderItemStyle}>
+          <Image
+            style={{
+              width: itemDimension,
+              height: itemDimension,
+              resizeMode: 'cover',
+            }}
+            source={
+              item?.photo
+                ? {
+                    uri: postImageRootURL + item.photo,
+                  }
+                : require('../../../assets/images/no_img.jpg')
+            }
+          />
+          <Text allowFontScaling={false}>text text</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const formatRow = (data, numColumns) => {
+    const numberOfFullRows = Math.floor(data.length / numColumns);
+    let numberOfElementsLastRow = data.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      data.push({id: `blank-${numberOfElementsLastRow}`, empty: true});
+      numberOfElementsLastRow++;
+    }
+    return data;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,7 +126,7 @@ const SocialProfileScreen = ({navigation}) => {
               activeOpacity={0.5}
               style={styles.postBtnStyle}
               onPress={() => {
-                // navigation.replace('MenuList');
+                navigation.replace('CreatePost', {onePost: null});
               }}>
               <MaterialCommunityIcons
                 size={fontPixel(25)}
@@ -154,7 +203,16 @@ const SocialProfileScreen = ({navigation}) => {
             </Text>
           </View>
         </View>
-        <View style={styles.wrapper}></View>
+        <View style={styles.wrapper}>
+          <FlatList
+            data={formatRow(myPostList, numColumns)}
+            keyExtractor={item => {
+              return item._id;
+            }}
+            renderItem={renderItem}
+            numColumns={numColumns}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -203,11 +261,8 @@ const styles = StyleSheet.create({
     minHeight: heightPixel(60),
   },
   wrapper: {
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    width: '100%',
-    paddingTop: heightPixel(10),
+    paddingTop: heightPixel(5),
+    maxHeight: SCREEN_HEIGHT - SCREEN_WIDTH * 0.15 - heightPixel(280),
   },
   postBtnStyle: {
     backgroundColor: '#063225',
@@ -231,6 +286,12 @@ const styles = StyleSheet.create({
     width: heightPixel(28),
     height: heightPixel(28),
     resizeMode: 'cover',
+  },
+  renderItemStyle: {
+    backgroundColor: 'transparent',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderWidth: heightPixel(1),
   },
 });
 

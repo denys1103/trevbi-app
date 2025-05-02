@@ -38,6 +38,7 @@ const VERSION = '1.0';
 const baseURL = HOST_URL + '/api';
 const imageURL = HOST_URL + '/uploads/images/';
 const recipeImageRootURL = HOST_URL + '/uploads/recipeImgs/';
+const postImageRootURL = HOST_URL + '/uploads/postImgs/';
 const client = axios.create({
   baseURL: HOST_URL + '/api',
   headers: {
@@ -834,4 +835,5 @@ export {
   indexFilePath,
   indexRecipeFilePath,
   recipeImageRootURL,
+  postImageRootURL,
 };
