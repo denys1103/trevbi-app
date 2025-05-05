@@ -187,7 +187,7 @@ const SocialProfileScreen = ({navigation}) => {
               activeOpacity={0.5}
               style={styles.postBtnStyle}
               onPress={() => {
-                // navigation.replace('MenuList');
+                navigation.replace('CrewPage');
               }}>
               <Image
                 style={styles.ico}

@@ -280,7 +280,7 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
-  const followRequest = async id => {
+  const followRequest = async (id, status = 0) => {
     setIsLoading(true);
     if (!isConnected) {
       showModal('Check your internet connection.');
@@ -288,13 +288,17 @@ export const GlobalContextProvider = ({children}) => {
       return;
     }
     try {
-      const {data} = await client.post('/follow-request', {id});
+      const {data} = await client.post('/follow-request', {id, status});
 
       if (data.success) {
         setIsLoading(false);
         userInfo.user = data.user;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        showModal('Followed!');
+        if (status < 1) {
+          showModal('Joined!');
+        } else {
+          showModal('Removed!');
+        }
       } else {
         setIsLoading(false);
         showModal(data.message);
