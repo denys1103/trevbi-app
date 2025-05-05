@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SocialWelcome from './SocialWelcome';
 import SocialProfile from './SocialProfile';
 import CreatePost from './CreatePost';
+import ScoutsPage from './ScoutsPage';
 import {HeaderBackButton} from '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
@@ -34,6 +35,11 @@ export function SocialIndex() {
       <Stack.Screen
         name="CreatePost"
         component={CreatePost}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ScoutsPage"
+        component={ScoutsPage}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

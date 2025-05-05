@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   FlatList,
   ScrollView,
+  Platform,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -202,7 +203,7 @@ const SocialProfileScreen = ({navigation}) => {
               activeOpacity={0.5}
               style={styles.postBtnStyle}
               onPress={() => {
-                // navigation.replace('MenuList');
+                navigation.replace('ScoutsPage');
               }}>
               <Image
                 style={styles.ico}
@@ -243,7 +244,13 @@ const SocialProfileScreen = ({navigation}) => {
       </View>
       {selectPostModalVisibleStatus && (
         <View style={styles.modalStyle}>
-          <ScrollView style={{height: SCREEN_HEIGHT - heightPixel(70)}}>
+          <ScrollView
+            style={{
+              height:
+                Platform.OS === 'ios'
+                  ? SCREEN_HEIGHT - heightPixel(70)
+                  : SCREEN_HEIGHT - heightPixel(120),
+            }}>
             <View style={styles.pencilContainer}>
               <TouchableOpacity
                 onPress={() => {
@@ -349,7 +356,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: SCREEN_HEIGHT,
-    paddingHorizontal: heightPixel(15),
   },
   overlay: {
     paddingTop: heightPixel(10),
@@ -424,7 +430,7 @@ const styles = StyleSheet.create({
     borderWidth: heightPixel(1),
   },
   pencilContainer: {
-    paddingTop: heightPixel(50),
+    paddingTop: Platform.OS === 'ios' ? heightPixel(50) : heightPixel(10),
     paddingRight: heightPixel(20),
     alignSelf: 'flex-end',
   },
