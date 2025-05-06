@@ -223,10 +223,7 @@ const FeedPage = ({navigation, route}) => {
           <View style={styles.modalStyle}>
             <ScrollView
               style={{
-                height:
-                  Platform.OS === 'ios'
-                    ? SCREEN_HEIGHT - heightPixel(70)
-                    : SCREEN_HEIGHT - heightPixel(120),
+                height: SCREEN_HEIGHT - heightPixel(120),
               }}>
               <View style={styles.closeContainer}>
                 <TouchableOpacity
@@ -399,7 +396,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   closeContainer: {
-    paddingTop: Platform.OS === 'ios' ? heightPixel(50) : heightPixel(10),
+    paddingTop: heightPixel(10),
     paddingRight: heightPixel(20),
     alignSelf: 'flex-end',
   },

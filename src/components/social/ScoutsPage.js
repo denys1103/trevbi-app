@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   closeContainer: {
-    paddingTop: Platform.OS === 'ios' ? heightPixel(50) : heightPixel(10),
+    paddingTop: heightPixel(10),
     paddingRight: heightPixel(20),
     alignSelf: 'flex-end',
   },
