@@ -28,6 +28,7 @@ export const GlobalContextProvider = ({children}) => {
   const [userList, setUserList] = useState([]);
   const [friendList, setFriendList] = useState([]);
   const [myPostList, setMyPostList] = useState([]);
+  const [postList, setPostList] = useState([]);
   //modal setting start
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -552,6 +553,32 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const getPostList = async () => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-posts', {});
+
+      if (data.success) {
+        setIsLoading(false);
+        setPostList(data.posts);
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -609,6 +636,8 @@ export const GlobalContextProvider = ({children}) => {
         saveTxtPost,
         myPostList,
         getMyPostList,
+        postList,
+        getPostList,
         showModal,
         hideModal,
       }}>

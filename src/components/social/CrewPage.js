@@ -12,9 +12,8 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {GlobalContext} from '../../context';
-import {fontPixel, heightPixel, widthPixel, imageURL} from '../../config';
+import {fontPixel, heightPixel, imageURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const CrewPage = ({navigation, route}) => {

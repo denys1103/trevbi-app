@@ -227,8 +227,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   userBox: {
-    padding: heightPixel(6),
-    marginVertical: heightPixel(1),
+    paddingLeft: heightPixel(15),
+    marginVertical: heightPixel(6),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
