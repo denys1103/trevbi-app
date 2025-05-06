@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, memo} from 'react';
 import {
   StyleSheet,
   Text,
@@ -19,14 +19,45 @@ import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const FeedPage = ({navigation, route}) => {
-  const {getPostList, postList} = useContext(GlobalContext);
+  const {userInfo, getPostList, postList, updateLike, setPostList} =
+    useContext(GlobalContext);
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
     useState(false);
   const [selectedPost, setSelectedPost] = useState({});
+  const profile = userInfo.user;
 
   useEffect(() => {
     getPostList();
   }, []);
+
+  const formatLike = count => {
+    if (count >= 1_000_000) {
+      return (count / 1_000_000).toFixed(0).replace(/\.0$/, '') + 'M';
+    } else if (count >= 1_000) {
+      return (count / 1_000).toFixed(0).replace(/\.0$/, '') + 'K';
+    }
+    return count.toString();
+  };
+
+  const onLikePress = async (id, selectType = 0) => {
+    const onePost = await updateLike({
+      id: id,
+      status: 0,
+    });
+
+    if (onePost && onePost._id) {
+      setPostList(prevList =>
+        prevList.map(post =>
+          post._id === onePost._id ? {...post, like: onePost.like} : post,
+        ),
+      );
+      if (selectType > 0) {
+        setSelectedPost(prevPost =>
+          prevPost._id === id ? {...prevPost, like: onePost.like} : prevPost,
+        );
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -65,87 +96,128 @@ const FeedPage = ({navigation, route}) => {
           keyExtractor={item => item._id}
           renderItem={({item}) => {
             return (
-              <>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  paddingBottom: heightPixel(6),
+                }}>
+                <View style={styles.userBox}>
+                  <Image
+                    style={styles.userAvatar}
+                    source={
+                      item.userid?.avatar
+                        ? {
+                            uri: imageURL + item.userid.avatar,
+                          }
+                        : require('../../../assets/images/free_user.png')
+                    }
+                  />
+                  <View style={styles.userBoxContent}>
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(18),
+                        color: 'black',
+                      }}>
+                      {item.userid?.fullname ? item.userid.fullname : ''}
+                    </Text>
+                  </View>
+                </View>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
                     setSelectedPost(item);
                     setSelectPostModalVisibleStatus(true);
                   }}>
-                  <View
+                  <Image
                     style={{
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      paddingBottom: heightPixel(6),
-                    }}>
-                    <View style={styles.userBox}>
-                      <Image
-                        style={styles.userAvatar}
-                        source={
-                          item.userid?.avatar
-                            ? {
-                                uri: imageURL + item.userid.avatar,
-                              }
-                            : require('../../../assets/images/free_user.png')
-                        }
-                      />
-                      <View style={styles.userBoxContent}>
-                        <Text
-                          allowFontScaling={false}
-                          style={{
-                            fontSize: fontPixel(18),
-                            color: 'black',
-                          }}>
-                          {item.userid?.fullname ? item.userid.fullname : ''}
-                        </Text>
-                      </View>
-                    </View>
-                    <Image
-                      style={{
-                        width: SCREEN_WIDTH,
-                        height: SCREEN_WIDTH,
-                        resizeMode: 'cover',
-                      }}
-                      source={
-                        item?.photo
-                          ? {
-                              uri: postImageRootURL + item.photo,
-                            }
-                          : require('../../../assets/images/no_img.jpg')
-                      }
-                    />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        paddingVertical: heightPixel(2),
-                        width: '100%',
-                      }}>
-                      <FontAwesome
-                        size={fontPixel(26)}
-                        name={'heart-o'}
-                        color={'black'}
-                        style={{paddingHorizontal: heightPixel(10)}}
-                      />
-                      <FontAwesome
-                        size={fontPixel(26)}
-                        name={'comment-o'}
-                        color={'black'}
-                        style={{paddingHorizontal: heightPixel(10)}}
-                      />
-                      <FontAwesome
-                        size={fontPixel(26)}
-                        name={'share-square-o'}
-                        color={'black'}
-                        style={{paddingHorizontal: heightPixel(10)}}
-                      />
-                    </View>
-                  </View>
+                      width: SCREEN_WIDTH,
+                      height: SCREEN_WIDTH,
+                      resizeMode: 'cover',
+                    }}
+                    source={
+                      item?.photo
+                        ? {
+                            uri: postImageRootURL + item.photo,
+                          }
+                        : require('../../../assets/images/no_img.jpg')
+                    }
+                  />
                 </TouchableOpacity>
-              </>
+                <View style={styles.iconsBox}>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    style={styles.columnCenterStyle}
+                    onPress={() => {
+                      // if (item.userid._id !== profile._id) {
+                      onLikePress(item._id);
+                      // }
+                    }}>
+                    <FontAwesome
+                      size={fontPixel(30)}
+                      name={'heart-o'}
+                      color={'black'}
+                      style={{paddingHorizontal: heightPixel(10)}}
+                    />
+                    <Text
+                      style={{
+                        fontSize: fontPixel(10),
+                        color: 'black',
+                        paddingHorizontal: heightPixel(10),
+                        marginTop: heightPixel(-24),
+                      }}>
+                      {item.like ? formatLike(item.like.length) : 0}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    style={[
+                      styles.columnCenterStyle,
+                      {paddingBottom: heightPixel(2)},
+                    ]}
+                    onPress={() => {
+                      console.log('');
+                    }}>
+                    <FontAwesome
+                      size={fontPixel(30)}
+                      name={'comment-o'}
+                      color={'black'}
+                      style={{paddingHorizontal: heightPixel(10)}}
+                    />
+                    <Text
+                      style={{
+                        fontSize: fontPixel(10),
+                        color: 'black',
+                        paddingHorizontal: heightPixel(10),
+                        marginTop: heightPixel(-22),
+                      }}>
+                      {item.comment ? item.comment.length : 0}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    style={[
+                      styles.columnCenterStyle,
+                      {paddingTop: heightPixel(8)},
+                    ]}
+                    onPress={() => {
+                      console.log('');
+                    }}>
+                    <FontAwesome
+                      size={fontPixel(30)}
+                      name={'share-square-o'}
+                      color={'black'}
+                      style={{paddingHorizontal: heightPixel(10)}}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             );
           }}
+          initialNumToRender={5}
+          maxToRenderPerBatch={5}
+          windowSize={10}
         />
         {selectPostModalVisibleStatus && (
           <View style={styles.modalStyle}>
@@ -204,32 +276,74 @@ const FeedPage = ({navigation, route}) => {
                     : require('../../../assets/images/no_img.jpg')
                 }
               />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  paddingVertical: heightPixel(5),
-                  width: '100%',
-                }}>
-                <FontAwesome
-                  size={fontPixel(26)}
-                  name={'heart-o'}
-                  color={'black'}
-                  style={{paddingHorizontal: heightPixel(10)}}
-                />
-                <FontAwesome
-                  size={fontPixel(26)}
-                  name={'comment-o'}
-                  color={'black'}
-                  style={{paddingHorizontal: heightPixel(10)}}
-                />
-                <FontAwesome
-                  size={fontPixel(26)}
-                  name={'share-square-o'}
-                  color={'black'}
-                  style={{paddingHorizontal: heightPixel(10)}}
-                />
+              <View style={styles.iconsBox}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={styles.columnCenterStyle}
+                  onPress={() => {
+                    // if (selectedPost.userid._id !== profile._id) {
+                    onLikePress(selectedPost._id, 1);
+                    // }
+                  }}>
+                  <FontAwesome
+                    size={fontPixel(30)}
+                    name={'heart-o'}
+                    color={'black'}
+                    style={{paddingHorizontal: heightPixel(10)}}
+                  />
+                  <Text
+                    style={{
+                      fontSize: fontPixel(10),
+                      color: 'black',
+                      paddingHorizontal: heightPixel(10),
+                      marginTop: heightPixel(-24),
+                    }}>
+                    {selectedPost.like
+                      ? formatLike(selectedPost.like.length)
+                      : 0}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={[
+                    styles.columnCenterStyle,
+                    {paddingBottom: heightPixel(2)},
+                  ]}
+                  onPress={() => {
+                    console.log('');
+                  }}>
+                  <FontAwesome
+                    size={fontPixel(30)}
+                    name={'comment-o'}
+                    color={'black'}
+                    style={{paddingHorizontal: heightPixel(10)}}
+                  />
+                  <Text
+                    style={{
+                      fontSize: fontPixel(10),
+                      color: 'black',
+                      paddingHorizontal: heightPixel(10),
+                      marginTop: heightPixel(-22),
+                    }}>
+                    {selectedPost.comment ? selectedPost.comment.length : 0}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={[
+                    styles.columnCenterStyle,
+                    {paddingTop: heightPixel(8)},
+                  ]}
+                  onPress={() => {
+                    console.log('');
+                  }}>
+                  <FontAwesome
+                    size={fontPixel(30)}
+                    name={'share-square-o'}
+                    color={'black'}
+                    style={{paddingHorizontal: heightPixel(10)}}
+                  />
+                </TouchableOpacity>
               </View>
               {selectedPost.title && (
                 <Text
@@ -334,6 +448,17 @@ const styles = StyleSheet.create({
     color: 'black',
     paddingLeft: heightPixel(8),
     maxWidth: SCREEN_WIDTH * 0.45,
+  },
+  columnCenterStyle: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconsBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
   },
 });
 

@@ -579,6 +579,37 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const updateLike = async (...likeInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/update-like', {
+        ...likeInfo,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        showModal(data.message);
+        return data.post;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return;
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return;
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -636,8 +667,10 @@ export const GlobalContextProvider = ({children}) => {
         saveTxtPost,
         myPostList,
         getMyPostList,
+        setPostList,
         postList,
         getPostList,
+        updateLike,
         showModal,
         hideModal,
       }}>
