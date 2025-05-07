@@ -35,6 +35,13 @@ const WelcomeScreen = ({navigation}) => {
           resizeMode="cover"
           style={styles.wrapper}>
           <View style={styles.descriptionView}>
+            <Text
+              allowFontScaling={false}
+              style={[styles.titleStyle, {fontSize: fontPixel(32)}]}>
+              {`Dinner just\ngot smarter!`}
+            </Text>
+          </View>
+          <View style={[styles.descriptionView, {paddingTop: heightPixel(50)}]}>
             <Text allowFontScaling={false} style={styles.titleStyle}>
               Scan your fridge or
             </Text>
@@ -44,24 +51,15 @@ const WelcomeScreen = ({navigation}) => {
             <Text allowFontScaling={false} style={styles.titleStyle}>
               Get AI recipe.
             </Text>
-          </View>
-          <View style={{paddingVertical: heightPixel(20)}}>
             <Text
               allowFontScaling={false}
               style={[
                 styles.descriptionStyle,
                 {
-                  paddingTop: heightPixel(10),
+                  paddingTop: heightPixel(20),
                 },
               ]}>
-              {`You can also lay your\ningredients on your counter`}
-            </Text>
-          </View>
-          <View style={styles.descriptionView}>
-            <Text
-              allowFontScaling={false}
-              style={[styles.titleStyle, {fontSize: fontPixel(28)}]}>
-              {`Dinner just\ngot smarter!`}
+              {`Place ingredients on counter\nTo capture for Ai recipes`}
             </Text>
           </View>
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -132,7 +130,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     alignItems: 'center',
     width: '100%',
     paddingTop: heightPixel(10),
@@ -148,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
     color: 'white',
     padding: heightPixel(8),
-    fontFamily: 'LEMONMILK-Regular',
+    fontFamily: 'LEMONMILK-Medium',
   },
   buzz_text_button: {
     fontSize: fontPixel(18),
@@ -170,11 +168,10 @@ const styles = StyleSheet.create({
     fontFamily: 'LEMONMILK-Medium',
   },
   button: {
-    marginTop: heightPixel(10),
     backgroundColor: '#063225',
-    borderRadius: heightPixel(24),
+    borderRadius: heightPixel(16),
     paddingVertical: heightPixel(5),
-    paddingHorizontal: widthPixel(20),
+    paddingHorizontal: widthPixel(25),
     marginBottom: heightPixel(10),
     alignItems: 'center',
     justifyContent: 'center',
@@ -203,10 +200,10 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     textAlign: 'center',
-    fontSize: fontPixel(24),
+    fontSize: fontPixel(26),
     color: 'white',
     padding: heightPixel(3),
-    fontFamily: 'LEMONMILK-Medium',
+    fontFamily: 'LEMONMILK-Regular',
   },
 });
 
