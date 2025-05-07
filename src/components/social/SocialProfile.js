@@ -36,6 +36,15 @@ const SocialProfileScreen = ({navigation}) => {
   }, []);
   const profile = userInfo.user;
 
+  const formatLike = count => {
+    if (count >= 1_000_000) {
+      return (count / 1_000_000).toFixed(0).replace(/\.0$/, '') + 'M';
+    } else if (count >= 1_000) {
+      return (count / 1_000).toFixed(0).replace(/\.0$/, '') + 'K';
+    }
+    return count.toString();
+  };
+
   const renderItem = ({item, index}) => {
     if (item.empty === true) {
       return <></>;
@@ -71,24 +80,55 @@ const SocialProfileScreen = ({navigation}) => {
               paddingVertical: heightPixel(2),
               width: '100%',
             }}>
-            <FontAwesome
-              size={fontPixel(20)}
-              name={'heart-o'}
-              color={'black'}
-              style={{paddingHorizontal: heightPixel(8)}}
-            />
-            <FontAwesome
-              size={fontPixel(20)}
-              name={'comment-o'}
-              color={'black'}
-              style={{paddingHorizontal: heightPixel(8)}}
-            />
-            <FontAwesome
-              size={fontPixel(20)}
-              name={'share-square-o'}
-              color={'black'}
-              style={{paddingHorizontal: heightPixel(8)}}
-            />
+            <View style={styles.columnCenterStyle}>
+              <FontAwesome
+                size={fontPixel(20)}
+                name={'heart-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(8)}}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(10),
+                  color: 'black',
+                  paddingHorizontal: heightPixel(10),
+                  marginTop: heightPixel(-18),
+                }}>
+                {item.like ? formatLike(item.like.length) : 0}
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.columnCenterStyle,
+                {paddingBottom: heightPixel(2)},
+              ]}>
+              <FontAwesome
+                size={fontPixel(20)}
+                name={'comment-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(8)}}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(10),
+                  color: 'black',
+                  paddingHorizontal: heightPixel(10),
+                  marginTop: heightPixel(-18),
+                }}>
+                {item.comment ? item.comment.length : 0}
+              </Text>
+            </View>
+            <View
+              style={[styles.columnCenterStyle, {paddingTop: heightPixel(8)}]}>
+              <FontAwesome
+                size={fontPixel(20)}
+                name={'share-square-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(8)}}
+              />
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -304,24 +344,58 @@ const SocialProfileScreen = ({navigation}) => {
                 paddingVertical: heightPixel(5),
                 width: '100%',
               }}>
-              <FontAwesome
-                size={fontPixel(24)}
-                name={'heart-o'}
-                color={'black'}
-                style={{paddingHorizontal: heightPixel(10)}}
-              />
-              <FontAwesome
-                size={fontPixel(24)}
-                name={'comment-o'}
-                color={'black'}
-                style={{paddingHorizontal: heightPixel(10)}}
-              />
-              <FontAwesome
-                size={fontPixel(24)}
-                name={'share-square-o'}
-                color={'black'}
-                style={{paddingHorizontal: heightPixel(10)}}
-              />
+              <View style={styles.columnCenterStyle}>
+                <FontAwesome
+                  size={fontPixel(26)}
+                  name={'heart-o'}
+                  color={'black'}
+                  style={{paddingHorizontal: heightPixel(10)}}
+                />
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontSize: fontPixel(10),
+                    color: 'black',
+                    paddingHorizontal: heightPixel(10),
+                    marginTop: heightPixel(-20),
+                  }}>
+                  {selectedPost.like ? formatLike(selectedPost.like.length) : 0}
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.columnCenterStyle,
+                  {paddingBottom: heightPixel(2)},
+                ]}>
+                <FontAwesome
+                  size={fontPixel(26)}
+                  name={'comment-o'}
+                  color={'black'}
+                  style={{paddingHorizontal: heightPixel(10)}}
+                />
+                <Text
+                  allowFontScaling={false}
+                  style={{
+                    fontSize: fontPixel(10),
+                    color: 'black',
+                    paddingHorizontal: heightPixel(10),
+                    marginTop: heightPixel(-20),
+                  }}>
+                  {selectedPost.comment ? selectedPost.comment.length : 0}
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.columnCenterStyle,
+                  {paddingTop: heightPixel(8)},
+                ]}>
+                <FontAwesome
+                  size={fontPixel(26)}
+                  name={'share-square-o'}
+                  color={'black'}
+                  style={{paddingHorizontal: heightPixel(10)}}
+                />
+              </View>
             </View>
             {selectedPost.title && (
               <Text
