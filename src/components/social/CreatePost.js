@@ -148,7 +148,9 @@ const CreatePost = ({navigation, route}) => {
               }
             />
             <View style={styles.boxContent}>
-              <Text style={styles.fullnameStyle}>{profile.fullname}</Text>
+              <Text allowFontScaling={false} style={styles.fullnameStyle}>
+                {profile.fullname}
+              </Text>
             </View>
           </View>
           <View style={styles.postBtnBox}>
@@ -192,7 +194,9 @@ const CreatePost = ({navigation, route}) => {
               name="image-search-outline"
               size={fontPixel(30)}
             />
-            <Text style={styles.imageTextStyle}>Image</Text>
+            <Text allowFontScaling={false} style={styles.imageTextStyle}>
+              Image
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

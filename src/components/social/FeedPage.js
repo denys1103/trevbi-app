@@ -161,6 +161,7 @@ const FeedPage = ({navigation, route}) => {
                       style={{paddingHorizontal: heightPixel(10)}}
                     />
                     <Text
+                      allowFontScaling={false}
                       style={{
                         fontSize: fontPixel(10),
                         color: 'black',
@@ -186,6 +187,7 @@ const FeedPage = ({navigation, route}) => {
                       style={{paddingHorizontal: heightPixel(10)}}
                     />
                     <Text
+                      allowFontScaling={false}
                       style={{
                         fontSize: fontPixel(10),
                         color: 'black',
@@ -289,6 +291,7 @@ const FeedPage = ({navigation, route}) => {
                     style={{paddingHorizontal: heightPixel(10)}}
                   />
                   <Text
+                    allowFontScaling={false}
                     style={{
                       fontSize: fontPixel(10),
                       color: 'black',
@@ -316,6 +319,7 @@ const FeedPage = ({navigation, route}) => {
                     style={{paddingHorizontal: heightPixel(10)}}
                   />
                   <Text
+                    allowFontScaling={false}
                     style={{
                       fontSize: fontPixel(10),
                       color: 'black',
