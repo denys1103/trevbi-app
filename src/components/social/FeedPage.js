@@ -100,7 +100,7 @@ const FeedPage = ({navigation, route}) => {
                 style={{
                   flexDirection: 'column',
                   alignItems: 'center',
-                  paddingBottom: heightPixel(6),
+                  paddingBottom: heightPixel(10),
                 }}>
                 <View style={styles.userBox}>
                   <Image
@@ -154,11 +154,18 @@ const FeedPage = ({navigation, route}) => {
                       onLikePress(item._id);
                       // }
                     }}>
-                    <FontAwesome
-                      size={fontPixel(30)}
-                      name={'heart-o'}
-                      color={'black'}
-                      style={{paddingHorizontal: heightPixel(10)}}
+                    <Image
+                      style={{
+                        width: heightPixel(37),
+                        height: heightPixel(30),
+                        resizeMode: 'cover',
+                        marginHorizontal: heightPixel(8),
+                      }}
+                      source={
+                        item.like.includes(profile._id)
+                          ? require('../../../assets/images/kiss_like.png')
+                          : require('../../../assets/images/kiss.png')
+                      }
                     />
                     <Text
                       allowFontScaling={false}
@@ -166,25 +173,24 @@ const FeedPage = ({navigation, route}) => {
                         fontSize: fontPixel(10),
                         color: 'black',
                         paddingHorizontal: heightPixel(10),
-                        marginTop: heightPixel(-24),
                       }}>
                       {item.like ? formatLike(item.like.length) : 0}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.6}
-                    style={[
-                      styles.columnCenterStyle,
-                      {paddingBottom: heightPixel(2)},
-                    ]}
+                    style={styles.columnCenterStyle}
                     onPress={() => {
                       console.log('');
                     }}>
-                    <FontAwesome
-                      size={fontPixel(30)}
-                      name={'comment-o'}
-                      color={'black'}
-                      style={{paddingHorizontal: heightPixel(10)}}
+                    <Image
+                      style={{
+                        width: heightPixel(37),
+                        height: heightPixel(30),
+                        resizeMode: 'cover',
+                        marginHorizontal: heightPixel(8),
+                      }}
+                      source={require('../../../assets/images/comment.png')}
                     />
                     <Text
                       allowFontScaling={false}
@@ -192,17 +198,13 @@ const FeedPage = ({navigation, route}) => {
                         fontSize: fontPixel(10),
                         color: 'black',
                         paddingHorizontal: heightPixel(10),
-                        marginTop: heightPixel(-22),
                       }}>
                       {item.comment ? item.comment.length : 0}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.6}
-                    style={[
-                      styles.columnCenterStyle,
-                      {paddingTop: heightPixel(8)},
-                    ]}
+                    style={styles.columnCenterStyle}
                     onPress={() => {
                       console.log('');
                     }}>
@@ -210,7 +212,7 @@ const FeedPage = ({navigation, route}) => {
                       size={fontPixel(30)}
                       name={'share-square-o'}
                       color={'black'}
-                      style={{paddingHorizontal: heightPixel(10)}}
+                      style={{paddingHorizontal: heightPixel(15)}}
                     />
                   </TouchableOpacity>
                 </View>
@@ -284,11 +286,18 @@ const FeedPage = ({navigation, route}) => {
                     onLikePress(selectedPost._id, 1);
                     // }
                   }}>
-                  <FontAwesome
-                    size={fontPixel(30)}
-                    name={'heart-o'}
-                    color={'black'}
-                    style={{paddingHorizontal: heightPixel(10)}}
+                  <Image
+                    style={{
+                      width: heightPixel(37),
+                      height: heightPixel(30),
+                      resizeMode: 'cover',
+                      marginHorizontal: heightPixel(8),
+                    }}
+                    source={
+                      selectedPost.like.includes(profile._id)
+                        ? require('../../../assets/images/kiss_like.png')
+                        : require('../../../assets/images/kiss.png')
+                    }
                   />
                   <Text
                     allowFontScaling={false}
@@ -296,7 +305,6 @@ const FeedPage = ({navigation, route}) => {
                       fontSize: fontPixel(10),
                       color: 'black',
                       paddingHorizontal: heightPixel(10),
-                      marginTop: heightPixel(-24),
                     }}>
                     {selectedPost.like
                       ? formatLike(selectedPost.like.length)
@@ -305,18 +313,18 @@ const FeedPage = ({navigation, route}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  style={[
-                    styles.columnCenterStyle,
-                    {paddingBottom: heightPixel(2)},
-                  ]}
+                  style={styles.columnCenterStyle}
                   onPress={() => {
                     console.log('');
                   }}>
-                  <FontAwesome
-                    size={fontPixel(30)}
-                    name={'comment-o'}
-                    color={'black'}
-                    style={{paddingHorizontal: heightPixel(10)}}
+                  <Image
+                    style={{
+                      width: heightPixel(37),
+                      height: heightPixel(30),
+                      resizeMode: 'cover',
+                      marginHorizontal: heightPixel(8),
+                    }}
+                    source={require('../../../assets/images/comment.png')}
                   />
                   <Text
                     allowFontScaling={false}
@@ -324,17 +332,13 @@ const FeedPage = ({navigation, route}) => {
                       fontSize: fontPixel(10),
                       color: 'black',
                       paddingHorizontal: heightPixel(10),
-                      marginTop: heightPixel(-22),
                     }}>
                     {selectedPost.comment ? selectedPost.comment.length : 0}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  style={[
-                    styles.columnCenterStyle,
-                    {paddingTop: heightPixel(8)},
-                  ]}
+                  style={styles.columnCenterStyle}
                   onPress={() => {
                     console.log('');
                   }}>
@@ -342,7 +346,7 @@ const FeedPage = ({navigation, route}) => {
                     size={fontPixel(30)}
                     name={'share-square-o'}
                     color={'black'}
-                    style={{paddingHorizontal: heightPixel(10)}}
+                    style={{paddingHorizontal: heightPixel(15)}}
                   />
                 </TouchableOpacity>
               </View>
@@ -458,8 +462,9 @@ const styles = StyleSheet.create({
   iconsBox: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     width: '100%',
+    paddingVertical: heightPixel(10),
   },
 });
 

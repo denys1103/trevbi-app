@@ -593,7 +593,6 @@ export const GlobalContextProvider = ({children}) => {
 
       if (data.success) {
         setIsLoading(false);
-        showModal(data.message);
         return data.post;
       } else {
         setIsLoading(false);
@@ -666,6 +665,7 @@ export const GlobalContextProvider = ({children}) => {
         savePost,
         saveTxtPost,
         myPostList,
+        setMyPostList,
         getMyPostList,
         setPostList,
         postList,

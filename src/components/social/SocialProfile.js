@@ -18,7 +18,7 @@ import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
-  const {userInfo, myPostList, getMyPostList, getUserList, userList} =
+  const {userInfo, myPostList, getMyPostList, updateLike, setMyPostList} =
     useContext(GlobalContext);
   const [selectedPost, setSelectedPost] = useState({});
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
@@ -35,6 +35,25 @@ const SocialProfileScreen = ({navigation}) => {
     getMyPostList();
   }, []);
   const profile = userInfo.user;
+
+  const onLikePress = async (id, selectType = 0) => {
+    const onePost = await updateLike({
+      id: id,
+      status: 0,
+    });
+    if (onePost && onePost._id) {
+      setMyPostList(prevList =>
+        prevList.map(post =>
+          post._id === onePost._id ? {...post, like: onePost.like} : post,
+        ),
+      );
+      if (selectType > 0) {
+        setSelectedPost(prevPost =>
+          prevPost._id === id ? {...prevPost, like: onePost.like} : prevPost,
+        );
+      }
+    }
+  };
 
   const formatLike = count => {
     if (count >= 1_000_000) {
@@ -76,16 +95,23 @@ const SocialProfileScreen = ({navigation}) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               paddingVertical: heightPixel(2),
               width: '100%',
             }}>
             <View style={styles.columnCenterStyle}>
-              <FontAwesome
-                size={fontPixel(20)}
-                name={'heart-o'}
-                color={'black'}
-                style={{paddingHorizontal: heightPixel(8)}}
+              <Image
+                style={{
+                  width: heightPixel(25),
+                  height: heightPixel(20),
+                  resizeMode: 'cover',
+                  marginHorizontal: heightPixel(6),
+                }}
+                source={
+                  item.like.includes(profile._id)
+                    ? require('../../../assets/images/kiss_like.png')
+                    : require('../../../assets/images/kiss.png')
+                }
               />
               <Text
                 allowFontScaling={false}
@@ -93,21 +119,19 @@ const SocialProfileScreen = ({navigation}) => {
                   fontSize: fontPixel(10),
                   color: 'black',
                   paddingHorizontal: heightPixel(10),
-                  marginTop: heightPixel(-18),
                 }}>
                 {item.like ? formatLike(item.like.length) : 0}
               </Text>
             </View>
-            <View
-              style={[
-                styles.columnCenterStyle,
-                {paddingBottom: heightPixel(2)},
-              ]}>
-              <FontAwesome
-                size={fontPixel(20)}
-                name={'comment-o'}
-                color={'black'}
-                style={{paddingHorizontal: heightPixel(8)}}
+            <View style={styles.columnCenterStyle}>
+              <Image
+                style={{
+                  width: heightPixel(25),
+                  height: heightPixel(20),
+                  resizeMode: 'cover',
+                  marginHorizontal: heightPixel(6),
+                }}
+                source={require('../../../assets/images/comment.png')}
               />
               <Text
                 allowFontScaling={false}
@@ -115,13 +139,11 @@ const SocialProfileScreen = ({navigation}) => {
                   fontSize: fontPixel(10),
                   color: 'black',
                   paddingHorizontal: heightPixel(10),
-                  marginTop: heightPixel(-18),
                 }}>
                 {item.comment ? item.comment.length : 0}
               </Text>
             </View>
-            <View
-              style={[styles.columnCenterStyle, {paddingTop: heightPixel(8)}]}>
+            <View style={styles.columnCenterStyle}>
               <FontAwesome
                 size={fontPixel(20)}
                 name={'share-square-o'}
@@ -340,16 +362,30 @@ const SocialProfileScreen = ({navigation}) => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 paddingVertical: heightPixel(5),
                 width: '100%',
               }}>
-              <View style={styles.columnCenterStyle}>
-                <FontAwesome
-                  size={fontPixel(26)}
-                  name={'heart-o'}
-                  color={'black'}
-                  style={{paddingHorizontal: heightPixel(10)}}
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.columnCenterStyle}
+                onPress={() => {
+                  // if (selectedPost.userid._id !== profile._id) {
+                  onLikePress(selectedPost._id, 1);
+                  // }
+                }}>
+                <Image
+                  style={{
+                    width: heightPixel(37),
+                    height: heightPixel(30),
+                    resizeMode: 'cover',
+                    marginHorizontal: heightPixel(8),
+                  }}
+                  source={
+                    selectedPost.like.includes(profile._id)
+                      ? require('../../../assets/images/kiss_like.png')
+                      : require('../../../assets/images/kiss.png')
+                  }
                 />
                 <Text
                   allowFontScaling={false}
@@ -357,21 +393,19 @@ const SocialProfileScreen = ({navigation}) => {
                     fontSize: fontPixel(10),
                     color: 'black',
                     paddingHorizontal: heightPixel(10),
-                    marginTop: heightPixel(-20),
                   }}>
                   {selectedPost.like ? formatLike(selectedPost.like.length) : 0}
                 </Text>
-              </View>
-              <View
-                style={[
-                  styles.columnCenterStyle,
-                  {paddingBottom: heightPixel(2)},
-                ]}>
-                <FontAwesome
-                  size={fontPixel(26)}
-                  name={'comment-o'}
-                  color={'black'}
-                  style={{paddingHorizontal: heightPixel(10)}}
+              </TouchableOpacity>
+              <View style={styles.columnCenterStyle}>
+                <Image
+                  style={{
+                    width: heightPixel(37),
+                    height: heightPixel(30),
+                    resizeMode: 'cover',
+                    marginHorizontal: heightPixel(8),
+                  }}
+                  source={require('../../../assets/images/comment.png')}
                 />
                 <Text
                   allowFontScaling={false}
@@ -379,21 +413,16 @@ const SocialProfileScreen = ({navigation}) => {
                     fontSize: fontPixel(10),
                     color: 'black',
                     paddingHorizontal: heightPixel(10),
-                    marginTop: heightPixel(-20),
                   }}>
                   {selectedPost.comment ? selectedPost.comment.length : 0}
                 </Text>
               </View>
-              <View
-                style={[
-                  styles.columnCenterStyle,
-                  {paddingTop: heightPixel(8)},
-                ]}>
+              <View style={styles.columnCenterStyle}>
                 <FontAwesome
-                  size={fontPixel(26)}
+                  size={fontPixel(30)}
                   name={'share-square-o'}
                   color={'black'}
-                  style={{paddingHorizontal: heightPixel(10)}}
+                  style={{paddingHorizontal: heightPixel(15)}}
                 />
               </View>
             </View>
