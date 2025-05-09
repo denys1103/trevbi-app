@@ -8,6 +8,7 @@ import {
   Dimensions,
   Platform,
   FlatList,
+  Switch,
   KeyboardAvoidingView,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -15,7 +16,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 
 import {GlobalContext} from '../../context';
@@ -29,6 +29,7 @@ export function Profile({setEditVisible, navigation}) {
     followRequest,
     friendList,
     getFriendList,
+    saveSwitch,
   } = useContext(GlobalContext);
   const [profileVisibleStatus, setProfileVisibleStatus] = useState(true);
   const [followVisibleStatus, setFollowVisibleStatus] = useState(false);
@@ -37,13 +38,22 @@ export function Profile({setEditVisible, navigation}) {
   const [selectedUser, setSelectedUser] = useState({});
   const [friendsVisibleStatus, setFriendsVisibleStatus] = useState(false);
   const [cookBookVisibleStatus, setCookBookVisibleStatus] = useState(false);
+  const profile = userInfo.user;
+  const [isEnabled1, setIsEnabled1] = useState(
+    profile.switchObj?.social ? true : false,
+  );
   const numColumns = 3;
   useEffect(() => {
     if (!userInfo.token) {
       navigation.replace('Login');
     }
   }, [navigation, userInfo.token]);
-  const profile = userInfo.user;
+  const toggleSwitch1 = () => {
+    const switchObj = {};
+    switchObj.social = !isEnabled1;
+    saveSwitch(switchObj);
+    setIsEnabled1(previousState => !previousState);
+  };
 
   const format_date = date => {
     date = new Date(date);
@@ -276,39 +286,25 @@ export function Profile({setEditVisible, navigation}) {
                 </Text>
               </View>
             </View>
-            {/* <View
-              style={{
-                flexDirection: 'row',
-                marginTop: heightPixel(20),
-                justifyContent: 'space-between',
-              }}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[styles.button, {flexDirection: 'row'}]}
-                onPress={clickShowFriendsBtn}>
-                <FontAwesome5
-                  size={fontPixel(18)}
-                  name={'users'}
-                  style={{color: 'white', paddingRight: heightPixel(5)}}
+            <View style={styles.box}>
+              <SimpleLineIcons
+                color={'#7d7d7d'}
+                name="lock"
+                size={fontPixel(32)}
+              />
+              <View style={styles.lockBoxContent}>
+                <Switch
+                  trackColor={{false: '#767577', true: '#72a04566'}}
+                  thumbColor={isEnabled1 ? '#72a045' : '#ffffff'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch1}
+                  value={isEnabled1}
                 />
-                <Text allowFontScaling={false} style={styles.buttonText}>
-                  Friends
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  Lock - Unlock TREVBI Social
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[styles.button, {flexDirection: 'row'}]}
-                onPress={clickFollowBtn}>
-                <FontAwesome5
-                  size={fontPixel(18)}
-                  name={'plus-circle'}
-                  style={{color: 'white', paddingRight: heightPixel(5)}}
-                />
-                <Text allowFontScaling={false} style={styles.buttonText}>
-                  Follow
-                </Text>
-              </TouchableOpacity>
-            </View> */}
+              </View>
+            </View>
             {/* <TouchableOpacity
               activeOpacity={0.8}
               style={styles.button}
@@ -649,6 +645,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     marginLeft: heightPixel(10),
+  },
+  lockBoxContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-around',
   },
   userBox: {
     padding: heightPixel(6),

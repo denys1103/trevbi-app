@@ -609,6 +609,35 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const saveSwitch = async (...switchObj) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/save-switch', {
+        ...switchObj,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        userInfo.user.switchObj = data.switchObj;
+        AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -671,6 +700,7 @@ export const GlobalContextProvider = ({children}) => {
         postList,
         getPostList,
         updateLike,
+        saveSwitch,
         showModal,
         hideModal,
       }}>
