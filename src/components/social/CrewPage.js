@@ -36,7 +36,7 @@ const CrewPage = ({navigation, route}) => {
       <TouchableOpacity
         onPress={() => {
           setSelectedUser(item);
-          setSelectUserModalVisibleStatus(true);
+          // setSelectUserModalVisibleStatus(true);
         }}
         activeOpacity={0.8}>
         <View

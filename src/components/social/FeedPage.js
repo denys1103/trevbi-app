@@ -19,12 +19,23 @@ import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const FeedPage = ({navigation, route}) => {
-  const {userInfo, getPostList, postList, updateLike, setPostList} =
-    useContext(GlobalContext);
+  const {
+    userInfo,
+    getPostList,
+    postList,
+    updateLike,
+    setPostList,
+    getUserPostList,
+    followRequest,
+  } = useContext(GlobalContext);
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
+    useState(false);
+  const [selectProfileModalVisibleStatus, setSelectProfileModalVisibleStatus] =
     useState(false);
   const [selectedPost, setSelectedPost] = useState({});
   const profile = userInfo.user;
+  const [userPostList, setUserPostList] = useState([]);
+  const numColumns = 2;
 
   useEffect(() => {
     getPostList();
@@ -59,6 +70,112 @@ const FeedPage = ({navigation, route}) => {
     }
   };
 
+  const renderItem = ({item, index}) => {
+    if (item.empty === true) {
+      return <></>;
+    }
+    var itemDimension = (SCREEN_WIDTH - heightPixel(30)) / numColumns;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          // setSelectedPost(item);
+          // setSelectPostModalVisibleStatus(true);
+        }}
+        activeOpacity={0.8}>
+        <View style={styles.renderItemStyle}>
+          <Image
+            style={{
+              width: itemDimension,
+              height: itemDimension,
+              resizeMode: 'cover',
+            }}
+            source={
+              item?.photo
+                ? {
+                    uri: postImageRootURL + item.photo,
+                  }
+                : require('../../../assets/images/no_img.jpg')
+            }
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              paddingVertical: heightPixel(2),
+              width: '100%',
+            }}>
+            <View style={styles.columnCenterStyle}>
+              <Image
+                style={{
+                  width: heightPixel(25),
+                  height: heightPixel(20),
+                  resizeMode: 'cover',
+                  marginHorizontal: heightPixel(6),
+                }}
+                source={
+                  item.like.includes(selectedPost.userid._id)
+                    ? require('../../../assets/images/kiss_like.png')
+                    : require('../../../assets/images/kiss.png')
+                }
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(10),
+                  color: 'black',
+                  paddingHorizontal: heightPixel(10),
+                }}>
+                {item.like ? formatLike(item.like.length) : 0}
+              </Text>
+            </View>
+            <View style={styles.columnCenterStyle}>
+              <Image
+                style={{
+                  width: heightPixel(25),
+                  height: heightPixel(20),
+                  resizeMode: 'cover',
+                  marginHorizontal: heightPixel(6),
+                }}
+                source={require('../../../assets/images/comment.png')}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  fontSize: fontPixel(10),
+                  color: 'black',
+                  paddingHorizontal: heightPixel(10),
+                }}>
+                {item.comment ? item.comment.length : 0}
+              </Text>
+            </View>
+            <View style={styles.columnCenterStyle}>
+              <FontAwesome
+                size={fontPixel(20)}
+                name={'share-square-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(8)}}
+              />
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const formatRow = (data, numColumns) => {
+    const numberOfFullRows = Math.floor(data.length / numColumns);
+    let numberOfElementsLastRow = data.length - numberOfFullRows * numColumns;
+    while (
+      numberOfElementsLastRow !== numColumns &&
+      numberOfElementsLastRow !== 0
+    ) {
+      data.push({id: `blank-${numberOfElementsLastRow}`, empty: true});
+      numberOfElementsLastRow++;
+    }
+    return data;
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
@@ -87,7 +204,7 @@ const FeedPage = ({navigation, route}) => {
           </Text>
         </TouchableOpacity>
         <Image
-          style={styles.logoStyle}
+          style={[styles.logoStyle, {alignSelf: 'center'}]}
           source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
         />
         <FlatList
@@ -102,7 +219,20 @@ const FeedPage = ({navigation, route}) => {
                   alignItems: 'center',
                   paddingBottom: heightPixel(10),
                 }}>
-                <View style={styles.userBox}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={async () => {
+                    if (item.userid?._id == profile._id) {
+                      navigation.replace('SocialProfile');
+                    }
+                    setSelectedPost(item);
+                    if (item.userid?._id) {
+                      const userPosts = await getUserPostList(item.userid._id);
+                      setUserPostList(userPosts);
+                    }
+                    setSelectProfileModalVisibleStatus(true);
+                  }}
+                  style={styles.userBox}>
                   <Image
                     style={styles.userAvatar}
                     source={
@@ -123,7 +253,7 @@ const FeedPage = ({navigation, route}) => {
                       {item.userid?.fullname ? item.userid.fullname : ''}
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
@@ -245,7 +375,21 @@ const FeedPage = ({navigation, route}) => {
                 style={[styles.logoStyle, {alignSelf: 'center'}]}
                 source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
               />
-              <View
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={async () => {
+                  if (selectedPost.userid?._id == profile._id) {
+                    navigation.replace('SocialProfile');
+                  }
+                  if (selectedPost.userid?._id) {
+                    const userPosts = await getUserPostList(
+                      selectedPost.userid._id,
+                    );
+                    setUserPostList(userPosts);
+                  }
+                  setSelectPostModalVisibleStatus(false);
+                  setSelectProfileModalVisibleStatus(true);
+                }}
                 style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
                 <Image
                   style={styles.avatar}
@@ -262,7 +406,7 @@ const FeedPage = ({navigation, route}) => {
                     ? selectedPost.userid.fullname
                     : ''}
                 </Text>
-              </View>
+              </TouchableOpacity>
               <Image
                 style={{
                   width: SCREEN_WIDTH,
@@ -375,6 +519,170 @@ const FeedPage = ({navigation, route}) => {
             </ScrollView>
           </View>
         )}
+        {selectProfileModalVisibleStatus && (
+          <View style={styles.modalStyle}>
+            <View style={styles.closeContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectProfileModalVisibleStatus(false);
+                }}>
+                <MaterialCommunityIcons
+                  color={'#72a045'}
+                  name="close"
+                  size={fontPixel(28)}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.overlay}>
+              <View style={styles.avatarContainer}>
+                <Image
+                  style={styles.avatar}
+                  source={
+                    selectedPost.userid?.avatar
+                      ? {
+                          uri: imageURL + selectedPost.userid.avatar,
+                        }
+                      : require('../../../assets/images/free_user.png')
+                  }
+                />
+                <View style={styles.columnStartStyle}>
+                  <Text
+                    allowFontScaling={false}
+                    style={[
+                      styles.fullnameStyle,
+                      {maxWidth: SCREEN_WIDTH * 0.9},
+                    ]}>
+                    {selectedPost.userid?.fullname
+                      ? selectedPost.userid.fullname
+                      : ''}
+                  </Text>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={styles.joinCrewBtnStyle}
+                    onPress={() => {
+                      if (selectedPost.userid?._id) {
+                        if (
+                          profile.following.indexOf(selectedPost.userid?._id) <
+                          0
+                        ) {
+                          followRequest(selectedPost.userid._id);
+                        } else {
+                          followRequest(selectedPost.userid._id, 1);
+                        }
+                      }
+                    }}>
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        fontSize: fontPixel(14),
+                        color: '#72a045',
+                        fontFamily: 'LEMONMILK-Medium',
+                      }}>
+                      {profile.following.indexOf(selectedPost.userid?._id) < 0
+                        ? 'Join My Crew'
+                        : 'Joined'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <Image
+                style={styles.logoStyle}
+                source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
+              />
+            </View>
+            <View style={{alignItems: 'flex-start'}}>
+              <Text
+                allowFontScaling={false}
+                style={styles.bioStyle}
+                numberOfLines={3}>
+                {selectedPost.userid?.bio ? selectedPost.userid.bio : ''}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: heightPixel(10),
+                width: '82%',
+              }}>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    // navigation.replace('FeedPage');
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/feed_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`   Feed   `}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    // navigation.replace('CrewPage');
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/crew_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`   Crew   `}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    // navigation.replace('ScoutsPage');
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/scouts_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`Members`}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    // navigation.replace('MenuList');
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/cookbook_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  Cookbook
+                </Text>
+              </View>
+            </View>
+            <View style={styles.wrapper}>
+              <FlatList
+                data={formatRow(userPostList, numColumns)}
+                keyExtractor={item => {
+                  return item._id;
+                }}
+                renderItem={renderItem}
+                numColumns={numColumns}
+              />
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -398,10 +706,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logoStyle: {
-    width: SCREEN_WIDTH * 0.4,
-    height: SCREEN_WIDTH * 0.2,
+    width: SCREEN_WIDTH * 0.3,
+    height: SCREEN_WIDTH * 0.15,
     resizeMode: 'cover',
-    alignSelf: 'center',
   },
   closeContainer: {
     paddingTop: heightPixel(10),
@@ -429,12 +736,75 @@ const styles = StyleSheet.create({
   },
   modalStyle: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    // justifyContent: 'flex-start',
+    // alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,1)',
     position: 'absolute',
     top: heightPixel(0),
     width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  },
+  overlay: {
+    paddingTop: heightPixel(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: heightPixel(15),
+  },
+  bioStyle: {
+    textAlign: 'left',
+    fontSize: fontPixel(18),
+    color: 'black',
+    paddingTop: heightPixel(8),
+    minHeight: heightPixel(60),
+    paddingHorizontal: heightPixel(15),
+  },
+  joinCrewBtnStyle: {
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    borderRadius: heightPixel(15),
+    paddingVertical: heightPixel(1),
+    paddingHorizontal: heightPixel(5),
+    marginLeft: heightPixel(5),
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    borderColor: '#72a045',
+    borderWidth: heightPixel(2),
+  },
+  columnStartStyle: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  postBtnStyle: {
+    backgroundColor: '#063225',
+    width: heightPixel(40),
+    height: heightPixel(40),
+    borderRadius: heightPixel(20),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  postTitleStyle: {
+    paddingTop: heightPixel(6),
+    fontSize: fontPixel(12),
+    color: 'black',
+    fontFamily: 'LEMONMILK-Medium',
+  },
+  ico: {
+    width: heightPixel(28),
+    height: heightPixel(28),
+    resizeMode: 'cover',
+  },
+  wrapper: {
+    paddingHorizontal: heightPixel(15),
+    paddingTop: heightPixel(5),
+    maxHeight: SCREEN_HEIGHT - SCREEN_WIDTH * 0.15 - heightPixel(300),
+  },
+  renderItemStyle: {
+    backgroundColor: 'transparent',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderWidth: heightPixel(1),
   },
   avatarContainer: {
     flexDirection: 'row',

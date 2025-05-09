@@ -265,7 +265,7 @@ const SocialProfileScreen = ({navigation}) => {
               activeOpacity={0.5}
               style={styles.postBtnStyle}
               onPress={() => {
-                navigation.replace('ScoutsPage');
+                // navigation.replace('ScoutsPage');
               }}>
               <Image
                 style={styles.ico}
@@ -273,7 +273,7 @@ const SocialProfileScreen = ({navigation}) => {
               />
             </TouchableOpacity>
             <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {` Scouts `}
+              {`Members`}
             </Text>
           </View>
           <View style={styles.columnCenterStyle}>
@@ -329,7 +329,12 @@ const SocialProfileScreen = ({navigation}) => {
               style={[styles.logoStyle, {alignSelf: 'center'}]}
               source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
             />
-            <View style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectPostModalVisibleStatus(false);
+              }}
+              activeOpacity={0.7}
+              style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
               <Image
                 style={styles.avatar}
                 source={
@@ -343,7 +348,7 @@ const SocialProfileScreen = ({navigation}) => {
               <Text allowFontScaling={false} style={styles.fullnameStyle}>
                 {profile?.fullname ? profile.fullname : ''}
               </Text>
-            </View>
+            </TouchableOpacity>
             <Image
               style={{
                 width: SCREEN_WIDTH,
