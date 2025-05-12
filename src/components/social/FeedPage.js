@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   FlatList,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -32,14 +33,25 @@ const FeedPage = ({navigation, route}) => {
     useState(false);
   const [selectProfileModalVisibleStatus, setSelectProfileModalVisibleStatus] =
     useState(false);
+  const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState({});
   const profile = userInfo.user;
   const [userPostList, setUserPostList] = useState([]);
+  const [refreshingPosts, setRefreshingPosts] = useState(false);
   const numColumns = 2;
 
   useEffect(() => {
     getPostList();
   }, []);
+
+  const fetchPosts = async () => {
+    setRefreshingPosts(true);
+    await getPostList();
+    setRefreshingPosts(false);
+    // setTimeout(() => {
+    //   setRefreshingPosts(false);
+    // }, 1000);
+  };
 
   const formatLike = count => {
     if (count >= 1_000_000) {
@@ -62,9 +74,16 @@ const FeedPage = ({navigation, route}) => {
           post._id === onePost._id ? {...post, like: onePost.like} : post,
         ),
       );
-      if (selectType > 0) {
+      if (selectType == 1) {
         setSelectedPost(prevPost =>
           prevPost._id === id ? {...prevPost, like: onePost.like} : prevPost,
+        );
+      }
+      if (selectType == 2) {
+        setUserPostList(prevList =>
+          prevList.map(post =>
+            post._id === onePost._id ? {...post, like: onePost.like} : post,
+          ),
         );
       }
     }
@@ -76,13 +95,14 @@ const FeedPage = ({navigation, route}) => {
     }
     var itemDimension = (SCREEN_WIDTH - heightPixel(30)) / numColumns;
     return (
-      <TouchableOpacity
-        onPress={() => {
-          // setSelectedPost(item);
-          // setSelectPostModalVisibleStatus(true);
-        }}
-        activeOpacity={0.8}>
-        <View style={styles.renderItemStyle}>
+      <View style={styles.renderItemStyle}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedPost(item);
+            setSelectPostModalVisibleStatus(true);
+            setSelectProfileModalVisibleStatus(false);
+          }}
+          activeOpacity={0.8}>
           <Image
             style={{
               width: itemDimension,
@@ -97,69 +117,76 @@ const FeedPage = ({navigation, route}) => {
                 : require('../../../assets/images/no_img.jpg')
             }
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              paddingVertical: heightPixel(2),
-              width: '100%',
+        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            paddingVertical: heightPixel(2),
+            width: '100%',
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.columnCenterStyle}
+            onPress={() => {
+              // if (item.userid._id !== profile._id) {
+              onLikePress(item._id, 2);
+              // }
             }}>
-            <View style={styles.columnCenterStyle}>
-              <Image
-                style={{
-                  width: heightPixel(25),
-                  height: heightPixel(20),
-                  resizeMode: 'cover',
-                  marginHorizontal: heightPixel(6),
-                }}
-                source={
-                  item.like.includes(selectedPost.userid._id)
-                    ? require('../../../assets/images/kiss_like.png')
-                    : require('../../../assets/images/kiss.png')
-                }
-              />
-              <Text
-                allowFontScaling={false}
-                style={{
-                  fontSize: fontPixel(10),
-                  color: 'black',
-                  paddingHorizontal: heightPixel(10),
-                }}>
-                {item.like ? formatLike(item.like.length) : 0}
-              </Text>
-            </View>
-            <View style={styles.columnCenterStyle}>
-              <Image
-                style={{
-                  width: heightPixel(25),
-                  height: heightPixel(20),
-                  resizeMode: 'cover',
-                  marginHorizontal: heightPixel(6),
-                }}
-                source={require('../../../assets/images/comment.png')}
-              />
-              <Text
-                allowFontScaling={false}
-                style={{
-                  fontSize: fontPixel(10),
-                  color: 'black',
-                  paddingHorizontal: heightPixel(10),
-                }}>
-                {item.comment ? item.comment.length : 0}
-              </Text>
-            </View>
-            <View style={styles.columnCenterStyle}>
-              <FontAwesome
-                size={fontPixel(20)}
-                name={'share-square-o'}
-                color={'black'}
-                style={{paddingHorizontal: heightPixel(8)}}
-              />
-            </View>
+            <Image
+              style={{
+                width: heightPixel(25),
+                height: heightPixel(20),
+                resizeMode: 'cover',
+                marginHorizontal: heightPixel(6),
+              }}
+              source={
+                item.like.includes(profile._id)
+                  ? require('../../../assets/images/kiss_like.png')
+                  : require('../../../assets/images/kiss.png')
+              }
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(10),
+                color: 'black',
+                paddingHorizontal: heightPixel(10),
+              }}>
+              {item.like ? formatLike(item.like.length) : 0}
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.columnCenterStyle}>
+            <Image
+              style={{
+                width: heightPixel(25),
+                height: heightPixel(20),
+                resizeMode: 'cover',
+                marginHorizontal: heightPixel(6),
+              }}
+              source={require('../../../assets/images/comment.png')}
+            />
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontSize: fontPixel(10),
+                color: 'black',
+                paddingHorizontal: heightPixel(10),
+              }}>
+              {item.comment ? item.comment.length : 0}
+            </Text>
+          </View>
+          <View style={styles.columnCenterStyle}>
+            <FontAwesome
+              size={fontPixel(20)}
+              name={'share-square-o'}
+              color={'black'}
+              style={{paddingHorizontal: heightPixel(8)}}
+            />
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
@@ -210,6 +237,12 @@ const FeedPage = ({navigation, route}) => {
         <FlatList
           enableEmptySections={true}
           data={postList}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshingPosts}
+              onRefresh={() => fetchPosts()}
+            />
+          }
           keyExtractor={item => item._id}
           renderItem={({item}) => {
             return (
@@ -231,6 +264,7 @@ const FeedPage = ({navigation, route}) => {
                       setUserPostList(userPosts);
                     }
                     setSelectProfileModalVisibleStatus(true);
+                    setIsProfileModalVisible(true);
                   }}
                   style={styles.userBox}>
                   <Image
@@ -362,6 +396,9 @@ const FeedPage = ({navigation, route}) => {
               <View style={styles.closeContainer}>
                 <TouchableOpacity
                   onPress={() => {
+                    if (isProfileModalVisible) {
+                      setSelectProfileModalVisibleStatus(true);
+                    }
                     setSelectPostModalVisibleStatus(false);
                   }}>
                   <MaterialCommunityIcons
@@ -389,6 +426,7 @@ const FeedPage = ({navigation, route}) => {
                   }
                   setSelectPostModalVisibleStatus(false);
                   setSelectProfileModalVisibleStatus(true);
+                  setIsProfileModalVisible(true);
                 }}
                 style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
                 <Image
@@ -525,6 +563,7 @@ const FeedPage = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   setSelectProfileModalVisibleStatus(false);
+                  setIsProfileModalVisible(false);
                 }}>
                 <MaterialCommunityIcons
                   color={'#72a045'}
@@ -580,7 +619,7 @@ const FeedPage = ({navigation, route}) => {
                       }}>
                       {profile.following.indexOf(selectedPost.userid?._id) < 0
                         ? 'Join My Crew'
-                        : 'Joined'}
+                        : 'Crewed Up'}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -611,7 +650,7 @@ const FeedPage = ({navigation, route}) => {
                   activeOpacity={0.5}
                   style={styles.postBtnStyle}
                   onPress={() => {
-                    // navigation.replace('FeedPage');
+                    navigation.replace('FeedPage');
                   }}>
                   <Image
                     style={styles.ico}

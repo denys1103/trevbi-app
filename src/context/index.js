@@ -292,14 +292,14 @@ export const GlobalContextProvider = ({children}) => {
       const {data} = await client.post('/follow-request', {id, status});
 
       if (data.success) {
-        setIsLoading(false);
         userInfo.user = data.user;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        if (status < 1) {
-          showModal('Joined!');
-        } else {
-          showModal('Removed!');
-        }
+        setIsLoading(false);
+        // if (status < 1) {
+        //   showModal('Joined!');
+        // } else {
+        //   showModal('Removed!');
+        // }
       } else {
         setIsLoading(false);
         showModal(data.message);
@@ -622,9 +622,9 @@ export const GlobalContextProvider = ({children}) => {
       });
 
       if (data.success) {
-        setIsLoading(false);
         userInfo.user.switchObj = data.switchObj;
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+        setIsLoading(false);
       } else {
         setIsLoading(false);
         showModal(data.message);
