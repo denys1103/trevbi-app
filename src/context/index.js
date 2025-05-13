@@ -666,6 +666,62 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const getUserCrewList = async id => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-usercrews', {id});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.users;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return [];
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return [];
+    }
+  };
+
+  const getUserMemberList = async id => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-usermembers', {id});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.users;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return [];
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return [];
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -730,6 +786,8 @@ export const GlobalContextProvider = ({children}) => {
         updateLike,
         saveSwitch,
         getUserPostList,
+        getUserCrewList,
+        getUserMemberList,
         showModal,
         hideModal,
       }}>

@@ -402,7 +402,7 @@ const FeedPage = ({navigation, route}) => {
                     setSelectPostModalVisibleStatus(false);
                   }}>
                   <MaterialCommunityIcons
-                    color={'#72a045'}
+                    color={'#61a148'}
                     name="close"
                     size={fontPixel(28)}
                   />
@@ -566,7 +566,7 @@ const FeedPage = ({navigation, route}) => {
                   setIsProfileModalVisible(false);
                 }}>
                 <MaterialCommunityIcons
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="close"
                   size={fontPixel(28)}
                 />
@@ -614,7 +614,7 @@ const FeedPage = ({navigation, route}) => {
                       allowFontScaling={false}
                       style={{
                         fontSize: fontPixel(14),
-                        color: '#72a045',
+                        color: '#61a148',
                         fontFamily: 'LEMONMILK-Medium',
                       }}>
                       {profile.following.indexOf(selectedPost.userid?._id) < 0
@@ -666,7 +666,12 @@ const FeedPage = ({navigation, route}) => {
                   activeOpacity={0.5}
                   style={styles.postBtnStyle}
                   onPress={() => {
-                    // navigation.replace('CrewPage');
+                    navigation.replace('MembersPage', {
+                      userid: selectedPost.userid?._id,
+                      userAvatar: selectedPost.userid?.avatar,
+                      userName: selectedPost.userid?.fullname,
+                      isMembersActive: false,
+                    });
                   }}>
                   <Image
                     style={styles.ico}
@@ -682,7 +687,12 @@ const FeedPage = ({navigation, route}) => {
                   activeOpacity={0.5}
                   style={styles.postBtnStyle}
                   onPress={() => {
-                    // navigation.replace('ScoutsPage');
+                    navigation.replace('MembersPage', {
+                      userid: selectedPost.userid?._id,
+                      userAvatar: selectedPost.userid?.avatar,
+                      userName: selectedPost.userid?.fullname,
+                      isMembersActive: true,
+                    });
                   }}>
                   <Image
                     style={styles.ico}
@@ -807,7 +817,7 @@ const styles = StyleSheet.create({
     marginLeft: heightPixel(5),
     alignSelf: 'flex-start',
     justifyContent: 'center',
-    borderColor: '#72a045',
+    borderColor: '#61a148',
     borderWidth: heightPixel(2),
   },
   columnStartStyle: {

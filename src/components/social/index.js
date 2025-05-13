@@ -5,7 +5,7 @@ import SocialProfile from './SocialProfile';
 import CreatePost from './CreatePost';
 import FeedPage from './FeedPage';
 import CrewPage from './CrewPage';
-import ScoutsPage from './ScoutsPage';
+import MembersPage from './MembersPage';
 import {HeaderBackButton} from '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
@@ -50,8 +50,8 @@ export function SocialIndex() {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="ScoutsPage"
-        component={ScoutsPage}
+        name="MembersPage"
+        component={MembersPage}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

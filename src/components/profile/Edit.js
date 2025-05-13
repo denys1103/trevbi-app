@@ -150,7 +150,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
         <View style={styles.pencilContainer}>
           <TouchableOpacity onPress={() => setEditVisible(false)}>
             <MaterialCommunityIcons
-              color={'#72a045'}
+              color={'#61a148'}
               name="arrow-left-bold-box-outline"
               size={fontPixel(28)}
             />
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     marginTop: heightPixel(8),
   },
   changeAvatarButtonText: {
-    color: '#72a045',
+    color: '#61a148',
     fontSize: fontPixel(18),
     fontFamily: 'LEMONMILK-Light',
   },

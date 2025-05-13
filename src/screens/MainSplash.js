@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   text0: {
     fontSize: fontPixel(20),
-    color: '#72a045',
+    color: '#61a148',
   },
 });
 

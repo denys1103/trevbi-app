@@ -17,12 +17,12 @@ import {fontPixel, heightPixel, imageURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const CrewPage = ({navigation, route}) => {
-  const {friendList, getFriendList} = useContext(GlobalContext);
+  const {userInfo, friendList, getFriendList} = useContext(GlobalContext);
   const [selectUserModalVisibleStatus, setSelectUserModalVisibleStatus] =
     useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const numColumns = 3;
-
+  const profile = userInfo.user;
   useEffect(() => {
     getFriendList();
   }, []);
@@ -108,6 +108,29 @@ const CrewPage = ({navigation, route}) => {
             Back
           </Text>
         </TouchableOpacity>
+        <View style={styles.overlay}>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.avatar}
+              source={
+                profile?.avatar
+                  ? {
+                      uri: imageURL + profile.avatar,
+                    }
+                  : require('../../../assets/images/free_user.png')
+              }
+            />
+            <Text
+              allowFontScaling={false}
+              style={[styles.fullnameStyle, {maxWidth: SCREEN_WIDTH * 0.9}]}>
+              {profile?.fullname ? profile.fullname : ''}
+            </Text>
+          </View>
+          <Image
+            style={styles.logoStyle}
+            source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
+          />
+        </View>
         <FlatList
           data={formatRow(friendList, numColumns)}
           keyExtractor={item => {
@@ -124,7 +147,7 @@ const CrewPage = ({navigation, route}) => {
                   setSelectUserModalVisibleStatus(false);
                 }}>
                 <MaterialCommunityIcons
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="close"
                   size={fontPixel(28)}
                 />
@@ -182,6 +205,36 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     justifyContent: 'center',
   },
+  overlay: {
+    paddingTop: heightPixel(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: heightPixel(15),
+  },
+  avatarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-start',
+    width: SCREEN_WIDTH * 0.6,
+  },
+  avatar: {
+    width: SCREEN_WIDTH * 0.15,
+    height: SCREEN_WIDTH * 0.15,
+    borderRadius: SCREEN_WIDTH * 0.075,
+  },
+  logoStyle: {
+    width: SCREEN_WIDTH * 0.3,
+    height: SCREEN_WIDTH * 0.15,
+    resizeMode: 'cover',
+  },
+  fullnameStyle: {
+    textAlign: 'center',
+    fontSize: fontPixel(18),
+    color: 'black',
+    paddingLeft: heightPixel(8),
+    maxWidth: SCREEN_WIDTH * 0.45,
+  },
   closeContainer: {
     paddingTop: heightPixel(10),
     paddingRight: heightPixel(20),
@@ -195,11 +248,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: heightPixel(0),
     width: '100%',
-  },
-  avatarContainer: {
-    paddingTop: heightPixel(5),
-    paddingBottom: heightPixel(20),
-    alignItems: 'center',
   },
   selectedUserAvatar: {
     width: heightPixel(180),

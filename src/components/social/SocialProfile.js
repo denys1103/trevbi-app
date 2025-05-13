@@ -249,7 +249,12 @@ const SocialProfileScreen = ({navigation}) => {
               activeOpacity={0.5}
               style={styles.postBtnStyle}
               onPress={() => {
-                navigation.replace('CrewPage');
+                navigation.replace('MembersPage', {
+                  userid: profile._id,
+                  userAvatar: profile.avatar,
+                  userName: profile.fullname,
+                  isMembersActive: false,
+                });
               }}>
               <Image
                 style={styles.ico}
@@ -265,7 +270,12 @@ const SocialProfileScreen = ({navigation}) => {
               activeOpacity={0.5}
               style={styles.postBtnStyle}
               onPress={() => {
-                // navigation.replace('ScoutsPage');
+                navigation.replace('MembersPage', {
+                  userid: profile._id,
+                  userAvatar: profile.avatar,
+                  userName: profile.fullname,
+                  isMembersActive: true,
+                });
               }}>
               <Image
                 style={styles.ico}
@@ -319,7 +329,7 @@ const SocialProfileScreen = ({navigation}) => {
                   setSelectPostModalVisibleStatus(false);
                 }}>
                 <MaterialCommunityIcons
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="close"
                   size={fontPixel(28)}
                 />

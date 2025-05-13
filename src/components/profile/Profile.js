@@ -150,7 +150,7 @@ export function Profile({setEditVisible, navigation}) {
           <View style={styles.pencilContainer}>
             <TouchableOpacity onPress={() => setEditVisible(true)}>
               <MaterialCommunityIcons
-                color={'#72a045'}
+                color={'#61a148'}
                 name="account-edit"
                 size={fontPixel(28)}
               />
@@ -294,8 +294,8 @@ export function Profile({setEditVisible, navigation}) {
               />
               <View style={styles.lockBoxContent}>
                 <Switch
-                  trackColor={{false: '#767577', true: '#72a04566'}}
-                  thumbColor={isEnabled1 ? '#72a045' : '#ffffff'}
+                  trackColor={{false: '#767577', true: '#61a14866'}}
+                  thumbColor={isEnabled1 ? '#61a148' : '#ffffff'}
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch1}
                   value={isEnabled1}
@@ -340,7 +340,7 @@ export function Profile({setEditVisible, navigation}) {
                   getUserList();
                 }}>
                 <Feather
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="refresh-cw"
                   size={fontPixel(28)}
                 />
@@ -353,7 +353,7 @@ export function Profile({setEditVisible, navigation}) {
                   setFollowVisibleStatus(false);
                 }}>
                 <MaterialCommunityIcons
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="close"
                   size={fontPixel(28)}
                 />
@@ -406,7 +406,7 @@ export function Profile({setEditVisible, navigation}) {
                           </View>
                           {userInfo.user.following.indexOf(item._id) > -1 && (
                             <SimpleLineIcons
-                              color={'#72a045'}
+                              color={'#61a148'}
                               name="user-following"
                               size={fontPixel(28)}
                             />
@@ -429,7 +429,7 @@ export function Profile({setEditVisible, navigation}) {
                 setSelectUserModalVisibleStatus(false);
               }}>
               <MaterialCommunityIcons
-                color={'#72a045'}
+                color={'#61a148'}
                 name="close"
                 size={fontPixel(28)}
               />
@@ -492,7 +492,7 @@ export function Profile({setEditVisible, navigation}) {
                   getFriendList();
                 }}>
                 <Feather
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="refresh-cw"
                   size={fontPixel(28)}
                 />
@@ -505,7 +505,7 @@ export function Profile({setEditVisible, navigation}) {
                   setFriendsVisibleStatus(false);
                 }}>
                 <MaterialCommunityIcons
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="close"
                   size={fontPixel(28)}
                 />
@@ -536,7 +536,7 @@ export function Profile({setEditVisible, navigation}) {
               <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity onPress={() => {}}>
                   <Feather
-                    color={'#72a045'}
+                    color={'#61a148'}
                     name="refresh-cw"
                     size={fontPixel(28)}
                   />
@@ -545,7 +545,7 @@ export function Profile({setEditVisible, navigation}) {
                   style={{paddingHorizontal: heightPixel(15)}}
                   onPress={() => {}}>
                   <MaterialIcons
-                    color={'#72a045'}
+                    color={'#61a148'}
                     name="add-box"
                     size={fontPixel(28)}
                   />
@@ -559,7 +559,7 @@ export function Profile({setEditVisible, navigation}) {
                   setCookBookVisibleStatus(false);
                 }}>
                 <MaterialCommunityIcons
-                  color={'#72a045'}
+                  color={'#61a148'}
                   name="close"
                   size={fontPixel(28)}
                 />
