@@ -149,7 +149,7 @@ const MembersPage = ({navigation, route}) => {
               }}>
               <Image
                 style={styles.ico}
-                source={require('../../../assets/images/scouts_ico.png')}
+                source={require('../../../assets/images/members_ico.png')}
               />
             </TouchableOpacity>
             <Text allowFontScaling={false} style={styles.postTitleStyle}>

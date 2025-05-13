@@ -4,7 +4,6 @@ import SocialWelcome from './SocialWelcome';
 import SocialProfile from './SocialProfile';
 import CreatePost from './CreatePost';
 import FeedPage from './FeedPage';
-import CrewPage from './CrewPage';
 import MembersPage from './MembersPage';
 import {HeaderBackButton} from '@react-navigation/elements';
 
@@ -42,11 +41,6 @@ export function SocialIndex() {
       <Stack.Screen
         name="FeedPage"
         component={FeedPage}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="CrewPage"
-        component={CrewPage}
         options={{headerShown: false}}
       />
       <Stack.Screen
