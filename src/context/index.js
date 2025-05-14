@@ -722,6 +722,34 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const getUserData = async id => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-userdata', {id});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.user;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return {};
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return {};
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -788,6 +816,7 @@ export const GlobalContextProvider = ({children}) => {
         getUserPostList,
         getUserCrewList,
         getUserMemberList,
+        getUserData,
         showModal,
         hideModal,
       }}>

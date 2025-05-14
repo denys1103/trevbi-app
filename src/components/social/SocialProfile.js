@@ -15,6 +15,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import {GlobalContext} from '../../context';
+import LinkText from './LinkText';
+import LinkPreviewCard from './LinkPreviewCard';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
@@ -453,7 +455,7 @@ const SocialProfileScreen = ({navigation}) => {
                 {selectedPost?.title ? selectedPost.title : ''}
               </Text>
             )}
-            <Text
+            {/* <Text
               allowFontScaling={false}
               style={{
                 fontSize: fontPixel(18),
@@ -462,7 +464,11 @@ const SocialProfileScreen = ({navigation}) => {
                 paddingBottom: heightPixel(20),
               }}>
               {selectedPost?.note ? selectedPost.note : ''}
-            </Text>
+            </Text> */}
+            <LinkText text={selectedPost?.note ? selectedPost.note : ''} />
+            <LinkPreviewCard
+              text={selectedPost?.note ? selectedPost.note : ''}
+            />
           </ScrollView>
         </View>
       )}

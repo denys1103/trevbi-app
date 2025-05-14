@@ -17,9 +17,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
+import LinkText from './LinkText';
+import LinkPreviewCard from './LinkPreviewCard';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const FeedPage = ({navigation, route}) => {
+  const {userid} = route?.params || {};
   const {
     userInfo,
     getPostList,
@@ -28,6 +31,7 @@ const FeedPage = ({navigation, route}) => {
     setPostList,
     getUserPostList,
     followRequest,
+    getUserData,
   } = useContext(GlobalContext);
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
     useState(false);
@@ -35,12 +39,16 @@ const FeedPage = ({navigation, route}) => {
     useState(false);
   const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
   const [selectedPost, setSelectedPost] = useState({});
+  const [selectedUser, setSelectedUser] = useState({});
   const profile = userInfo.user;
   const [userPostList, setUserPostList] = useState([]);
   const [refreshingPosts, setRefreshingPosts] = useState(false);
   const numColumns = 2;
 
   useEffect(() => {
+    if (userid) {
+      showOtherProfileAction(userid);
+    }
     getPostList();
   }, []);
 
@@ -203,6 +211,20 @@ const FeedPage = ({navigation, route}) => {
     return data;
   };
 
+  const showOtherProfileAction = async id => {
+    if (id == profile._id) {
+      navigation.replace('SocialProfile');
+    }
+    if (id) {
+      const user = await getUserData(id);
+      setSelectedUser(user);
+      const userPosts = await getUserPostList(id);
+      setUserPostList(userPosts);
+    }
+    setSelectProfileModalVisibleStatus(true);
+    setIsProfileModalVisible(true);
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
@@ -254,17 +276,8 @@ const FeedPage = ({navigation, route}) => {
                 }}>
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={async () => {
-                    if (item.userid?._id == profile._id) {
-                      navigation.replace('SocialProfile');
-                    }
-                    setSelectedPost(item);
-                    if (item.userid?._id) {
-                      const userPosts = await getUserPostList(item.userid._id);
-                      setUserPostList(userPosts);
-                    }
-                    setSelectProfileModalVisibleStatus(true);
-                    setIsProfileModalVisible(true);
+                  onPress={() => {
+                    showOtherProfileAction(item.userid?._id);
                   }}
                   style={styles.userBox}>
                   <Image
@@ -544,7 +557,7 @@ const FeedPage = ({navigation, route}) => {
                   {selectedPost?.title ? selectedPost.title : ''}
                 </Text>
               )}
-              <Text
+              {/* <Text
                 allowFontScaling={false}
                 style={{
                   fontSize: fontPixel(18),
@@ -553,7 +566,11 @@ const FeedPage = ({navigation, route}) => {
                   paddingBottom: heightPixel(20),
                 }}>
                 {selectedPost?.note ? selectedPost.note : ''}
-              </Text>
+              </Text> */}
+              <LinkText text={selectedPost?.note ? selectedPost.note : ''} />
+              <LinkPreviewCard
+                text={selectedPost?.note ? selectedPost.note : ''}
+              />
             </ScrollView>
           </View>
         )}
@@ -577,9 +594,9 @@ const FeedPage = ({navigation, route}) => {
                 <Image
                   style={styles.avatar}
                   source={
-                    selectedPost.userid?.avatar
+                    selectedUser.avatar
                       ? {
-                          uri: imageURL + selectedPost.userid.avatar,
+                          uri: imageURL + selectedUser.avatar,
                         }
                       : require('../../../assets/images/free_user.png')
                   }
@@ -591,22 +608,17 @@ const FeedPage = ({navigation, route}) => {
                       styles.fullnameStyle,
                       {maxWidth: SCREEN_WIDTH * 0.9},
                     ]}>
-                    {selectedPost.userid?.fullname
-                      ? selectedPost.userid.fullname
-                      : ''}
+                    {selectedUser.fullname ? selectedUser.fullname : ''}
                   </Text>
                   <TouchableOpacity
                     activeOpacity={0.5}
                     style={styles.joinCrewBtnStyle}
                     onPress={() => {
-                      if (selectedPost.userid?._id) {
-                        if (
-                          profile.following.indexOf(selectedPost.userid?._id) <
-                          0
-                        ) {
-                          followRequest(selectedPost.userid._id);
+                      if (selectedUser._id) {
+                        if (profile.following.indexOf(selectedUser._id) < 0) {
+                          followRequest(selectedUser._id);
                         } else {
-                          followRequest(selectedPost.userid._id, 1);
+                          followRequest(selectedUser._id, 1);
                         }
                       }
                     }}>
@@ -617,7 +629,7 @@ const FeedPage = ({navigation, route}) => {
                         color: '#61a148',
                         fontFamily: 'LEMONMILK-Medium',
                       }}>
-                      {profile.following.indexOf(selectedPost.userid?._id) < 0
+                      {profile.following.indexOf(selectedUser._id) < 0
                         ? 'Join My Crew'
                         : 'Crewed Up'}
                     </Text>
@@ -634,7 +646,7 @@ const FeedPage = ({navigation, route}) => {
                 allowFontScaling={false}
                 style={styles.bioStyle}
                 numberOfLines={3}>
-                {selectedPost.userid?.bio ? selectedPost.userid.bio : ''}
+                {selectedUser.bio ? selectedUser.bio : ''}
               </Text>
             </View>
             <View
@@ -667,9 +679,9 @@ const FeedPage = ({navigation, route}) => {
                   style={styles.postBtnStyle}
                   onPress={() => {
                     navigation.replace('MembersPage', {
-                      userid: selectedPost.userid?._id,
-                      userAvatar: selectedPost.userid?.avatar,
-                      userName: selectedPost.userid?.fullname,
+                      userid: selectedUser._id,
+                      userAvatar: selectedUser.avatar,
+                      userName: selectedUser.fullname,
                       isMembersActive: false,
                     });
                   }}>
@@ -688,9 +700,9 @@ const FeedPage = ({navigation, route}) => {
                   style={styles.postBtnStyle}
                   onPress={() => {
                     navigation.replace('MembersPage', {
-                      userid: selectedPost.userid?._id,
-                      userAvatar: selectedPost.userid?.avatar,
-                      userName: selectedPost.userid?.fullname,
+                      userid: selectedUser._id,
+                      userAvatar: selectedUser.avatar,
+                      userName: selectedUser.fullname,
                       isMembersActive: true,
                     });
                   }}>

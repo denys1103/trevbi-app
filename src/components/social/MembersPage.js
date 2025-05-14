@@ -60,14 +60,20 @@ const MembersPage = ({navigation, route}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.5}
           style={[
             styles.goToBackBtnStyle,
             {width: heightPixel(80), marginBottom: heightPixel(5)},
           ]}
           onPress={() => {
-            navigation.replace('SocialProfile');
+            if (userid) {
+              if (userid == profile._id) {
+                navigation.replace('SocialProfile');
+              } else {
+                navigation.replace('FeedPage', {userid});
+              }
+            }
           }}>
           <Ionicons
             size={fontPixel(18)}
@@ -83,8 +89,19 @@ const MembersPage = ({navigation, route}) => {
             }}>
             Back
           </Text>
-        </TouchableOpacity>
-        <View style={styles.overlay}>
+        </TouchableOpacity> */}
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.overlay}
+          onPress={() => {
+            if (userid) {
+              if (userid == profile._id) {
+                navigation.replace('SocialProfile');
+              } else {
+                navigation.replace('FeedPage', {userid});
+              }
+            }
+          }}>
           <View style={styles.avatarContainer}>
             <Image
               style={styles.avatar}
@@ -106,7 +123,7 @@ const MembersPage = ({navigation, route}) => {
             style={styles.logoStyle}
             source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
           />
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             flexDirection: 'row',
@@ -181,7 +198,9 @@ const MembersPage = ({navigation, route}) => {
                     <TouchableOpacity
                       activeOpacity={0.6}
                       onPress={() => {
-                        // setSelectedUser(item);
+                        navigation.replace('FeedPage', {
+                          userid: item._id,
+                        });
                       }}
                       style={styles.userBox}>
                       <Image
