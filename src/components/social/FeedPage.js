@@ -401,7 +401,7 @@ const FeedPage = ({navigation, route}) => {
           windowSize={10}
         />
         {selectPostModalVisibleStatus && (
-          <View style={styles.modalStyle}>
+          <View style={styles.postModalStyle}>
             <ScrollView
               style={{
                 height: SCREEN_HEIGHT - heightPixel(120),
@@ -804,6 +804,13 @@ const styles = StyleSheet.create({
     top: heightPixel(0),
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
+  },
+  postModalStyle: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,1)',
+    position: 'absolute',
+    top: heightPixel(0),
+    width: SCREEN_WIDTH,
   },
   overlay: {
     paddingTop: heightPixel(10),
