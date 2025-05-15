@@ -15,6 +15,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import LinkText from './LinkText';
@@ -43,6 +44,7 @@ const FeedPage = ({navigation, route}) => {
   const profile = userInfo.user;
   const [userPostList, setUserPostList] = useState([]);
   const [refreshingPosts, setRefreshingPosts] = useState(false);
+  const [waiting, setWaiting] = useState(false);
   const numColumns = 2;
 
   useEffect(() => {
@@ -212,6 +214,7 @@ const FeedPage = ({navigation, route}) => {
   };
 
   const showOtherProfileAction = async id => {
+    setWaiting(true);
     if (id == profile._id) {
       navigation.replace('SocialProfile');
     }
@@ -223,10 +226,12 @@ const FeedPage = ({navigation, route}) => {
     }
     setSelectProfileModalVisibleStatus(true);
     setIsProfileModalVisible(true);
+    setWaiting(false);
   };
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      <Spinner visible={waiting} />
       <View style={styles.container}>
         <TouchableOpacity
           activeOpacity={0.5}

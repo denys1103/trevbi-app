@@ -723,7 +723,7 @@ export const GlobalContextProvider = ({children}) => {
   };
 
   const getUserData = async id => {
-    setIsLoading(true);
+    // setIsLoading(true);
     if (!isConnected) {
       showModal('Check your internet connection.');
       setIsLoading(false);
@@ -736,7 +736,6 @@ export const GlobalContextProvider = ({children}) => {
         setIsLoading(false);
         return data.user;
       } else {
-        setIsLoading(false);
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
