@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect, memo} from 'react';
+import React, {useState, useContext, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,6 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-  Platform,
   SafeAreaView,
   FlatList,
   ScrollView,
@@ -16,10 +15,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import LinkText from './LinkText';
 import LinkPreviewCard from './LinkPreviewCard';
+import CommentBottomSheet from './CommentBottomSheet';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const FeedPage = ({navigation, route}) => {
@@ -45,6 +46,7 @@ const FeedPage = ({navigation, route}) => {
   const [userPostList, setUserPostList] = useState([]);
   const [refreshingPosts, setRefreshingPosts] = useState(false);
   const [waiting, setWaiting] = useState(false);
+  const commentSheetRef = useRef(null);
   const numColumns = 2;
 
   useEffect(() => {
@@ -219,6 +221,7 @@ const FeedPage = ({navigation, route}) => {
       navigation.replace('SocialProfile');
     }
     if (id) {
+      commentSheetRef.current?.close();
       const user = await getUserData(id);
       setSelectedUser(user);
       const userPosts = await getUserPostList(id);
@@ -229,10 +232,38 @@ const FeedPage = ({navigation, route}) => {
     setWaiting(false);
   };
 
+  const openComments = () => {
+    commentSheetRef.current?.snapToIndex(0);
+  };
+
+  const onCommentBtnPress = updatedPost => {
+    if (updatedPost && updatedPost._id) {
+      setPostList(prevList =>
+        prevList.map(post =>
+          post._id === updatedPost._id
+            ? {...post, comment: updatedPost.comment}
+            : post,
+        ),
+      );
+      setSelectedPost(prevPost =>
+        prevPost._id === updatedPost._id
+          ? {...prevPost, comment: updatedPost.comment}
+          : prevPost,
+      );
+      setUserPostList(prevList =>
+        prevList.map(post =>
+          post._id === updatedPost._id
+            ? {...post, comment: updatedPost.comment}
+            : post,
+        ),
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Spinner visible={waiting} />
-      <View style={styles.container}>
+      <GestureHandlerRootView style={styles.container}>
         <TouchableOpacity
           activeOpacity={0.5}
           style={[
@@ -363,7 +394,10 @@ const FeedPage = ({navigation, route}) => {
                     activeOpacity={0.6}
                     style={styles.columnCenterStyle}
                     onPress={() => {
-                      console.log('');
+                      setSelectedPost(item);
+                      setTimeout(() => {
+                        openComments();
+                      }, 100);
                     }}>
                     <Image
                       style={{
@@ -414,6 +448,7 @@ const FeedPage = ({navigation, route}) => {
               <View style={styles.closeContainer}>
                 <TouchableOpacity
                   onPress={() => {
+                    commentSheetRef.current?.close();
                     if (isProfileModalVisible) {
                       setSelectProfileModalVisibleStatus(true);
                     }
@@ -514,9 +549,7 @@ const FeedPage = ({navigation, route}) => {
                 <TouchableOpacity
                   activeOpacity={0.6}
                   style={styles.columnCenterStyle}
-                  onPress={() => {
-                    console.log('');
-                  }}>
+                  onPress={openComments}>
                   <Image
                     style={{
                       width: heightPixel(37),
@@ -749,7 +782,12 @@ const FeedPage = ({navigation, route}) => {
             </View>
           </View>
         )}
-      </View>
+        <CommentBottomSheet
+          postItem={selectedPost}
+          onCommentBtnPress={onCommentBtnPress}
+          ref={commentSheetRef}
+        />
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };

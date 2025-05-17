@@ -5,6 +5,7 @@ import SocialProfile from './SocialProfile';
 import CreatePost from './CreatePost';
 import FeedPage from './FeedPage';
 import MembersPage from './MembersPage';
+import PostItem from './PostItem';
 import {HeaderBackButton} from '@react-navigation/elements';
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,11 @@ export function SocialIndex() {
           />
         ),
       })}>
+      {/* <Stack.Screen
+        name="PostItem"
+        component={PostItem}
+        options={{headerShown: false}}
+      /> */}
       <Stack.Screen
         name="SocialProfile"
         component={SocialProfile}

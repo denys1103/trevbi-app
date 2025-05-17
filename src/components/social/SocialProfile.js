@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import {GlobalContext} from '../../context';
 import LinkText from './LinkText';
 import LinkPreviewCard from './LinkPreviewCard';
+import CommentBottomSheet from './CommentBottomSheet';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
@@ -25,6 +27,7 @@ const SocialProfileScreen = ({navigation}) => {
   const [selectedPost, setSelectedPost] = useState({});
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
     useState(false);
+  const commentSheetRef = useRef(null);
   const numColumns = 2;
 
   useEffect(() => {
@@ -37,6 +40,10 @@ const SocialProfileScreen = ({navigation}) => {
     getMyPostList();
   }, []);
   const profile = userInfo.user;
+
+  const openComments = () => {
+    commentSheetRef.current?.snapToIndex(0);
+  };
 
   const onLikePress = async (id, selectType = 0) => {
     const onePost = await updateLike({
@@ -54,6 +61,23 @@ const SocialProfileScreen = ({navigation}) => {
           prevPost._id === id ? {...prevPost, like: onePost.like} : prevPost,
         );
       }
+    }
+  };
+
+  const onCommentBtnPress = updatedPost => {
+    if (updatedPost && updatedPost._id) {
+      setMyPostList(prevList =>
+        prevList.map(post =>
+          post._id === updatedPost._id
+            ? {...post, comment: updatedPost.comment}
+            : post,
+        ),
+      );
+      setSelectedPost(prevPost =>
+        prevPost._id === updatedPost._id
+          ? {...prevPost, comment: updatedPost.comment}
+          : prevPost,
+      );
     }
   };
 
@@ -174,304 +198,312 @@ const SocialProfileScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flex: 1}}>
-        <View style={styles.overlay}>
-          <View style={styles.avatarContainer}>
-            <Image
-              style={styles.avatar}
-              source={
-                profile?.avatar
-                  ? {
-                      uri: imageURL + profile.avatar,
-                    }
-                  : require('../../../assets/images/free_user.png')
-              }
-            />
-            <Text
-              allowFontScaling={false}
-              style={[styles.fullnameStyle, {maxWidth: SCREEN_WIDTH * 0.9}]}>
-              {profile?.fullname ? profile.fullname : ''}
-            </Text>
-          </View>
-          <Image
-            style={styles.logoStyle}
-            source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
-          />
-        </View>
-        <View style={{alignItems: 'flex-start'}}>
-          <Text
-            allowFontScaling={false}
-            style={styles.bioStyle}
-            numberOfLines={3}>
-            {profile?.bio ? profile.bio : ''}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingTop: heightPixel(10),
-          }}>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.postBtnStyle}
-              onPress={() => {
-                navigation.replace('CreatePost', {onePost: null});
-              }}>
-              <MaterialCommunityIcons
-                size={fontPixel(25)}
-                name={'plus-thick'}
-                style={{color: 'white'}}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`   Post   `}
-            </Text>
-          </View>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.postBtnStyle}
-              onPress={() => {
-                navigation.replace('FeedPage');
-              }}>
-              <Image
-                style={styles.ico}
-                source={require('../../../assets/images/feed_ico.png')}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`   Feed   `}
-            </Text>
-          </View>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.postBtnStyle}
-              onPress={() => {
-                navigation.replace('MembersPage', {
-                  userid: profile._id,
-                  userAvatar: profile.avatar,
-                  userName: profile.fullname,
-                  isMembersActive: false,
-                });
-              }}>
-              <Image
-                style={styles.ico}
-                source={require('../../../assets/images/crew_ico.png')}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`   Crew   `}
-            </Text>
-          </View>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.postBtnStyle}
-              onPress={() => {
-                navigation.replace('MembersPage', {
-                  userid: profile._id,
-                  userAvatar: profile.avatar,
-                  userName: profile.fullname,
-                  isMembersActive: true,
-                });
-              }}>
-              <Image
-                style={styles.ico}
-                source={require('../../../assets/images/members_ico.png')}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`Members`}
-            </Text>
-          </View>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={styles.postBtnStyle}
-              onPress={() => {
-                // navigation.replace('MenuList');
-              }}>
-              <Image
-                style={styles.ico}
-                source={require('../../../assets/images/cookbook_ico.png')}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              Cookbook
-            </Text>
-          </View>
-        </View>
-        <View style={styles.wrapper}>
-          <FlatList
-            data={formatRow(myPostList, numColumns)}
-            keyExtractor={item => {
-              return item._id;
-            }}
-            renderItem={renderItem}
-            numColumns={numColumns}
-          />
-        </View>
-      </View>
-      {selectPostModalVisibleStatus && (
-        <View style={styles.modalStyle}>
-          <ScrollView
-            style={{
-              height:
-                Platform.OS === 'ios'
-                  ? SCREEN_HEIGHT - heightPixel(70)
-                  : SCREEN_HEIGHT - heightPixel(120),
-            }}>
-            <View style={styles.pencilContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectPostModalVisibleStatus(false);
-                }}>
-                <MaterialCommunityIcons
-                  color={'#61a148'}
-                  name="close"
-                  size={fontPixel(28)}
-                />
-              </TouchableOpacity>
-            </View>
-            <Image
-              style={[styles.logoStyle, {alignSelf: 'center'}]}
-              source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setSelectPostModalVisibleStatus(false);
-              }}
-              activeOpacity={0.7}
-              style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
-              <Image
-                style={styles.avatar}
-                source={
-                  profile?.avatar
-                    ? {
-                        uri: imageURL + profile.avatar,
-                      }
-                    : require('../../../assets/images/free_user.png')
-                }
-              />
-              <Text allowFontScaling={false} style={styles.fullnameStyle}>
-                {profile?.fullname ? profile.fullname : ''}
-              </Text>
-            </TouchableOpacity>
-            <Image
-              style={{
-                width: SCREEN_WIDTH,
-                height: SCREEN_WIDTH,
-                resizeMode: 'cover',
-              }}
-              source={
-                selectedPost?.photo
-                  ? {
-                      uri: postImageRootURL + selectedPost.photo,
-                    }
-                  : require('../../../assets/images/no_img.jpg')
-              }
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'flex-start',
-                paddingVertical: heightPixel(5),
-                width: '100%',
-              }}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={styles.columnCenterStyle}
-                onPress={() => {
-                  // if (selectedPost.userid._id !== profile._id) {
-                  onLikePress(selectedPost._id, 1);
-                  // }
-                }}>
+      <GestureHandlerRootView style={styles.flex1}>
+        {!selectPostModalVisibleStatus && (
+          <View style={{flex: 1}}>
+            <View style={styles.overlay}>
+              <View style={styles.avatarContainer}>
                 <Image
-                  style={{
-                    width: heightPixel(37),
-                    height: heightPixel(30),
-                    resizeMode: 'cover',
-                    marginHorizontal: heightPixel(8),
-                  }}
+                  style={styles.avatar}
                   source={
-                    selectedPost.like.includes(profile._id)
-                      ? require('../../../assets/images/kiss_like.png')
-                      : require('../../../assets/images/kiss.png')
+                    profile?.avatar
+                      ? {
+                          uri: imageURL + profile.avatar,
+                        }
+                      : require('../../../assets/images/free_user.png')
                   }
                 />
                 <Text
                   allowFontScaling={false}
-                  style={{
-                    fontSize: fontPixel(10),
-                    color: 'black',
-                    paddingHorizontal: heightPixel(10),
+                  style={[
+                    styles.fullnameStyle,
+                    {maxWidth: SCREEN_WIDTH * 0.9},
+                  ]}>
+                  {profile?.fullname ? profile.fullname : ''}
+                </Text>
+              </View>
+              <Image
+                style={styles.logoStyle}
+                source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
+              />
+            </View>
+            <View style={{alignItems: 'flex-start'}}>
+              <Text
+                allowFontScaling={false}
+                style={styles.bioStyle}
+                numberOfLines={3}>
+                {profile?.bio ? profile.bio : ''}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: heightPixel(10),
+              }}>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    navigation.replace('CreatePost', {onePost: null});
                   }}>
-                  {selectedPost.like ? formatLike(selectedPost.like.length) : 0}
+                  <MaterialCommunityIcons
+                    size={fontPixel(25)}
+                    name={'plus-thick'}
+                    style={{color: 'white'}}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`   Post   `}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    navigation.replace('FeedPage');
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/feed_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`   Feed   `}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    navigation.replace('MembersPage', {
+                      userid: profile._id,
+                      userAvatar: profile.avatar,
+                      userName: profile.fullname,
+                      isMembersActive: false,
+                    });
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/crew_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`   Crew   `}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    navigation.replace('MembersPage', {
+                      userid: profile._id,
+                      userAvatar: profile.avatar,
+                      userName: profile.fullname,
+                      isMembersActive: true,
+                    });
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/members_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  {`Members`}
+                </Text>
+              </View>
+              <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.postBtnStyle}
+                  onPress={() => {
+                    // navigation.replace('MenuList');
+                  }}>
+                  <Image
+                    style={styles.ico}
+                    source={require('../../../assets/images/cookbook_ico.png')}
+                  />
+                </TouchableOpacity>
+                <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                  Cookbook
+                </Text>
+              </View>
+            </View>
+            <View style={styles.wrapper}>
+              <FlatList
+                data={formatRow(myPostList, numColumns)}
+                keyExtractor={item => {
+                  return item._id;
+                }}
+                renderItem={renderItem}
+                numColumns={numColumns}
+              />
+            </View>
+          </View>
+        )}
+        {selectPostModalVisibleStatus && (
+          <View style={styles.modalStyle}>
+            <ScrollView
+              style={{
+                height:
+                  Platform.OS === 'ios'
+                    ? SCREEN_HEIGHT - heightPixel(70)
+                    : SCREEN_HEIGHT - heightPixel(120),
+              }}>
+              <View style={styles.pencilContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    commentSheetRef.current?.close();
+                    setSelectPostModalVisibleStatus(false);
+                  }}>
+                  <MaterialCommunityIcons
+                    color={'#61a148'}
+                    name="close"
+                    size={fontPixel(28)}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Image
+                style={[styles.logoStyle, {alignSelf: 'center'}]}
+                source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectPostModalVisibleStatus(false);
+                }}
+                activeOpacity={0.7}
+                style={[styles.avatarContainer, {padding: heightPixel(10)}]}>
+                <Image
+                  style={styles.avatar}
+                  source={
+                    profile?.avatar
+                      ? {
+                          uri: imageURL + profile.avatar,
+                        }
+                      : require('../../../assets/images/free_user.png')
+                  }
+                />
+                <Text allowFontScaling={false} style={styles.fullnameStyle}>
+                  {profile?.fullname ? profile.fullname : ''}
                 </Text>
               </TouchableOpacity>
-              <View style={styles.columnCenterStyle}>
-                <Image
-                  style={{
-                    width: heightPixel(37),
-                    height: heightPixel(30),
-                    resizeMode: 'cover',
-                    marginHorizontal: heightPixel(8),
-                  }}
-                  source={require('../../../assets/images/comment.png')}
-                />
+              <Image
+                style={{
+                  width: SCREEN_WIDTH,
+                  height: SCREEN_WIDTH,
+                  resizeMode: 'cover',
+                }}
+                source={
+                  selectedPost?.photo
+                    ? {
+                        uri: postImageRootURL + selectedPost.photo,
+                      }
+                    : require('../../../assets/images/no_img.jpg')
+                }
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                  paddingVertical: heightPixel(5),
+                  width: '100%',
+                }}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={styles.columnCenterStyle}
+                  onPress={() => {
+                    // if (selectedPost.userid._id !== profile._id) {
+                    onLikePress(selectedPost._id, 1);
+                    // }
+                  }}>
+                  <Image
+                    style={{
+                      width: heightPixel(37),
+                      height: heightPixel(30),
+                      resizeMode: 'cover',
+                      marginHorizontal: heightPixel(8),
+                    }}
+                    source={
+                      selectedPost.like.includes(profile._id)
+                        ? require('../../../assets/images/kiss_like.png')
+                        : require('../../../assets/images/kiss.png')
+                    }
+                  />
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      fontSize: fontPixel(10),
+                      color: 'black',
+                      paddingHorizontal: heightPixel(10),
+                    }}>
+                    {selectedPost.like
+                      ? formatLike(selectedPost.like.length)
+                      : 0}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={styles.columnCenterStyle}
+                  onPress={openComments}>
+                  <Image
+                    style={{
+                      width: heightPixel(37),
+                      height: heightPixel(30),
+                      resizeMode: 'cover',
+                      marginHorizontal: heightPixel(8),
+                    }}
+                    source={require('../../../assets/images/comment.png')}
+                  />
+                  <Text
+                    allowFontScaling={false}
+                    style={{
+                      fontSize: fontPixel(10),
+                      color: 'black',
+                      paddingHorizontal: heightPixel(10),
+                    }}>
+                    {selectedPost.comment ? selectedPost.comment.length : 0}
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.columnCenterStyle}>
+                  <FontAwesome
+                    size={fontPixel(30)}
+                    name={'share-square-o'}
+                    color={'black'}
+                    style={{paddingHorizontal: heightPixel(15)}}
+                  />
+                </View>
+              </View>
+              {selectedPost.title && (
                 <Text
                   allowFontScaling={false}
                   style={{
-                    fontSize: fontPixel(10),
+                    fontSize: fontPixel(22),
                     color: 'black',
-                    paddingHorizontal: heightPixel(10),
+                    paddingHorizontal: heightPixel(15),
+                    paddingBottom: heightPixel(10),
                   }}>
-                  {selectedPost.comment ? selectedPost.comment.length : 0}
+                  {selectedPost?.title ? selectedPost.title : ''}
                 </Text>
-              </View>
-              <View style={styles.columnCenterStyle}>
-                <FontAwesome
-                  size={fontPixel(30)}
-                  name={'share-square-o'}
-                  color={'black'}
-                  style={{paddingHorizontal: heightPixel(15)}}
-                />
-              </View>
-            </View>
-            {selectedPost.title && (
-              <Text
-                allowFontScaling={false}
-                style={{
-                  fontSize: fontPixel(22),
-                  color: 'black',
-                  paddingHorizontal: heightPixel(15),
-                  paddingBottom: heightPixel(10),
-                }}>
-                {selectedPost?.title ? selectedPost.title : ''}
-              </Text>
-            )}
-            {/* <Text
-              allowFontScaling={false}
-              style={{
-                fontSize: fontPixel(18),
-                color: 'black',
-                paddingHorizontal: heightPixel(15),
-                paddingBottom: heightPixel(20),
-              }}>
-              {selectedPost?.note ? selectedPost.note : ''}
-            </Text> */}
-            <LinkText text={selectedPost?.note ? selectedPost.note : ''} />
-            <LinkPreviewCard
-              text={selectedPost?.note ? selectedPost.note : ''}
-            />
-          </ScrollView>
-        </View>
-      )}
+              )}
+              <LinkText text={selectedPost?.note ? selectedPost.note : ''} />
+              <LinkPreviewCard
+                text={selectedPost?.note ? selectedPost.note : ''}
+              />
+            </ScrollView>
+          </View>
+        )}
+        <CommentBottomSheet
+          postItem={selectedPost}
+          onCommentBtnPress={onCommentBtnPress}
+          ref={commentSheetRef}
+        />
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };
@@ -480,6 +512,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: SCREEN_HEIGHT,
+  },
+  flex1: {
+    flex: 1,
   },
   overlay: {
     paddingTop: heightPixel(10),
@@ -563,7 +598,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,1)',
-    position: 'absolute',
+    // position: 'absolute',
     top: heightPixel(0),
     width: SCREEN_WIDTH,
   },

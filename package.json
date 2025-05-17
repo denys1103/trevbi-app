@@ -12,6 +12,7 @@
   "dependencies": {
     "@gluestack-style/animation-plugin": "0.1.7",
     "@gluestack-style/react": "1.0.26",
+    "@gorhom/bottom-sheet": "^5",
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-community/checkbox": "^0.5.17",
     "@react-native-community/netinfo": "^11.4.1",
