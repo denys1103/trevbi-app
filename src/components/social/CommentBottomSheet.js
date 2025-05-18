@@ -37,6 +37,7 @@ const CommentBottomSheet = React.forwardRef(
     const navigation = useNavigation();
 
     const animatedValue = useRef(new Animated.Value(0)).current;
+    const emojis = ['❤️', '🙌', '🔥', '👏', '😢', '😍', '😮', '😂'];
 
     useEffect(() => {
       Animated.timing(animatedValue, {
@@ -141,7 +142,6 @@ const CommentBottomSheet = React.forwardRef(
             renderItem={renderComment}
             contentContainerStyle={{backgroundColor: 'white', flexGrow: 1}}
           />
-
           <View style={styles.inputWrapper}>
             {replyTo && (
               <View style={styles.replyBanner}>
@@ -155,6 +155,19 @@ const CommentBottomSheet = React.forwardRef(
                 </TouchableOpacity>
               </View>
             )}
+            <View style={styles.emojiRowStyle}>
+              {emojis.map((emoji, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => setText(prev => prev + emoji)}
+                  activeOpacity={0.7}
+                  style={styles.emojiBtnStyle}>
+                  <Text allowFontScaling={false} style={styles.emojiFontStyle}>
+                    {emoji}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
             <View style={styles.inputRow}>
               <Image
                 style={styles.userAvatar}
@@ -279,5 +292,22 @@ const styles = StyleSheet.create({
   commentTextStyle: {
     fontSize: fontPixel(18),
     color: 'black',
+  },
+  emojiRowStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: heightPixel(10),
+    marginBottom: heightPixel(6),
+  },
+  emojiBtnStyle: {
+    backgroundColor: 'white',
+    borderRadius: heightPixel(20),
+    paddingHorizontal: heightPixel(10),
+    paddingVertical: heightPixel(4),
+    marginRight: heightPixel(8),
+  },
+  emojiFontStyle: {
+    fontSize: fontPixel(18),
   },
 });
