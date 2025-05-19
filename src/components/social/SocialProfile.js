@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: heightPixel(15),
   },
   wrapper: {
-    paddingHorizontal: heightPixel(15),
+    paddingHorizontal: heightPixel(13),
     paddingTop: heightPixel(5),
     maxHeight: SCREEN_HEIGHT - SCREEN_WIDTH * 0.15 - heightPixel(280),
   },
