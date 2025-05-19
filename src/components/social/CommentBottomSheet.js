@@ -28,7 +28,7 @@ const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const CommentBottomSheet = React.forwardRef(
   ({postItem, onCommentBtnPress}, ref) => {
-    const snapPoints = useMemo(() => ['20%', '70%'], []);
+    const snapPoints = useMemo(() => ['100%'], []);
     const inputRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
     const [text, setText] = useState('');
@@ -131,6 +131,8 @@ const CommentBottomSheet = React.forwardRef(
         index={-1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
+        enableDynamicSizing={false}
+        keyboardBehavior={'interactive'}
         enablePanDownToClose>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
