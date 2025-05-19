@@ -38,6 +38,7 @@
     "react-native-reanimated": "^3.5.4",
     "react-native-safe-area-context": "^4.6.4",
     "react-native-screens": "^3.27.0",
+    "react-native-share": "^12.0.11",
     "react-native-svg": "^13.4.0",
     "react-native-toast-message": "^2.2.1",
     "react-native-tree-checkbox": "^1.1.1",

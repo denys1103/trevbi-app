@@ -16,6 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Share from 'react-native-share';
 import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import LinkText from './LinkText';
@@ -236,6 +237,23 @@ const FeedPage = ({navigation, route}) => {
     commentSheetRef.current?.snapToIndex(0);
   };
 
+  const handleShare = async post => {
+    const postImage = post.photo ? postImageRootURL + post.photo : '';
+    // const shareLink = `https://myapp.com/post/${post._id}`;
+    const shareOptions = {
+      title: post.title ? post.title : '',
+      // message: `Take a look at this! \n\n${shareLink}`,
+      message: 'Take a look at this!',
+      url: postImage,
+      failOnCancel: false,
+    };
+    try {
+      await Share.open(shareOptions);
+    } catch (error) {
+      console.log('Share error:', error);
+    }
+  };
+
   const onCommentBtnPress = updatedPost => {
     if (updatedPost && updatedPost._id) {
       setPostList(prevList =>
@@ -422,7 +440,7 @@ const FeedPage = ({navigation, route}) => {
                     activeOpacity={0.6}
                     style={styles.columnCenterStyle}
                     onPress={() => {
-                      console.log('');
+                      handleShare(item);
                     }}>
                     <FontAwesome
                       size={fontPixel(30)}
@@ -573,7 +591,7 @@ const FeedPage = ({navigation, route}) => {
                   activeOpacity={0.6}
                   style={styles.columnCenterStyle}
                   onPress={() => {
-                    console.log('');
+                    handleShare(selectedPost);
                   }}>
                   <FontAwesome
                     size={fontPixel(30)}

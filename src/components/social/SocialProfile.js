@@ -14,6 +14,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Share from 'react-native-share';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import {GlobalContext} from '../../context';
 import LinkText from './LinkText';
@@ -43,6 +44,23 @@ const SocialProfileScreen = ({navigation}) => {
 
   const openComments = () => {
     commentSheetRef.current?.snapToIndex(0);
+  };
+
+  const handleShare = async post => {
+    const postImage = post.photo ? postImageRootURL + post.photo : '';
+    // const shareLink = `https://myapp.com/post/${post._id}`;
+    const shareOptions = {
+      title: post.title ? post.title : '',
+      // message: `Take a look at this! \n\n${shareLink}`,
+      message: 'Take a look at this!',
+      url: postImage,
+      failOnCancel: false,
+    };
+    try {
+      await Share.open(shareOptions);
+    } catch (error) {
+      console.log('Share error:', error);
+    }
   };
 
   const onLikePress = async (id, selectType = 0) => {
@@ -470,14 +488,19 @@ const SocialProfileScreen = ({navigation}) => {
                     {selectedPost.comment ? selectedPost.comment.length : 0}
                   </Text>
                 </TouchableOpacity>
-                <View style={styles.columnCenterStyle}>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={styles.columnCenterStyle}
+                  onPress={() => {
+                    handleShare(selectedPost);
+                  }}>
                   <FontAwesome
                     size={fontPixel(30)}
                     name={'share-square-o'}
                     color={'black'}
                     style={{paddingHorizontal: heightPixel(15)}}
                   />
-                </View>
+                </TouchableOpacity>
               </View>
               {selectedPost.title && (
                 <Text

@@ -12,10 +12,19 @@ import {GlobalContextProvider} from './src/context/index';
 import Toast from 'react-native-toast-message';
 import {StyledProvider} from '@gluestack-style/react';
 import {theme} from './src/config';
+const linking = {
+  prefixes: ['trevbi://', 'https://trevbi.com'],
+  config: {
+    screens: {
+      Home: '',
+      PostDetail: 'post/:id',
+    },
+  },
+};
 
 function App(): JSX.Element {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <GlobalContextProvider>
         <StyledProvider config={theme}>
           <Navigation />
