@@ -776,6 +776,60 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const deleteComment = async (...commentInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/del-comment', {...commentInfo});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.updatedPost;
+      } else {
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return {};
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return {};
+    }
+  };
+
+  const updateComment = async (...commentInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/update-comment', {...commentInfo});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.updatedPost;
+      } else {
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return {};
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return {};
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -844,6 +898,8 @@ export const GlobalContextProvider = ({children}) => {
         getUserMemberList,
         getUserData,
         addComment,
+        deleteComment,
+        updateComment,
         showModal,
         hideModal,
       }}>

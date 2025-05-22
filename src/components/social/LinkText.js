@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   url: {
+    fontSize: fontPixel(18),
     color: 'blue',
     textDecorationLine: 'underline',
   },

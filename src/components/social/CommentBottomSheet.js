@@ -18,6 +18,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  ActionSheetIOS,
+  Alert,
 } from 'react-native';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -33,7 +35,9 @@ const CommentBottomSheet = React.forwardRef(
     const [isOpen, setIsOpen] = useState(false);
     const [text, setText] = useState('');
     const [replyTo, setReplyTo] = useState(null);
-    const {userInfo, addComment} = useContext(GlobalContext);
+    const [editingComment, setEditingComment] = useState(null);
+    const {userInfo, addComment, deleteComment, updateComment} =
+      useContext(GlobalContext);
     const navigation = useNavigation();
 
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -59,20 +63,82 @@ const CommentBottomSheet = React.forwardRef(
 
     const handleSend = async () => {
       if (!text.trim()) return;
-      const updatedPost = await addComment({
-        id: postItem._id,
-        comment: text.trim(),
-      });
-      onCommentBtnPress(updatedPost);
-      // const newComment = {
-      //   id: Date.now().toString(),
-      //   user: 'You',
-      //   text: replyTo ? `↪ ${replyTo.user}: ${text}` : text,
-      // };
-
-      // setComments(prev => [newComment, ...prev]);
+      if (editingComment) {
+        const updatedPost = await updateComment({
+          id: postItem._id,
+          commentId: editingComment._id,
+          comment: text.trim(),
+        });
+        onCommentBtnPress(updatedPost);
+        setEditingComment(null);
+      } else {
+        const updatedPost = await addComment({
+          id: postItem._id,
+          comment: text.trim(),
+        });
+        onCommentBtnPress(updatedPost);
+        // const newComment = {
+        //   id: Date.now().toString(),
+        //   user: 'You',
+        //   text: replyTo ? `↪ ${replyTo.user}: ${text}` : text,
+        // };
+        // setComments(prev => [newComment, ...prev]);
+      }
       setText('');
       setReplyTo(null);
+    };
+
+    const onEditComment = async item => {
+      setReplyTo(null);
+      setEditingComment(item);
+      setText(item.comment);
+      inputRef.current?.focus();
+    };
+
+    const onDeleteComment = async commentId => {
+      try {
+        const updatedPost = await deleteComment({
+          id: postItem._id,
+          commentId,
+        });
+        onCommentBtnPress(updatedPost);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const handleLongPress = item => {
+      if (Platform.OS === 'ios') {
+        ActionSheetIOS.showActionSheetWithOptions(
+          {
+            options: ['Cancel', 'Edit', 'Delete'],
+            destructiveButtonIndex: 2,
+            cancelButtonIndex: 0,
+          },
+          buttonIndex => {
+            if (buttonIndex === 1) {
+              onEditComment(item);
+            } else if (buttonIndex === 2) {
+              onDeleteComment(item._id);
+            }
+          },
+        );
+      } else {
+        Alert.alert(
+          'Comment Options',
+          '',
+          [
+            {text: 'Edit', onPress: () => onEditComment(item)},
+            {
+              text: 'Delete',
+              onPress: () => onDeleteComment(item._id),
+              style: 'destructive',
+            },
+            {text: 'Cancel', style: 'cancel'},
+          ],
+          {cancelable: true},
+        );
+      }
     };
 
     const renderComment = ({item}) => (
@@ -110,7 +176,16 @@ const CommentBottomSheet = React.forwardRef(
             }
           />
         </TouchableOpacity>
-        <View style={styles.userBoxContent}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onLongPress={() => {
+            if (item.userid._id) {
+              if (item.userid._id === userInfo.user._id) {
+                handleLongPress(item);
+              }
+            }
+          }}
+          style={styles.userBoxContent}>
           <Text allowFontScaling={false} style={styles.flexRow}>
             <Text allowFontScaling={false} style={styles.fullnameTextStyle}>
               {item.userid?.fullname ? `${item.userid.fullname} ` : ''}
@@ -119,7 +194,7 @@ const CommentBottomSheet = React.forwardRef(
               {item.comment}
             </Text>
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     );
 
