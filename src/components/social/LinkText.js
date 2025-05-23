@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Linking, StyleSheet} from 'react-native';
+import {Text, Linking, StyleSheet, View} from 'react-native';
 import {fontPixel, heightPixel} from '../../config';
 
 const LinkText = ({text}) => {
@@ -28,7 +28,7 @@ const LinkText = ({text}) => {
     });
   };
 
-  return <Text style={styles.textContainer}>{renderTextWithLinks(text)}</Text>;
+  return <View style={styles.textContainer}>{renderTextWithLinks(text)}</View>;
 };
 
 export default LinkText;
@@ -38,13 +38,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     flexShrink: 1,
+    paddingHorizontal: heightPixel(5),
   },
   text: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(20),
     color: 'black',
   },
   url: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(20),
     color: 'blue',
     textDecorationLine: 'underline',
   },

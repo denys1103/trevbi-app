@@ -830,6 +830,36 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const updateCommentLike = async (...likeInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/update-commentlike', {
+        ...likeInfo,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.comment;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return;
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return;
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -900,6 +930,7 @@ export const GlobalContextProvider = ({children}) => {
         addComment,
         deleteComment,
         updateComment,
+        updateCommentLike,
         showModal,
         hideModal,
       }}>
@@ -917,9 +948,13 @@ export const GlobalContextProvider = ({children}) => {
                 style={{width: heightPixel(150), height: heightPixel(41.6)}}
               />
             </View>
-            <Text style={styles.modalText}>{modalMessage}</Text>
+            <Text allowFontScaling={false} style={styles.modalText}>
+              {modalMessage}
+            </Text>
             <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
+              <Text allowFontScaling={false} style={styles.closeButtonText}>
+                Close
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

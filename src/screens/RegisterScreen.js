@@ -82,6 +82,7 @@ const RegisterScreen = ({navigation}) => {
                 <View style={styles.input_box}>
                   <TextInput
                     style={styles.input}
+                    allowFontScaling={false}
                     value={name}
                     placeholder="username"
                     placeholderTextColor="#000000aa"
@@ -96,6 +97,7 @@ const RegisterScreen = ({navigation}) => {
                 <View style={styles.input_box}>
                   <TextInput
                     style={styles.input}
+                    allowFontScaling={false}
                     value={email}
                     onChangeText={text => setEmail(text)}
                     placeholder="e-mail"
@@ -110,6 +112,7 @@ const RegisterScreen = ({navigation}) => {
                 <View style={styles.input_box}>
                   <TextInput
                     style={styles.input}
+                    allowFontScaling={false}
                     value={password}
                     onChangeText={text => setPassword(text)}
                     placeholder="create password"
@@ -127,6 +130,7 @@ const RegisterScreen = ({navigation}) => {
                 <View style={styles.input_box}>
                   <TextInput
                     style={styles.input}
+                    allowFontScaling={false}
                     value={Confpassword}
                     placeholder="verify your password"
                     placeholderTextColor="#000000aa"

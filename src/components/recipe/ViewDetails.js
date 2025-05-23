@@ -300,6 +300,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
               </Text>
               <TextInput
                 style={[styles.input, {width: SCREEN_WIDTH - heightPixel(65)}]}
+                allowFontScaling={false}
                 value={title}
                 onChangeText={setTitle}
               />
@@ -310,6 +311,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
               </Text>
               <TextInput
                 style={[styles.input, {width: SCREEN_WIDTH - heightPixel(210)}]}
+                allowFontScaling={false}
                 value={servings}
                 keyboardType="numeric"
                 onChangeText={handlePhoneNumChange}
@@ -321,6 +323,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
               </Text>
               <TextInput
                 style={[styles.input, {width: SCREEN_WIDTH - heightPixel(150)}]}
+                allowFontScaling={false}
                 value={cookTime}
                 onChangeText={setCookTime}
                 maxLength={15}

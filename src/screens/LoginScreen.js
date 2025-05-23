@@ -192,6 +192,7 @@ const LoginScreen = ({navigation}) => {
                   style={[styles.input_box, {marginBottom: widthPixel(20)}]}>
                   <TextInput
                     style={styles.input}
+                    allowFontScaling={false}
                     value={email}
                     onChangeText={onChangeEmail}
                     label="Email"
@@ -209,6 +210,7 @@ const LoginScreen = ({navigation}) => {
                 <View style={styles.input_box}>
                   <TextInput
                     style={styles.input}
+                    allowFontScaling={false}
                     value={password}
                     onChangeText={text => setPassword(text)}
                     label="Password"
@@ -431,6 +433,7 @@ const LoginScreen = ({navigation}) => {
             {step == 0 && (
               <TextInput
                 style={styles.popup_input}
+                allowFontScaling={false}
                 value={emailAddress}
                 onChangeText={setEmailAddress}
               />
@@ -438,6 +441,7 @@ const LoginScreen = ({navigation}) => {
             {step == 1 && (
               <TextInput
                 style={styles.popup_input}
+                allowFontScaling={false}
                 value={code}
                 onChangeText={setCode}
               />
@@ -445,6 +449,7 @@ const LoginScreen = ({navigation}) => {
             {step == 2 && (
               <TextInput
                 style={styles.popup_input}
+                allowFontScaling={false}
                 value={rePassword}
                 onChangeText={setRePassword}
                 secureTextEntry={true}
@@ -459,6 +464,7 @@ const LoginScreen = ({navigation}) => {
             {step == 2 && (
               <TextInput
                 style={styles.popup_input}
+                allowFontScaling={false}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry={true}

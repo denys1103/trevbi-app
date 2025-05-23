@@ -9,9 +9,9 @@ import IosScanTestComponent from './scan/test';
 import {RecipeIndex} from './recipe/index';
 import {SocialIndex} from './social/index';
 import {Menu} from './menu/index';
-import {Image, Platform} from 'react-native';
+import {Image, Platform, Text, StyleSheet} from 'react-native';
 
-import {widthPixel, heightPixel} from '../config';
+import {widthPixel, heightPixel, fontPixel} from '../config';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,24 +50,20 @@ function CustomTabs() {
         name="Scan"
         component={Platform.OS === 'ios' ? IosScanComponent : ScanComponent}
         options={{
-          tabBarLabel: 'SCAN',
+          tabBarLabel: ({color}) => (
+            <Text allowFontScaling={false} style={[styles.tabLabel, {color}]}>
+              SCAN
+            </Text>
+          ),
           tabBarIcon: ({focused, color, size}) =>
             focused ? (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/scan_active.png')}
               />
             ) : (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/scan.png')}
               />
             ),
@@ -77,24 +73,20 @@ function CustomTabs() {
         name="AIRecipes"
         component={RecipeIndex}
         options={{
-          tabBarLabel: 'AI RECIPES',
+          tabBarLabel: ({color}) => (
+            <Text allowFontScaling={false} style={[styles.tabLabel, {color}]}>
+              AI RECIPES
+            </Text>
+          ),
           tabBarIcon: ({focused, color, size}) =>
             focused ? (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/ai_recipes_active.png')}
               />
             ) : (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/ai_recipes.png')}
               />
             ),
@@ -104,24 +96,20 @@ function CustomTabs() {
         name="Social"
         component={SocialIndex}
         options={{
-          tabBarLabel: 'SOCIAL',
+          tabBarLabel: ({color}) => (
+            <Text allowFontScaling={false} style={[styles.tabLabel, {color}]}>
+              SOCIAL
+            </Text>
+          ),
           tabBarIcon: ({focused, color, size}) =>
             focused ? (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/social_active.png')}
               />
             ) : (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/social.png')}
               />
             ),
@@ -131,24 +119,20 @@ function CustomTabs() {
         name="Menu"
         component={Menu}
         options={{
-          tabBarLabel: 'MENU',
+          tabBarLabel: ({color}) => (
+            <Text allowFontScaling={false} style={[styles.tabLabel, {color}]}>
+              MENU
+            </Text>
+          ),
           tabBarIcon: ({focused, color, size}) =>
             focused ? (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/menu_active.png')}
               />
             ) : (
               <Image
-                style={{
-                  width: widthPixel(40),
-                  height: widthPixel(40),
-                  resizeMode: 'contain',
-                }}
+                style={styles.menuImage}
                 source={require('../../assets/images/menu.png')}
               />
             ),
@@ -171,6 +155,18 @@ function CustomTabs() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  tabLabel: {
+    fontSize: fontPixel(12),
+    textAlign: 'center',
+  },
+  menuImage: {
+    width: widthPixel(40),
+    height: widthPixel(40),
+    resizeMode: 'contain',
+  },
+});
 
 export default function SubTabs() {
   return <CustomTabs />;

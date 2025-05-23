@@ -44,7 +44,7 @@ const WelcomeSecondScreen = ({navigation}) => {
                     paddingTop: heightPixel(10),
                   },
                 ]}>
-                1. SCAN INGREDIENTS
+                1.  SCAN INGREDIENTS
               </Text>
               <Text
                 allowFontScaling={false}
@@ -167,7 +167,7 @@ const WelcomeSecondScreen = ({navigation}) => {
             <Text
               allowFontScaling={false}
               style={{
-                fontSize: fontPixel(11),
+                fontSize: fontPixel(12),
                 color: '#000000',
               }}>
               SCAN
@@ -190,7 +190,7 @@ const WelcomeSecondScreen = ({navigation}) => {
             <Text
               allowFontScaling={false}
               style={{
-                fontSize: fontPixel(11),
+                fontSize: fontPixel(12),
                 color: '#000000',
               }}>
               AI RECIPES
@@ -211,7 +211,7 @@ const WelcomeSecondScreen = ({navigation}) => {
             <Text
               allowFontScaling={false}
               style={{
-                fontSize: fontPixel(11),
+                fontSize: fontPixel(12),
                 color: '#000000',
               }}>
               SOCIAL
@@ -232,7 +232,7 @@ const WelcomeSecondScreen = ({navigation}) => {
             <Text
               allowFontScaling={false}
               style={{
-                fontSize: fontPixel(11),
+                fontSize: fontPixel(12),
                 color: '#61a148',
               }}>
               MENU

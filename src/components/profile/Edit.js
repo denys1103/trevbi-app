@@ -182,6 +182,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
             Name
           </Text>
           <TextInput
+            allowFontScaling={false}
             style={styles.input}
             placeholder="Enter Name"
             value={fullname}
@@ -213,6 +214,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
                     fontSize: fontPixel(18),
                   },
                 ]}
+                allowFontScaling={false}
                 placeholder="Enter Date of Birth"
                 value={format_date(birth)}
                 editable={false}
@@ -243,6 +245,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
           </Text>
           <TextInput
             style={styles.input}
+            allowFontScaling={false}
             placeholder=""
             keyboardType="phone-pad"
             value={phone_num}
@@ -269,6 +272,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
           </Text>
           <TextInput
             style={styles.input}
+            allowFontScaling={false}
             placeholder=""
             value={email}
             onChangeText={setEmail}

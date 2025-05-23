@@ -36,8 +36,13 @@ const CommentBottomSheet = React.forwardRef(
     const [text, setText] = useState('');
     const [replyTo, setReplyTo] = useState(null);
     const [editingComment, setEditingComment] = useState(null);
-    const {userInfo, addComment, deleteComment, updateComment} =
-      useContext(GlobalContext);
+    const {
+      userInfo,
+      addComment,
+      deleteComment,
+      updateComment,
+      updateCommentLike,
+    } = useContext(GlobalContext);
     const navigation = useNavigation();
 
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -141,6 +146,14 @@ const CommentBottomSheet = React.forwardRef(
       }
     };
 
+    const onCommentLikePress = async commentId => {
+      const oneComment = await updateCommentLike({
+        id: postItem._id,
+        commentId,
+      });
+      onCommentBtnPress({_id: postItem._id, comment: oneComment});
+    };
+
     const renderComment = ({item}) => (
       // <View style={styles.commentRow}>
       //   <Text allowFontScaling={false} style={styles.commentUser}>
@@ -194,6 +207,30 @@ const CommentBottomSheet = React.forwardRef(
               {item.comment}
             </Text>
           </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={{padding: heightPixel(10)}}
+          onPress={() => {
+            onCommentLikePress(item._id);
+          }}>
+          <Ionicons
+            name={
+              item?.like
+                ? item.like.includes(userInfo.user._id)
+                  ? 'heart'
+                  : 'heart-outline'
+                : 'heart-outline'
+            }
+            size={fontPixel(22)}
+            color={
+              item?.like
+                ? item.like.includes(userInfo.user._id)
+                  ? 'red'
+                  : 'black'
+                : 'black'
+            }
+          />
         </TouchableOpacity>
       </View>
     );
@@ -262,6 +299,7 @@ const CommentBottomSheet = React.forwardRef(
                 onChangeText={setText}
                 placeholder="Add a comment..."
                 style={styles.input}
+                allowFontScaling={false}
                 placeholderTextColor="#888"
                 multiline
               />
@@ -351,6 +389,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     paddingHorizontal: heightPixel(10),
+    width: SCREEN_WIDTH - heightPixel(100),
   },
   userAvatar: {
     width: heightPixel(40),

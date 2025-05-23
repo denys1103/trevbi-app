@@ -230,6 +230,7 @@ const ScanHistory = ({navigation}) => {
           searchIcon={Platform.OS === 'ios' ? {name: 'search'} : null}
           clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
           value={search}
+          allowFontScaling={false}
         />
       </View>
       <FlatList

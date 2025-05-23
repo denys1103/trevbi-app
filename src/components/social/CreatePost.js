@@ -20,7 +20,7 @@ const CreatePost = ({navigation, route}) => {
     useContext(GlobalContext);
   const onePost = route.params.onePost;
   const [id, setId] = useState(onePost ? onePost._id : '');
-  const [title, setTitle] = useState(onePost ? onePost.title : 'My post title');
+  const [title, setTitle] = useState(onePost ? onePost.title : '');
   const [note, setNote] = useState(onePost ? onePost.note : '');
   const [file, setFile] = useState({});
   const [filePath, setFilePath] = useState(
@@ -169,12 +169,14 @@ const CreatePost = ({navigation, route}) => {
         <View style={styles.postContainer}>
           <TextInput
             style={styles.inputTitleStyle}
-            placeholder=""
+            allowFontScaling={false}
+            placeholder="My post title"
             value={title}
             onChangeText={setTitle}
           />
           <TextInput
             textAlignVertical="top"
+            allowFontScaling={false}
             multiline={true}
             numberOfLines={10}
             style={styles.inputNoteStyle}
