@@ -316,7 +316,7 @@ const SocialProfileScreen = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 <Text allowFontScaling={false} style={styles.postTitleStyle}>
-                  {`   Crew   `}
+                  {` Follow `}
                 </Text>
               </View>
               <View style={styles.columnCenterStyle}>
@@ -337,7 +337,7 @@ const SocialProfileScreen = ({navigation}) => {
                   />
                 </TouchableOpacity>
                 <Text allowFontScaling={false} style={styles.postTitleStyle}>
-                  {`Members`}
+                  {`Followers`}
                 </Text>
               </View>
               <View style={styles.columnCenterStyle}>

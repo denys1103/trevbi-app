@@ -711,8 +711,8 @@ const FeedPage = ({navigation, route}) => {
                         fontFamily: 'LEMONMILK-Medium',
                       }}>
                       {profile.following.indexOf(selectedUser._id) < 0
-                        ? 'Join My Crew'
-                        : 'Crewed Up'}
+                        ? 'Follow'
+                        : 'Unfollow'}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -772,7 +772,7 @@ const FeedPage = ({navigation, route}) => {
                   />
                 </TouchableOpacity>
                 <Text allowFontScaling={false} style={styles.postTitleStyle}>
-                  {`   Crew   `}
+                  {` Follow `}
                 </Text>
               </View>
               <View style={styles.columnCenterStyle}>
@@ -793,7 +793,7 @@ const FeedPage = ({navigation, route}) => {
                   />
                 </TouchableOpacity>
                 <Text allowFontScaling={false} style={styles.postTitleStyle}>
-                  {`Members`}
+                  {`Followers`}
                 </Text>
               </View>
               <View style={styles.columnCenterStyle}>

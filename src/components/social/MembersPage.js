@@ -149,7 +149,7 @@ const MembersPage = ({navigation, route}) => {
               />
             </TouchableOpacity>
             <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`   Crew   `}
+              {` Follow `}
             </Text>
           </View>
           <View style={styles.columnCenterStyle}>
@@ -170,7 +170,7 @@ const MembersPage = ({navigation, route}) => {
               />
             </TouchableOpacity>
             <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`Members`}
+              {`Followers`}
             </Text>
           </View>
         </View>
@@ -267,7 +267,7 @@ const MembersPage = ({navigation, route}) => {
                             color: '#61a148',
                             fontFamily: 'LEMONMILK-Medium',
                           }}>
-                          Join My Crew
+                          Follow
                         </Text>
                       </TouchableOpacity>
                     )}
