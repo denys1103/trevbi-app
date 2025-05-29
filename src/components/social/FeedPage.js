@@ -22,6 +22,7 @@ import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import LinkText from './LinkText';
 import LinkPreviewCard from './LinkPreviewCard';
 import CommentBottomSheet from './CommentBottomSheet';
+import FeedPostMedia from './FeedPostMedia';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const FeedPage = ({navigation, route}) => {
@@ -48,7 +49,15 @@ const FeedPage = ({navigation, route}) => {
   const [refreshingPosts, setRefreshingPosts] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const commentSheetRef = useRef(null);
+  const [activePostIndex, setActivePostIndex] = useState(0);
   const numColumns = 2;
+  const onViewableItemsChanged = useRef(({viewableItems}) => {
+    if (viewableItems.length > 0) {
+      setActivePostIndex(viewableItems[0].index);
+    }
+  });
+
+  const viewConfigRef = useRef({viewAreaCoveragePercentThreshold: 50});
 
   useEffect(() => {
     if (userid) {
@@ -116,7 +125,7 @@ const FeedPage = ({navigation, route}) => {
             setSelectProfileModalVisibleStatus(false);
           }}
           activeOpacity={0.8}>
-          <Image
+          {/* <Image
             style={{
               width: itemDimension,
               height: itemDimension,
@@ -129,6 +138,10 @@ const FeedPage = ({navigation, route}) => {
                   }
                 : require('../../../assets/images/no_img.jpg')
             }
+          /> */}
+          <FeedPostMedia
+            media={item?.media ? item.media : []}
+            isActive={false}
           />
         </TouchableOpacity>
         <View
@@ -320,7 +333,7 @@ const FeedPage = ({navigation, route}) => {
             />
           }
           keyExtractor={item => item._id}
-          renderItem={({item}) => {
+          renderItem={({item, index}) => {
             return (
               <View
                 style={{
@@ -359,9 +372,10 @@ const FeedPage = ({navigation, route}) => {
                   activeOpacity={0.8}
                   onPress={() => {
                     setSelectedPost(item);
+                    setActivePostIndex(-1);
                     setSelectPostModalVisibleStatus(true);
                   }}>
-                  <Image
+                  {/* <Image
                     style={{
                       width: SCREEN_WIDTH,
                       height: SCREEN_WIDTH,
@@ -374,6 +388,10 @@ const FeedPage = ({navigation, route}) => {
                           }
                         : require('../../../assets/images/no_img.jpg')
                     }
+                  /> */}
+                  <FeedPostMedia
+                    media={item?.media ? item.media : []}
+                    isActive={index === activePostIndex}
                   />
                 </TouchableOpacity>
                 <View style={styles.iconsBox}>
@@ -453,6 +471,8 @@ const FeedPage = ({navigation, route}) => {
               </View>
             );
           }}
+          onViewableItemsChanged={onViewableItemsChanged.current}
+          viewabilityConfig={viewConfigRef.current}
           initialNumToRender={5}
           maxToRenderPerBatch={5}
           windowSize={10}
@@ -516,7 +536,7 @@ const FeedPage = ({navigation, route}) => {
                     : ''}
                 </Text>
               </TouchableOpacity>
-              <Image
+              {/* <Image
                 style={{
                   width: SCREEN_WIDTH,
                   height: SCREEN_WIDTH,
@@ -529,6 +549,11 @@ const FeedPage = ({navigation, route}) => {
                       }
                     : require('../../../assets/images/no_img.jpg')
                 }
+              /> */}
+              <FeedPostMedia
+                media={selectedPost?.media ? selectedPost.media : []}
+                isActive={false}
+                isRepeat={true}
               />
               <View style={styles.iconsBox}>
                 <TouchableOpacity

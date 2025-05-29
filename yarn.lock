@@ -3275,6 +3275,7 @@ __metadata:
     react-native-dropdown-select-list: ^2.0.5
     react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.21.2
+    react-native-image-crop-picker: ^0.42.0
     react-native-image-picker: ^8.2.0
     react-native-loading-spinner-overlay: ^3.0.1
     react-native-quick-md5: ^3.0.6
@@ -3286,6 +3287,7 @@ __metadata:
     react-native-toast-message: ^2.2.1
     react-native-tree-checkbox: ^1.1.1
     react-native-vector-icons: ^10.2.0
+    react-native-video: ^6.14.0
     react-native-vision-camera: ^4.3.2
     react-native-vision-camera-text-recognition: ^3.0.0
     react-native-web: ^0.19.13
@@ -9308,6 +9310,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-image-crop-picker@npm:^0.42.0":
+  version: 0.42.0
+  resolution: "react-native-image-crop-picker@npm:0.42.0"
+  peerDependencies:
+    react-native: ">=0.40.0"
+  checksum: 40d13e9a610d15b0bbaf2a6ec6de476caffc941e7d70d9c2254c101f2f65b6fa3f2ebf7669a44c30508adc130c2ea7ddae9c9c9d35dc9468ebad4139833fe5a1
+  languageName: node
+  linkType: hard
+
 "react-native-image-picker@npm:^8.2.0":
   version: 8.2.0
   resolution: "react-native-image-picker@npm:8.2.0"
@@ -9462,6 +9473,16 @@ __metadata:
     fa6-upgrade: bin/fa6-upgrade.sh
     generate-icon: bin/generate-icon.js
   checksum: fda930df4e63f12533268f5b339ebe4c77c691eae43503328466b3087ed868a06a4593fd246e75ac6b5ec955543eec35608c7922191bdcc3b3a94ed7f3575ef0
+  languageName: node
+  linkType: hard
+
+"react-native-video@npm:^6.14.0":
+  version: 6.14.0
+  resolution: "react-native-video@npm:6.14.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 3da3ccab377cf84926725be5263eeeba0d45368ef522de993331d9f7bb8ea6cbe9dd4cf9240901595910c3e150bda30fe9456382d58b556018e00dac33ee89bc
   languageName: node
   linkType: hard
 

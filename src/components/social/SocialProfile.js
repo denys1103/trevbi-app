@@ -20,6 +20,7 @@ import {GlobalContext} from '../../context';
 import LinkText from './LinkText';
 import LinkPreviewCard from './LinkPreviewCard';
 import CommentBottomSheet from './CommentBottomSheet';
+import FeedPostMedia from './FeedPostMedia';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
@@ -121,7 +122,7 @@ const SocialProfileScreen = ({navigation}) => {
         }}
         activeOpacity={0.8}>
         <View style={styles.renderItemStyle}>
-          <Image
+          {/* <Image
             style={{
               width: itemDimension,
               height: itemDimension,
@@ -134,6 +135,10 @@ const SocialProfileScreen = ({navigation}) => {
                   }
                 : require('../../../assets/images/no_img.jpg')
             }
+          /> */}
+          <FeedPostMedia
+            media={item?.media ? item.media : []}
+            isActive={false}
           />
           <View
             style={{
@@ -410,7 +415,7 @@ const SocialProfileScreen = ({navigation}) => {
                   {profile?.fullname ? profile.fullname : ''}
                 </Text>
               </TouchableOpacity>
-              <Image
+              {/* <Image
                 style={{
                   width: SCREEN_WIDTH,
                   height: SCREEN_WIDTH,
@@ -423,6 +428,11 @@ const SocialProfileScreen = ({navigation}) => {
                       }
                     : require('../../../assets/images/no_img.jpg')
                 }
+              /> */}
+              <FeedPostMedia
+                media={selectedPost?.media ? selectedPost.media : []}
+                isActive={false}
+                isRepeat={true}
               />
               <View
                 style={{

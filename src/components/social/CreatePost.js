@@ -8,15 +8,19 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, widthPixel, imageURL} from '../../config';
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const CreatePost = ({navigation, route}) => {
-  const {userInfo, showModal, savePost, saveTxtPost} =
+  const {userInfo, showModal, saveMediaPost, saveTxtPost} =
     useContext(GlobalContext);
   const onePost = route.params.onePost;
   const [id, setId] = useState(onePost ? onePost._id : '');
@@ -27,6 +31,10 @@ const CreatePost = ({navigation, route}) => {
     onePost ? (onePost.photo ? imageURL + onePost.photo : '') : '',
   );
   const profile = userInfo.user;
+  const [media, setMedia] = useState([]);
+  const [searchMedia, setSearchMedia] = useState([{mime: 'plus'}]);
+  const MAX_MEDIA = 10;
+
   const selectPhotoFile = async () => {
     let options = {
       aspect: [1, 1],
@@ -84,29 +92,71 @@ const CreatePost = ({navigation, route}) => {
     data.append('title', title);
     data.append('note', note);
     data.append('id', id);
-    if (Object.keys(file).length === 0) {
-      data.append('file', '');
-      if (title.replace(/\s+/g, '') !== '' && filePath !== '') {
+    media.forEach((item, index) => {
+      data.append('media', {
+        uri: item.path,
+        type: item.mime,
+        name: `media_${index}.${item.mime.split('/')[1]}`,
+      });
+    });
+    if (media.length === 0) {
+      if (title.replace(/\s+/g, '') !== '') {
         await saveTxtPost({
           title,
           note,
           id,
-          file: '',
         });
         navigation.replace('SocialProfile');
       }
-      if (filePath === '') {
-        showModal('No image selected.');
-      }
+      // if (filePath === '') {
+      //   showModal('No image selected.');
+      // }
       if (title.replace(/\s+/g, '') === '') {
         showModal('No title.');
       }
     } else {
-      data.append('file', file);
-      await savePost(data);
+      await saveMediaPost(data);
       navigation.replace('SocialProfile');
     }
   };
+
+  const pickMedia = () => {
+    ImagePicker.openPicker({
+      multiple: true,
+      mediaType: 'any',
+      maxFiles: MAX_MEDIA - media.length,
+    }).then(selected => {
+      setMedia([...media, ...selected.slice(0, MAX_MEDIA - media.length)]);
+      const currentCount =
+        media.length + selected.slice(0, MAX_MEDIA - media.length).length;
+      if (currentCount == MAX_MEDIA) {
+        setSearchMedia([
+          ...media,
+          ...selected.slice(0, MAX_MEDIA - media.length),
+        ]);
+      } else {
+        setSearchMedia([
+          ...media,
+          ...selected.slice(0, MAX_MEDIA - media.length),
+          {mime: 'plus'},
+        ]);
+      }
+    });
+  };
+
+  const renderItem = ({item}) => (
+    <View style={styles.mediaItem}>
+      {item.mime.startsWith('video') ? (
+        <Text style={styles.videoTag}>🎥</Text>
+      ) : item.mime.startsWith('plus') ? (
+        <TouchableOpacity style={styles.addMedia} onPress={pickMedia}>
+          <Text style={styles.addIcon}>＋</Text>
+        </TouchableOpacity>
+      ) : (
+        <Image source={{uri: item.path}} style={styles.image} />
+      )}
+    </View>
+  );
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -184,7 +234,7 @@ const CreatePost = ({navigation, route}) => {
             value={note}
             onChangeText={setNote}
           />
-          {filePath != '' && (
+          {/* {filePath != '' && (
             <Image style={styles.imageStyle} source={{uri: filePath}} />
           )}
           <TouchableOpacity
@@ -199,7 +249,14 @@ const CreatePost = ({navigation, route}) => {
             <Text allowFontScaling={false} style={styles.imageTextStyle}>
               Image
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <FlatList
+            data={searchMedia}
+            renderItem={renderItem}
+            keyExtractor={(_, i) => i.toString()}
+            numColumns={3}
+            contentContainerStyle={styles.mediaGrid}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -228,6 +285,7 @@ const styles = StyleSheet.create({
   postContainer: {
     backgroundColor: 'white',
     flexDirection: 'column',
+    height: SCREEN_HEIGHT - heightPixel(220), //android style
   },
   avatarBox: {
     flexDirection: 'row',
@@ -301,6 +359,25 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     justifyContent: 'center',
   },
+  mediaGrid: {justifyContent: 'center'},
+  mediaItem: {
+    width: (SCREEN_WIDTH - heightPixel(18)) / 3.0,
+    aspectRatio: heightPixel(1),
+    margin: heightPixel(3),
+    backgroundColor: '#eee',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addMedia: {
+    width: '100%',
+    aspectRatio: heightPixel(1),
+    borderColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addIcon: {fontSize: fontPixel(10), color: 'black'},
+  image: {width: '100%', height: '100%', resizeMode: 'cover'},
+  videoTag: {fontSize: fontPixel(24)},
 });
 
 export default CreatePost;
