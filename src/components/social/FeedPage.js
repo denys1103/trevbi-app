@@ -142,6 +142,7 @@ const FeedPage = ({navigation, route}) => {
           <FeedPostMedia
             media={item?.media ? item.media : []}
             isActive={false}
+            width={itemDimension}
           />
         </TouchableOpacity>
         <View

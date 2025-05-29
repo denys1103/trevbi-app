@@ -139,6 +139,7 @@ const SocialProfileScreen = ({navigation}) => {
           <FeedPostMedia
             media={item?.media ? item.media : []}
             isActive={false}
+            width={itemDimension}
           />
           <View
             style={{

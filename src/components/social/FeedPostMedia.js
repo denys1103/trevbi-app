@@ -10,10 +10,15 @@ import {
 import Video from 'react-native-video';
 import {fontPixel, heightPixel, postImageRootURL} from '../../config';
 
-const {width} = Dimensions.get('window');
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 const AUTO_PLAY_INTERVAL = 3000;
 
-const FeedPostMedia = ({media, isActive, isRepeat = false}) => {
+const FeedPostMedia = ({
+  media,
+  isActive,
+  isRepeat = false,
+  width = SCREEN_WIDTH,
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVideoPaused, setIsVideoPaused] = useState(false);
   const flatListRef = useRef();
@@ -37,7 +42,7 @@ const FeedPostMedia = ({media, isActive, isRepeat = false}) => {
 
   const onScrollEnd = e => {
     const index = Math.floor(
-      Math.floor(e.nativeEvent.contentOffset.x) / Math.floor(width),
+      Math.floor(e.nativeEvent.contentOffset.x) / Math.floor(SCREEN_WIDTH),
     );
     setActiveIndex(index);
   };
@@ -49,7 +54,7 @@ const FeedPostMedia = ({media, isActive, isRepeat = false}) => {
     const isCurrent = index === activeIndex;
 
     return (
-      <View style={styles.mediaContainer}>
+      <View style={[styles.mediaContainer, {width}]}>
         {isVideo ? (
           <Video
             source={{uri: postImageRootURL + item.name}}
@@ -72,7 +77,7 @@ const FeedPostMedia = ({media, isActive, isRepeat = false}) => {
   };
 
   return (
-    <View style={styles.postContainer}>
+    <View style={[styles.postContainer, {width}]}>
       {/* MEDIA CAROUSEL */}
       <FlatList
         ref={flatListRef}
@@ -103,13 +108,13 @@ const FeedPostMedia = ({media, isActive, isRepeat = false}) => {
 export default FeedPostMedia;
 const styles = StyleSheet.create({
   postContainer: {
-    width,
+    width: SCREEN_WIDTH,
     aspectRatio: 1,
     backgroundColor: 'transparent',
     marginBottom: heightPixel(16),
   },
   mediaContainer: {
-    width,
+    width: SCREEN_WIDTH,
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
