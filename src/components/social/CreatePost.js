@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,8 +15,15 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import Video from 'react-native-video';
 import {GlobalContext} from '../../context';
-import {fontPixel, heightPixel, widthPixel, imageURL} from '../../config';
+import {
+  fontPixel,
+  heightPixel,
+  widthPixel,
+  imageURL,
+  postImageRootURL,
+} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const CreatePost = ({navigation, route}) => {
@@ -31,62 +38,19 @@ const CreatePost = ({navigation, route}) => {
     onePost ? (onePost.photo ? imageURL + onePost.photo : '') : '',
   );
   const profile = userInfo.user;
-  const [media, setMedia] = useState([]);
-  const [searchMedia, setSearchMedia] = useState([{mime: 'plus'}]);
   const MAX_MEDIA = 10;
+  const [media, setMedia] = useState([]);
+  const [searchMedia, setSearchMedia] = useState(
+    onePost
+      ? onePost.media.length >= MAX_MEDIA
+        ? onePost.media
+        : [...onePost.media, {mime: 'plus'}]
+      : [{mime: 'plus'}],
+  );
+  const [onePostMedia, setOnePostMedia] = useState(
+    onePost ? onePost.media : [],
+  );
 
-  const selectPhotoFile = async () => {
-    let options = {
-      aspect: [1, 1],
-      includeBase64: true,
-      maxWidth: 550,
-      maxHeight: 550,
-      quality: 1,
-      title: 'Select Image',
-      mediaType: 'photo',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    launchImageLibrary(options, response => {
-      // console.log('Response = ', response);
-
-      if (response.didCancel) {
-        // alert('User cancelled camera picker');
-        return;
-      } else if (response.errorCode == 'camera_unavailable') {
-        // alert('Camera not available on device');
-        return;
-      } else if (response.errorCode == 'permission') {
-        // alert('Permission not satisfied');
-        return;
-      } else if (response.errorCode == 'others') {
-        // alert(response.errorMessage);
-        return;
-      }
-      if (response.assets[0].fileSize < 10000000) {
-        if (response.assets[0].uri) {
-          const res_data = response.assets[0];
-          setFile({
-            name: res_data.fileName,
-            type: res_data.type,
-            uri:
-              Platform.OS === 'android'
-                ? res_data.uri
-                : res_data.uri.replace('file://', ''),
-          });
-          var temp_uri =
-            Platform.OS === 'android'
-              ? res_data.uri
-              : res_data.uri.replace('file://', '');
-          setFilePath(temp_uri);
-        }
-      } else {
-        showModal('File size should not exceed 10 MB.');
-      }
-    });
-  };
   const handleSubmit = async () => {
     let data = new FormData();
     data.append('title', title);
@@ -115,8 +79,13 @@ const CreatePost = ({navigation, route}) => {
         showModal('No title.');
       }
     } else {
-      await saveMediaPost(data);
-      navigation.replace('SocialProfile');
+      if (title.replace(/\s+/g, '') !== '') {
+        await saveMediaPost(data);
+        navigation.replace('SocialProfile');
+      }
+      if (title.replace(/\s+/g, '') === '') {
+        showModal('No title.');
+      }
     }
   };
 
@@ -124,20 +93,28 @@ const CreatePost = ({navigation, route}) => {
     ImagePicker.openPicker({
       multiple: true,
       mediaType: 'any',
-      maxFiles: MAX_MEDIA - media.length,
+      maxFiles: MAX_MEDIA - media.length - onePostMedia.length,
     }).then(selected => {
-      setMedia([...media, ...selected.slice(0, MAX_MEDIA - media.length)]);
+      setMedia([
+        ...media,
+        ...selected.slice(0, MAX_MEDIA - media.length - onePostMedia.length),
+      ]);
       const currentCount =
-        media.length + selected.slice(0, MAX_MEDIA - media.length).length;
-      if (currentCount == MAX_MEDIA) {
+        media.length +
+        onePostMedia.length +
+        selected.slice(0, MAX_MEDIA - media.length - onePostMedia.length)
+          .length;
+      if (currentCount >= MAX_MEDIA) {
         setSearchMedia([
+          ...onePostMedia,
           ...media,
-          ...selected.slice(0, MAX_MEDIA - media.length),
+          ...selected.slice(0, MAX_MEDIA - media.length - onePostMedia.length),
         ]);
       } else {
         setSearchMedia([
+          ...onePostMedia,
           ...media,
-          ...selected.slice(0, MAX_MEDIA - media.length),
+          ...selected.slice(0, MAX_MEDIA - media.length - onePostMedia.length),
           {mime: 'plus'},
         ]);
       }
@@ -147,7 +124,14 @@ const CreatePost = ({navigation, route}) => {
   const renderItem = ({item}) => (
     <View style={styles.mediaItem}>
       {item.mime.startsWith('video') ? (
-        <Text style={styles.videoTag}>🎥</Text>
+        // <Text style={styles.videoTag}>🎥</Text>
+        <Video
+          source={{uri: item.path}}
+          style={styles.image}
+          resizeMode="cover"
+          repeat
+          paused={true}
+        />
       ) : item.mime.startsWith('plus') ? (
         <TouchableOpacity style={styles.addMedia} onPress={pickMedia}>
           <Text style={styles.addIcon}>＋</Text>

@@ -10,6 +10,8 @@ import {
   FlatList,
   ScrollView,
   Platform,
+  ActionSheetIOS,
+  Alert,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -24,8 +26,14 @@ import FeedPostMedia from './FeedPostMedia';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const SocialProfileScreen = ({navigation}) => {
-  const {userInfo, myPostList, getMyPostList, updateLike, setMyPostList} =
-    useContext(GlobalContext);
+  const {
+    userInfo,
+    myPostList,
+    getMyPostList,
+    updateLike,
+    setMyPostList,
+    deletePost,
+  } = useContext(GlobalContext);
   const [selectedPost, setSelectedPost] = useState({});
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
     useState(false);
@@ -107,6 +115,64 @@ const SocialProfileScreen = ({navigation}) => {
       return (count / 1_000).toFixed(0).replace(/\.0$/, '') + 'K';
     }
     return count.toString();
+  };
+
+  const onEditPost = async item => {
+    let selectMedia = [];
+    if (item?.media) {
+      selectMedia = item.media.map(mediaItem => ({
+        ...mediaItem,
+        path: postImageRootURL + mediaItem.name,
+      }));
+    }
+    navigation.replace('CreatePost', {onePost: {...item, media: selectMedia}});
+  };
+
+  const onDeletePost = async (id, isMyPost = true) => {
+    try {
+      await deletePost({
+        id,
+        isMyPost,
+      });
+      commentSheetRef.current?.close();
+      setSelectPostModalVisibleStatus(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handlePostEditPress = item => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Cancel', 'Edit', 'Delete'],
+          destructiveButtonIndex: 2,
+          cancelButtonIndex: 0,
+        },
+        buttonIndex => {
+          if (buttonIndex === 1) {
+            onEditPost(item);
+          } else if (buttonIndex === 2) {
+            onDeletePost(item._id);
+          }
+        },
+      );
+    } else {
+      Alert.alert(
+        'Comment Options',
+        '',
+        [
+          {text: 'Edit', onPress: () => onEditPost(item)},
+          {
+            text: 'Delete',
+            onPress: () => onDeletePost(item._id),
+            style: 'destructive',
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ],
+        {cancelable: true},
+      );
+    }
   };
 
   const renderItem = ({item, index}) => {
@@ -197,6 +263,14 @@ const SocialProfileScreen = ({navigation}) => {
               <FontAwesome
                 size={fontPixel(20)}
                 name={'share-square-o'}
+                color={'black'}
+                style={{paddingHorizontal: heightPixel(8)}}
+              />
+            </View>
+            <View style={styles.columnCenterStyle}>
+              <FontAwesome
+                size={fontPixel(20)}
+                name={'edit'}
                 color={'black'}
                 style={{paddingHorizontal: heightPixel(8)}}
               />
@@ -508,6 +582,21 @@ const SocialProfileScreen = ({navigation}) => {
                   <FontAwesome
                     size={fontPixel(30)}
                     name={'share-square-o'}
+                    color={'black'}
+                    style={{paddingHorizontal: heightPixel(15)}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={styles.columnCenterStyle}
+                  onPress={() => {
+                    // if (selectedPost.userid._id !== profile._id) {
+                    handlePostEditPress(selectedPost);
+                    // }
+                  }}>
+                  <FontAwesome
+                    size={fontPixel(30)}
+                    name={'edit'}
                     color={'black'}
                     style={{paddingHorizontal: heightPixel(15)}}
                   />

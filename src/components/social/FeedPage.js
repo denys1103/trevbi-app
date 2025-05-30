@@ -10,6 +10,9 @@ import {
   FlatList,
   ScrollView,
   RefreshControl,
+  ActionSheetIOS,
+  Alert,
+  Platform,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -36,6 +39,7 @@ const FeedPage = ({navigation, route}) => {
     getUserPostList,
     followRequest,
     getUserData,
+    deletePost,
   } = useContext(GlobalContext);
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
     useState(false);
@@ -108,6 +112,64 @@ const FeedPage = ({navigation, route}) => {
           ),
         );
       }
+    }
+  };
+
+  const onEditPost = async item => {
+    let selectMedia = [];
+    if (item?.media) {
+      selectMedia = item.media.map(mediaItem => ({
+        ...mediaItem,
+        path: postImageRootURL + mediaItem.name,
+      }));
+    }
+    navigation.replace('CreatePost', {onePost: {...item, media: selectMedia}});
+  };
+
+  const onDeletePost = async (id, isMyPost = true) => {
+    try {
+      await deletePost({
+        id,
+        isMyPost,
+      });
+      commentSheetRef.current?.close();
+      setSelectPostModalVisibleStatus(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handlePostEditPress = item => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Cancel', 'Edit', 'Delete'],
+          destructiveButtonIndex: 2,
+          cancelButtonIndex: 0,
+        },
+        buttonIndex => {
+          if (buttonIndex === 1) {
+            onEditPost(item);
+          } else if (buttonIndex === 2) {
+            onDeletePost(item._id, false);
+          }
+        },
+      );
+    } else {
+      Alert.alert(
+        'Comment Options',
+        '',
+        [
+          {text: 'Edit', onPress: () => onEditPost(item)},
+          {
+            text: 'Delete',
+            onPress: () => onDeletePost(item._id, false),
+            style: 'destructive',
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ],
+        {cancelable: true},
+      );
     }
   };
 
@@ -468,6 +530,21 @@ const FeedPage = ({navigation, route}) => {
                       style={{paddingHorizontal: heightPixel(15)}}
                     />
                   </TouchableOpacity>
+                  {item.userid._id == profile._id && (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      style={styles.columnCenterStyle}
+                      onPress={() => {
+                        handlePostEditPress(item);
+                      }}>
+                      <FontAwesome
+                        size={fontPixel(30)}
+                        name={'edit'}
+                        color={'black'}
+                        style={{paddingHorizontal: heightPixel(15)}}
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             );
@@ -626,6 +703,21 @@ const FeedPage = ({navigation, route}) => {
                     style={{paddingHorizontal: heightPixel(15)}}
                   />
                 </TouchableOpacity>
+                {selectedPost.userid._id == profile._id && (
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    style={styles.columnCenterStyle}
+                    onPress={() => {
+                      handlePostEditPress(selectedPost);
+                    }}>
+                    <FontAwesome
+                      size={fontPixel(30)}
+                      name={'edit'}
+                      color={'black'}
+                      style={{paddingHorizontal: heightPixel(15)}}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
               {selectedPost.title && (
                 <Text

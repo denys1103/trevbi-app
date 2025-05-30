@@ -895,6 +895,36 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const deletePost = async (...postInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/del-post', {...postInfo});
+
+      if (data.success) {
+        const {isMyPost} = postInfo[0];
+        if (isMyPost) {
+          setMyPostList(data.postList);
+        } else {
+          setPostList(data.postList);
+        }
+        setIsLoading(false);
+      } else {
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -967,6 +997,7 @@ export const GlobalContextProvider = ({children}) => {
         deleteComment,
         updateComment,
         updateCommentLike,
+        deletePost,
         showModal,
         hideModal,
       }}>
