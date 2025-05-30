@@ -30,26 +30,10 @@ const RecipesHistory = ({navigation}) => {
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const {getRecipeList, deleteRecipe} = useContext(GlobalContext);
-  const [search, setSearch] = useState('');
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const fetchRecipesHistory = async () => {
     try {
       const validEntries = await getRecipeList();
-
-      // const historyEntries = await Promise.all(
-      //   validEntries.map(async entry => {
-      //     const recipeText = entry.text;
-      //     const extractedText = recipeText.split(
-      //       'the ingredients detected in your photo.',
-      //     )[1];
-      //     const textPart = extractedText ? extractedText.slice(0, 100) : '';
-      //     let cleanedTextPart = textPart.trim().replace(/\s*\n\s*/g, '');
-
-      //     return {...entry, textPart: cleanedTextPart};
-      //   }),
-      // );
-
       setHistoryData(validEntries);
       setSearchHistoryData(validEntries);
     } catch (error) {
@@ -158,6 +142,18 @@ const RecipesHistory = ({navigation}) => {
               </Text>
             </View>
           </View>
+          <Image
+            style={{
+              width: heightPixel(40),
+              height: heightPixel(40),
+              resizeMode: 'cover',
+            }}
+            source={
+              item.cookbook
+                ? require('../../../assets/images/cookbook_active.png')
+                : require('../../../assets/images/cookbook.png')
+            }
+          />
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
@@ -173,22 +169,6 @@ const RecipesHistory = ({navigation}) => {
       </TouchableOpacity>
     </View>
   );
-
-  const searchHistory = text => {
-    setSearch(text);
-    if (text) {
-      const newData = historyData.filter(item => {
-        const itemData = item.textPart
-          ? item.textPart.toUpperCase()
-          : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setSearchHistoryData(newData);
-    } else {
-      setSearchHistoryData(historyData);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -229,7 +209,6 @@ const RecipesHistory = ({navigation}) => {
           data={searchHistoryData}
           keyExtractor={(item, index) => `${item._id}`}
           renderItem={renderItem}
-          // contentContainerStyle={styles.list}
           ListEmptyComponent={
             <Text allowFontScaling={false} style={styles.emptyMessage}>
               No history available
@@ -297,31 +276,6 @@ const RecipesHistory = ({navigation}) => {
                   AI RECIPES
                 </Text>
               </TouchableOpacity>
-              {/* <View style={styles.checkboxContainer}>
-                <CheckBox
-                  disabled={false}
-                  value={toggleCheckBox}
-                  onValueChange={newValue => setToggleCheckBox(newValue)}
-                  tintColor={'white'}
-                  tintColors={'white'}
-                  style={
-                    Platform.OS === 'ios'
-                      ? styles.checkbox
-                      : styles.checkboxAndroid
-                  }
-                  boxType={'square'}
-                />
-                <Text
-                  allowFontScaling={false}
-                  style={[
-                    styles.label,
-                    {
-                      fontFamily: 'LEMONMILK-Light',
-                    },
-                  ]}>
-                  DON'T SHOW THIS SCREEN AGAIN
-                </Text>
-              </View> */}
             </View>
           </ImageBackground>
         </View>
@@ -333,10 +287,8 @@ const RecipesHistory = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingVertical: heightPixel(20),
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    // alignItems: 'center',
   },
   image: {
     width: heightPixel(60),

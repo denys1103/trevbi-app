@@ -894,7 +894,11 @@ const FeedPage = ({navigation, route}) => {
                   activeOpacity={0.5}
                   style={styles.postBtnStyle}
                   onPress={() => {
-                    // navigation.replace('MenuList');
+                    navigation.replace('CookbookPage', {
+                      userid: selectedUser._id,
+                      userAvatar: selectedUser.avatar,
+                      userName: selectedUser.fullname,
+                    });
                   }}>
                   <Image
                     style={styles.ico}

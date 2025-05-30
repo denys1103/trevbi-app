@@ -420,7 +420,11 @@ const SocialProfileScreen = ({navigation}) => {
                   activeOpacity={0.5}
                   style={styles.postBtnStyle}
                   onPress={() => {
-                    // navigation.replace('MenuList');
+                    navigation.replace('CookbookPage', {
+                      userid: profile._id,
+                      userAvatar: profile.avatar,
+                      userName: profile.fullname,
+                    });
                   }}>
                   <Image
                     style={styles.ico}

@@ -32,7 +32,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
     item.servings ? item.servings.toString() : '',
   );
   const [cookTime, setCookTime] = useState(item.cookTime ? item.cookTime : '');
-  const {uploadRecipeImg, updateRecipeData, showModal} =
+  const {uploadRecipeImg, updateRecipeData, showModal, cookbookRequest} =
     useContext(GlobalContext);
   const [editRecipeText, setEditRecipeText] = useState(null);
   const loadData = async () => {
@@ -185,31 +185,70 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    paddingBottom: heightPixel(5),
                   }}>
-                  <MaterialCommunityIcons
-                    size={fontPixel(24)}
-                    name={'account-supervisor-outline'}
-                    style={{color: 'black'}}
-                  />
-                  <Text
-                    allowFontScaling={false}
-                    style={styles.recipeServingsStyle}
-                    numberOfLines={1}>
-                    {servings}
-                  </Text>
-                  <MaterialCommunityIcons
-                    size={fontPixel(24)}
-                    name={'clock-time-three-outline'}
-                    style={{color: 'black', paddingLeft: heightPixel(5)}}
-                  />
-                  <Text
-                    allowFontScaling={false}
-                    style={styles.recipeServingsStyle}
-                    numberOfLines={1}>
-                    {cookTime}
-                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <MaterialCommunityIcons
+                      size={fontPixel(24)}
+                      name={'account-supervisor-outline'}
+                      style={{color: 'black'}}
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      style={styles.recipeServingsStyle}
+                      numberOfLines={1}>
+                      {servings}
+                    </Text>
+                    <MaterialCommunityIcons
+                      size={fontPixel(24)}
+                      name={'clock-time-three-outline'}
+                      style={{color: 'black', paddingLeft: heightPixel(5)}}
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      style={styles.recipeServingsStyle}
+                      numberOfLines={1}>
+                      {cookTime}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={async () => {
+                      const temp_recipe = {};
+                      temp_recipe.recipeId = item._id;
+                      if (item.cookbook) {
+                        temp_recipe.status = 0;
+                        const recipeList = await cookbookRequest(temp_recipe);
+                        item.cookbook = 0;
+                        setRecipes(recipeList);
+                      } else {
+                        temp_recipe.status = 1;
+                        const recipeList = await cookbookRequest(temp_recipe);
+                        item.cookbook = 1;
+                        setRecipes(recipeList);
+                      }
+                    }}>
+                    <Image
+                      style={{
+                        width: heightPixel(30),
+                        height: heightPixel(30),
+                        resizeMode: 'cover',
+                      }}
+                      source={
+                        item.cookbook
+                          ? require('../../../assets/images/cookbook_active.png')
+                          : require('../../../assets/images/cookbook.png')
+                      }
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
               <Image

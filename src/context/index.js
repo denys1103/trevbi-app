@@ -369,6 +369,34 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const getUserRecipeList = async userid => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/get-userrecipes', {userid});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.recipes;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return [];
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return [];
+    }
+  };
+
   const deleteRecipe = async recipeId => {
     setIsLoading(true);
     if (!isConnected) {
@@ -925,6 +953,36 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const cookbookRequest = async (...recipeInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/cookbook-request', {
+        ...recipeInfo,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.recipes;
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+        setError(null);
+        return [];
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return [];
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -975,6 +1033,7 @@ export const GlobalContextProvider = ({children}) => {
         getFriendList,
         saveRecipe,
         getRecipeList,
+        getUserRecipeList,
         deleteRecipe,
         uploadRecipeImg,
         updateRecipeData,
@@ -998,6 +1057,7 @@ export const GlobalContextProvider = ({children}) => {
         updateComment,
         updateCommentLike,
         deletePost,
+        cookbookRequest,
         showModal,
         hideModal,
       }}>
