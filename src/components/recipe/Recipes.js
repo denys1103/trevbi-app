@@ -20,7 +20,7 @@ import {
 } from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CheckBox from '@react-native-community/checkbox';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ViewDetailsComponent from './ViewDetails';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -79,11 +79,13 @@ const RecipesHistory = ({navigation}) => {
 
   if (selectedItem) {
     return (
-      <ViewDetailsComponent
-        item={selectedItem}
-        onGoBack={goBackToHistory}
-        setRecipes={setSearchHistoryData}
-      />
+      <GestureHandlerRootView style={{flex: 1}}>
+        <ViewDetailsComponent
+          item={selectedItem}
+          onGoBack={goBackToHistory}
+          setRecipes={setSearchHistoryData}
+        />
+      </GestureHandlerRootView>
     );
   }
 

@@ -19,6 +19,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {GlobalContext} from '../../context';
+import FullScreenImageViewer from './FullScreenImageViewer';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
@@ -35,6 +36,10 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
   const {uploadRecipeImg, updateRecipeData, showModal, cookbookRequest} =
     useContext(GlobalContext);
   const [editRecipeText, setEditRecipeText] = useState(null);
+  const [viewerVisible, setViewerVisible] = useState(false);
+  const handleImagePress = () => {
+    setViewerVisible(true);
+  };
   const loadData = async () => {
     try {
       setLoading(false);
@@ -251,16 +256,18 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              <Image
-                source={
-                  recipeImg
-                    ? {
-                        uri: recipeImageRootURL + recipeImg,
-                      }
-                    : require('../../../assets/images/no_img.jpg')
-                }
-                style={styles.capturedImage}
-              />
+              <TouchableOpacity onPress={handleImagePress}>
+                <Image
+                  source={
+                    recipeImg
+                      ? {
+                          uri: recipeImageRootURL + recipeImg,
+                        }
+                      : require('../../../assets/images/no_img.jpg')
+                  }
+                  style={styles.capturedImage}
+                />
+              </TouchableOpacity>
               {recipeResult && (
                 <ScrollView
                   contentContainerStyle={{
@@ -393,6 +400,12 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
             </View>
           </KeyboardAvoidingView>
         </ScrollView>
+      )}
+      {viewerVisible && (
+        <FullScreenImageViewer
+          uri={recipeImageRootURL + recipeImg}
+          onClose={() => setViewerVisible(false)}
+        />
       )}
     </SafeAreaView>
   );
