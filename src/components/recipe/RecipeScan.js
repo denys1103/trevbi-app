@@ -12,8 +12,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   ScrollView,
-  Linking,
-  FlatList,
+  Switch,
   Dimensions,
   Keyboard,
 } from 'react-native';
@@ -63,6 +62,7 @@ const RecipeScanScreen = ({navigation}) => {
   const [recipeId, setRecipeId] = useState(null);
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
   const {selectedDiets, selectedMeal, saveRecipe} = useContext(GlobalContext);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   const device = useCameraDevice('back', {
     physicalDevices: [
@@ -188,8 +188,9 @@ const RecipeScanScreen = ({navigation}) => {
             formData.append('diets', selectedDiets);
             formData.append('meal', selectedMeal);
             formData.append('ingredients', recipeIngredients);
+            formData.append('useAI', isEnabled ? 1 : 0);
 
-            const response = await client.post('/makeMealRecipeV3', formData, {
+            const response = await client.post('/makeMealRecipeV4', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
@@ -248,6 +249,10 @@ const RecipeScanScreen = ({navigation}) => {
     }
   };
 
+  const toggleSwitch = () => {
+    setIsEnabled(previousState => !previousState);
+  };
+
   const resetScan = () => {
     setCapturedPhoto(null);
     setIsScanning(true);
@@ -257,6 +262,7 @@ const RecipeScanScreen = ({navigation}) => {
     setRecipeResult(null);
     setRecipeResultImg(null);
     setRecipeId(null);
+    setIsEnabled(false);
   };
 
   if (!hasPermission) {
@@ -342,6 +348,20 @@ const RecipeScanScreen = ({navigation}) => {
                       source={{uri: capturedPhoto}}
                       style={styles.capturedImage}
                     />
+                    <View style={styles.switchBoxContent}>
+                      <Switch
+                        trackColor={{false: '#767577', true: '#61a14866'}}
+                        thumbColor={isEnabled ? '#61a148' : '#ffffff'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                      />
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.switchTxtStyle}>
+                        With an AI-generated image 🤖
+                      </Text>
+                    </View>
                     <View style={styles.recipeIngredientsViewStyle}>
                       <Text
                         allowFontScaling={false}
@@ -834,6 +854,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  switchBoxContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  switchTxtStyle: {
+    fontSize: fontPixel(18),
   },
 });
 
