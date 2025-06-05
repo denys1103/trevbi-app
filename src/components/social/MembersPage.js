@@ -12,20 +12,29 @@ import {
   RefreshControl,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {SearchBar} from '@rneui/themed';
 import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const MembersPage = ({navigation, route}) => {
   const {userid, userAvatar, userName, isMembersActive} = route?.params || {};
-  const {userInfo, followRequest, getUserCrewList, getUserMemberList} =
-    useContext(GlobalContext);
+  const {
+    userInfo,
+    followRequest,
+    getUserCrewList,
+    getUserMemberList,
+    getUserList,
+    userList,
+  } = useContext(GlobalContext);
   const [activeCrewTab, setActiveCrewTab] = useState(
     isMembersActive ? false : true,
   );
-  const [selectedUser, setSelectedUser] = useState({});
   const [memberList, setMemberList] = useState([]);
   const [refreshingUsers, setRefreshingUsers] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const profile = userInfo.user;
 
   useEffect(() => {
@@ -42,7 +51,22 @@ const MembersPage = ({navigation, route}) => {
       }
     }
     fetchData();
+    getUserList();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setIsSearching(false);
+      setFilteredUsers([]);
+    } else {
+      const lower = searchQuery.toLowerCase();
+      const results = userList.filter(user =>
+        user.fullname.toLowerCase().includes(lower),
+      );
+      setFilteredUsers(results);
+      setIsSearching(true);
+    }
+  }, [searchQuery, userList]);
 
   const fetchUsers = async () => {
     setRefreshingUsers(true);
@@ -56,6 +80,8 @@ const MembersPage = ({navigation, route}) => {
     }
     setRefreshingUsers(false);
   };
+
+  const dataToShow = isSearching ? filteredUsers : memberList;
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -90,6 +116,22 @@ const MembersPage = ({navigation, route}) => {
             Back
           </Text>
         </TouchableOpacity> */}
+        <View style={{paddingHorizontal: '10%', paddingTop: heightPixel(10)}}>
+          <SearchBar
+            placeholder="Search User"
+            onChangeText={setSearchQuery}
+            platform={Platform.OS === 'ios' ? 'ios' : 'android'}
+            containerStyle={{
+              borderRadius: heightPixel(20),
+              marginBottom: heightPixel(10),
+            }}
+            inputContainerStyle={{borderRadius: heightPixel(20)}}
+            searchIcon={Platform.OS === 'ios' ? {name: 'search'} : null}
+            clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
+            value={searchQuery}
+            allowFontScaling={false}
+          />
+        </View>
         <TouchableOpacity
           activeOpacity={0.5}
           style={styles.overlay}
@@ -124,59 +166,65 @@ const MembersPage = ({navigation, route}) => {
             source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
           />
         </TouchableOpacity>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical: heightPixel(10),
-          }}>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={
-                activeCrewTab ? styles.postBtnActiveStyle : styles.postBtnStyle
-              }
-              onPress={async () => {
-                setActiveCrewTab(true);
-                const id = userid ?? profile._id;
-                const users = await getUserCrewList(id);
-                setMemberList(users);
-              }}>
-              <Image
-                style={styles.ico}
-                source={require('../../../assets/images/crew_ico.png')}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {` Follow `}
-            </Text>
+        {!isSearching && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: heightPixel(10),
+            }}>
+            <View style={styles.columnCenterStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={
+                  activeCrewTab
+                    ? styles.postBtnActiveStyle
+                    : styles.postBtnStyle
+                }
+                onPress={async () => {
+                  setActiveCrewTab(true);
+                  const id = userid ?? profile._id;
+                  const users = await getUserCrewList(id);
+                  setMemberList(users);
+                }}>
+                <Image
+                  style={styles.ico}
+                  source={require('../../../assets/images/crew_ico.png')}
+                />
+              </TouchableOpacity>
+              <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                {` Follow `}
+              </Text>
+            </View>
+            <View style={styles.columnCenterStyle}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                style={
+                  !activeCrewTab
+                    ? styles.postBtnActiveStyle
+                    : styles.postBtnStyle
+                }
+                onPress={async () => {
+                  setActiveCrewTab(false);
+                  const id = userid ?? profile._id;
+                  const users = await getUserMemberList(id);
+                  setMemberList(users);
+                }}>
+                <Image
+                  style={styles.ico}
+                  source={require('../../../assets/images/members_ico.png')}
+                />
+              </TouchableOpacity>
+              <Text allowFontScaling={false} style={styles.postTitleStyle}>
+                {`Followers`}
+              </Text>
+            </View>
           </View>
-          <View style={styles.columnCenterStyle}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              style={
-                !activeCrewTab ? styles.postBtnActiveStyle : styles.postBtnStyle
-              }
-              onPress={async () => {
-                setActiveCrewTab(false);
-                const id = userid ?? profile._id;
-                const users = await getUserMemberList(id);
-                setMemberList(users);
-              }}>
-              <Image
-                style={styles.ico}
-                source={require('../../../assets/images/members_ico.png')}
-              />
-            </TouchableOpacity>
-            <Text allowFontScaling={false} style={styles.postTitleStyle}>
-              {`Followers`}
-            </Text>
-          </View>
-        </View>
+        )}
         <FlatList
           enableEmptySections={true}
-          data={memberList}
+          data={dataToShow}
           refreshControl={
             <RefreshControl
               refreshing={refreshingUsers}
@@ -276,6 +324,11 @@ const MembersPage = ({navigation, route}) => {
               </>
             );
           }}
+          ListEmptyComponent={
+            <Text allowFontScaling={false} style={styles.emptyMessage}>
+              No users found
+            </Text>
+          }
         />
       </View>
     </SafeAreaView>
@@ -300,7 +353,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   overlay: {
-    paddingTop: heightPixel(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -394,6 +446,12 @@ const styles = StyleSheet.create({
     width: heightPixel(60),
     height: heightPixel(60),
     borderRadius: heightPixel(30),
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    marginTop: heightPixel(20),
+    fontSize: fontPixel(18),
+    color: '#888',
   },
 });
 
