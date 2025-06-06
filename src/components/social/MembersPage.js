@@ -14,6 +14,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SearchBar} from '@rneui/themed';
 import {GlobalContext} from '../../context';
+import {SocketContext} from '../../context/socket';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
@@ -27,6 +28,8 @@ const MembersPage = ({navigation, route}) => {
     getUserList,
     userList,
   } = useContext(GlobalContext);
+  const {followSocketRequest, checkFollowSocketEvent} =
+    useContext(SocketContext);
   const [activeCrewTab, setActiveCrewTab] = useState(
     isMembersActive ? false : true,
   );
@@ -67,6 +70,10 @@ const MembersPage = ({navigation, route}) => {
       setIsSearching(true);
     }
   }, [searchQuery, userList]);
+
+  useEffect(() => {
+    followRequest('0');
+  }, [checkFollowSocketEvent]);
 
   const fetchUsers = async () => {
     setRefreshingUsers(true);
@@ -289,6 +296,7 @@ const MembersPage = ({navigation, route}) => {
                         onPress={async () => {
                           await followRequest(item._id, 1);
                           fetchUsers();
+                          followSocketRequest(item._id);
                         }}>
                         <Text
                           allowFontScaling={false}
@@ -307,6 +315,7 @@ const MembersPage = ({navigation, route}) => {
                         onPress={async () => {
                           await followRequest(item._id);
                           fetchUsers();
+                          followSocketRequest(item._id);
                         }}>
                         <Text
                           allowFontScaling={false}

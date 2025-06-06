@@ -21,6 +21,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Share from 'react-native-share';
 import {GlobalContext} from '../../context';
+import {SocketContext} from '../../context/socket';
 import {fontPixel, heightPixel, imageURL, postImageRootURL} from '../../config';
 import LinkText from './LinkText';
 import LinkPreviewCard from './LinkPreviewCard';
@@ -41,6 +42,8 @@ const FeedPage = ({navigation, route}) => {
     getUserData,
     deletePost,
   } = useContext(GlobalContext);
+  const {followSocketRequest, checkFollowSocketEvent} =
+    useContext(SocketContext);
   const [selectPostModalVisibleStatus, setSelectPostModalVisibleStatus] =
     useState(false);
   const [selectProfileModalVisibleStatus, setSelectProfileModalVisibleStatus] =
@@ -69,6 +72,10 @@ const FeedPage = ({navigation, route}) => {
     }
     getPostList();
   }, []);
+
+  useEffect(() => {
+    followRequest('0');
+  }, [checkFollowSocketEvent]);
 
   const fetchPosts = async () => {
     setRefreshingPosts(true);
@@ -787,13 +794,14 @@ const FeedPage = ({navigation, route}) => {
                   <TouchableOpacity
                     activeOpacity={0.5}
                     style={styles.joinCrewBtnStyle}
-                    onPress={() => {
+                    onPress={async () => {
                       if (selectedUser._id) {
                         if (profile.following.indexOf(selectedUser._id) < 0) {
-                          followRequest(selectedUser._id);
+                          await followRequest(selectedUser._id);
                         } else {
-                          followRequest(selectedUser._id, 1);
+                          await followRequest(selectedUser._id, 1);
                         }
+                        followSocketRequest(selectedUser._id);
                       }
                     }}>
                     <Text

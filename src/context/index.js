@@ -29,6 +29,7 @@ export const GlobalContextProvider = ({children}) => {
   const [friendList, setFriendList] = useState([]);
   const [myPostList, setMyPostList] = useState([]);
   const [postList, setPostList] = useState([]);
+  const [isLogin, setIsLogin] = useState(false);
   //modal setting start
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -106,6 +107,7 @@ export const GlobalContextProvider = ({children}) => {
         if (data.token) {
           client.defaults.headers.common.authorization = data.token;
         }
+        setIsLogin(true);
         setIsLoading(false);
       } else {
         setIsLoading(false);
@@ -128,6 +130,7 @@ export const GlobalContextProvider = ({children}) => {
       .then(res => {
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       })
@@ -163,6 +166,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -193,6 +197,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -221,6 +226,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -247,6 +253,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -273,6 +280,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -305,6 +313,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -333,6 +342,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -359,6 +369,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -387,6 +398,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -417,6 +429,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -450,6 +463,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return null;
@@ -481,6 +495,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -517,6 +532,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         setMyPostList([]);
@@ -552,6 +568,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         setMyPostList([]);
@@ -581,6 +598,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         setMyPostList([]);
@@ -608,6 +626,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -634,6 +653,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -662,6 +682,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return;
@@ -693,6 +714,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -719,6 +741,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -747,6 +770,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -775,6 +799,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -802,6 +827,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return {};
@@ -829,6 +855,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return {};
@@ -856,6 +883,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return {};
@@ -883,6 +911,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return {};
@@ -913,6 +942,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return;
@@ -945,6 +975,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
       }
@@ -973,6 +1004,7 @@ export const GlobalContextProvider = ({children}) => {
         showModal(data.message);
         AsyncStorage.removeItem('userInfo');
         setUserInfo({});
+        setIsLogin(false);
         setIsLoading(false);
         setError(null);
         return [];
@@ -991,6 +1023,7 @@ export const GlobalContextProvider = ({children}) => {
       userInfo = JSON.parse(userInfo);
 
       if (userInfo) {
+        setIsLogin(true);
         setUserInfo(userInfo);
         if (userInfo.token) {
           client.defaults.headers.common.authorization = userInfo.token;
@@ -1058,6 +1091,7 @@ export const GlobalContextProvider = ({children}) => {
         updateCommentLike,
         deletePost,
         cookbookRequest,
+        isLogin,
         showModal,
         hideModal,
       }}>
