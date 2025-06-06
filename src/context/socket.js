@@ -51,8 +51,10 @@ export const SocketContextProvider = ({
     }
   }, []);
 
-  const onFollowRequest = res => {
-    setCheckFollowSocketEvent(!checkFollowSocketEvent);
+  const onFollowRequest = () => {
+    setCheckFollowSocketEvent(prev => {
+      return !prev;
+    });
   };
 
   useEffect(() => {

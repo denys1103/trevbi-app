@@ -72,7 +72,14 @@ const MembersPage = ({navigation, route}) => {
   }, [searchQuery, userList]);
 
   useEffect(() => {
-    followRequest('0');
+    async function fetchMemberList() {
+      const id = userid ?? profile._id;
+      const users = await getUserMemberList(id);
+      setMemberList(users);
+    }
+    if (!activeCrewTab) {
+      fetchMemberList();
+    }
   }, [checkFollowSocketEvent]);
 
   const fetchUsers = async () => {

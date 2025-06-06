@@ -73,9 +73,9 @@ const FeedPage = ({navigation, route}) => {
     getPostList();
   }, []);
 
-  useEffect(() => {
-    followRequest('0');
-  }, [checkFollowSocketEvent]);
+  // useEffect(() => {
+  //   followRequest('0');
+  // }, [checkFollowSocketEvent]);
 
   const fetchPosts = async () => {
     setRefreshingPosts(true);
