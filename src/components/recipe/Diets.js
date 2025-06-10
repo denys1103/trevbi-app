@@ -302,16 +302,6 @@ const DietsScreen = ({navigation}) => {
       ],
     },
     {
-      name: 'DASH (Dietary Approaches to Stop Hypertension) Diet',
-      icon: '',
-      childs: [
-        {
-          name: 'Emphasizes fruits, vegetables, whole grains, low-fat dairy, and limits sodium intake.',
-          icon: '',
-        },
-      ],
-    },
-    {
       name: 'Flexitarian Diet',
       icon: '',
       childs: [
