@@ -35,6 +35,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app uses media access to enhance your experience.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used for network state information (required by system).</string>
 	<key>UIAppFonts</key>
