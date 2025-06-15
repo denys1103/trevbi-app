@@ -323,10 +323,10 @@ const FeedPage = ({navigation, route}) => {
   const handleShare = async post => {
     const postImage = post.photo ? postImageRootURL + post.photo : '';
     // const shareLink = `https://myapp.com/post/${post._id}`;
+    const shareLink = `https://www.trevbi.com/beta`;
     const shareOptions = {
       title: post.title ? post.title : '',
-      // message: `Take a look at this! \n\n${shareLink}`,
-      message: 'Take a look at this!',
+      message: `Take a look at this! \n\n${shareLink}`,
       url: postImage,
       failOnCancel: false,
     };

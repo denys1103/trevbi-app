@@ -5,9 +5,10 @@ import {
   Image,
   Dimensions,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 import Video from 'react-native-video';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {fontPixel, heightPixel, postImageRootURL} from '../../config';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -21,6 +22,7 @@ const FeedPostMedia = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVideoPaused, setIsVideoPaused] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const flatListRef = useRef();
 
   useEffect(() => {
@@ -48,6 +50,11 @@ const FeedPostMedia = ({
   };
 
   const toggleVideoPause = () => setIsVideoPaused(prev => !prev);
+  const toggleMute = () => {
+    if (isRepeat) {
+      setIsMuted(prev => !prev);
+    }
+  };
 
   const renderItem = ({item, index}) => {
     const isVideo = item.mime && item.mime.startsWith('video');
@@ -56,16 +63,30 @@ const FeedPostMedia = ({
     return (
       <View style={[styles.mediaContainer, {width}]}>
         {isVideo ? (
-          <Video
-            source={{uri: postImageRootURL + item.name}}
-            style={styles.media}
-            resizeMode="cover"
-            muted
-            repeat
-            paused={
-              !isRepeat ? !isCurrent || !isActive || isVideoPaused : false
-            }
-          />
+          <View style={styles.media}>
+            <Video
+              source={{uri: postImageRootURL + item.name}}
+              style={styles.media}
+              resizeMode="cover"
+              muted={isMuted}
+              ignoreSilentSwitch="ignore"
+              repeat
+              paused={
+                !isRepeat ? !isCurrent || !isActive || isVideoPaused : false
+              }
+            />
+            {isRepeat && (
+              <TouchableOpacity
+                onPress={toggleMute}
+                style={styles.muteIconContainer}>
+                <Ionicons
+                  name={isMuted ? 'volume-mute' : 'volume-high'}
+                  size={heightPixel(28)}
+                  color="#fff"
+                />
+              </TouchableOpacity>
+            )}
+          </View>
         ) : (
           <Image
             source={{uri: postImageRootURL + item.name}}
@@ -141,5 +162,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
     width: heightPixel(10),
     height: heightPixel(10),
+  },
+  muteIconContainer: {
+    position: 'absolute',
+    bottom: heightPixel(10),
+    right: heightPixel(10),
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: heightPixel(20),
+    padding: heightPixel(6),
   },
 });
