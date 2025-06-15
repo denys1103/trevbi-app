@@ -43,8 +43,8 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
   const loadData = async () => {
     try {
       setLoading(false);
-      setRecipeResult(item.text);
-      setEditRecipeText(`${item.text}\n\n\n\n\n`);
+      setRecipeResult(item.text.replace(/\*/g, ''));
+      setEditRecipeText(`${item.text.replace(/\*/g, '')}\n\n\n\n\n`);
       setLoading(true);
     } catch (error) {
       setLoading(true);
@@ -56,7 +56,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
     loadData();
   }, []);
 
-  const handlePhoneNumChange = text => {
+  const numericCheckHandle = text => {
     const numericText = text.replace(/[^0-9]/g, '');
     if (numericText.length <= 2) {
       setServings(numericText);
@@ -120,8 +120,8 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
     setTitle(item.title ? item.title : 'No Title');
     setServings(item.servings ? item.servings.toString() : '');
     setCookTime(item.cookTime ? item.cookTime : '');
-    setRecipeResult(item.text);
-    setEditRecipeText(`${item.text}\n\n\n\n\n`);
+    setRecipeResult(item.text.replace(/\*/g, ''));
+    setEditRecipeText(`${item.text.replace(/\*/g, '')}\n\n\n\n\n`);
   };
 
   const save = async () => {
@@ -360,7 +360,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes}) => {
                 allowFontScaling={false}
                 value={servings}
                 keyboardType="numeric"
-                onChangeText={handlePhoneNumChange}
+                onChangeText={numericCheckHandle}
               />
             </View>
             <View style={[styles.form, {paddingBottom: heightPixel(5)}]}>

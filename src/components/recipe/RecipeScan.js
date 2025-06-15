@@ -63,6 +63,7 @@ const RecipeScanScreen = ({navigation}) => {
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
   const {selectedDiets, selectedMeal, saveRecipe} = useContext(GlobalContext);
   const [isEnabled, setIsEnabled] = useState(false);
+  const [servings, setServings] = useState(1);
 
   const device = useCameraDevice('back', {
     physicalDevices: [
@@ -176,6 +177,7 @@ const RecipeScanScreen = ({navigation}) => {
       try {
         setOkBtnStatus(false);
         setModalVisibleStatus(false);
+        await new Promise(resolve => setTimeout(resolve, 200));
 
         if (capturedPhoto) {
           try {
@@ -189,8 +191,9 @@ const RecipeScanScreen = ({navigation}) => {
             formData.append('meal', selectedMeal);
             formData.append('ingredients', recipeIngredients);
             formData.append('useAI', isEnabled ? 1 : 0);
+            formData.append('servings', servings < 1 ? 1 : servings);
 
-            const response = await client.post('/makeMealRecipeV4', formData, {
+            const response = await client.post('/makeMealRecipeV5', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
@@ -253,6 +256,13 @@ const RecipeScanScreen = ({navigation}) => {
     setIsEnabled(previousState => !previousState);
   };
 
+  const numericCheckHandle = text => {
+    const numericText = text.replace(/[^0-9]/g, '');
+    if (numericText.length <= 3) {
+      setServings(numericText);
+    }
+  };
+
   const resetScan = () => {
     setCapturedPhoto(null);
     setIsScanning(true);
@@ -263,6 +273,7 @@ const RecipeScanScreen = ({navigation}) => {
     setRecipeResultImg(null);
     setRecipeId(null);
     setIsEnabled(false);
+    setServings(1);
   };
 
   if (!hasPermission) {
@@ -359,24 +370,24 @@ const RecipeScanScreen = ({navigation}) => {
                       <Text
                         allowFontScaling={false}
                         style={styles.switchTxtStyle}>
-                        With an AI-generated image 🤖
+                        Generate AI image
                       </Text>
                     </View>
                     <View style={styles.recipeIngredientsViewStyle}>
                       <Text
                         allowFontScaling={false}
                         style={styles.recipeIngredientsDescriptionStyle}>
-                        AI isn't perfect, but your recipe
+                        Ai isn't perfect but your recipe can be.
                       </Text>
                       <Text
                         allowFontScaling={false}
                         style={styles.recipeIngredientsDescriptionStyle}>
-                        can be. edit, add, or remove
+                        tweak the ingredients, adjust the
                       </Text>
                       <Text
                         allowFontScaling={false}
                         style={styles.recipeIngredientsDescriptionStyle}>
-                        ingredients to get it just right
+                        servings, and make it truly yours.
                       </Text>
                     </View>
                     <ScrollView
@@ -384,7 +395,7 @@ const RecipeScanScreen = ({navigation}) => {
                         paddingVertical: heightPixel(5),
                       }}
                       style={{
-                        height: SCREEN_HEIGHT - heightPixel(550),
+                        height: SCREEN_HEIGHT - heightPixel(610),
                       }}>
                       <Text
                         allowFontScaling={false}
@@ -407,6 +418,14 @@ const RecipeScanScreen = ({navigation}) => {
                             {ingredient}
                           </Text>
                         ))}
+                      <Text
+                        allowFontScaling={false}
+                        style={[
+                          styles.recipeItem,
+                          {paddingTop: heightPixel(6)},
+                        ]}>
+                        {`Servings: ${servings}`}
+                      </Text>
                     </ScrollView>
                     <View style={styles.scanGroupStyle}>
                       <TouchableOpacity
@@ -456,16 +475,19 @@ const RecipeScanScreen = ({navigation}) => {
                         paddingVertical: heightPixel(5),
                       }}
                       style={{
-                        maxHeight: height - heightPixel(100),
+                        maxHeight: height - heightPixel(150),
                       }}>
-                      {recipeResult.split('\n').map((recipeItem, index) => (
-                        <Text
-                          allowFontScaling={false}
-                          key={index}
-                          style={styles.recipeItem}>
-                          {recipeItem}
-                        </Text>
-                      ))}
+                      {recipeResult
+                        .replace(/\*/g, '')
+                        .split('\n')
+                        .map((recipeItem, index) => (
+                          <Text
+                            allowFontScaling={false}
+                            key={index}
+                            style={styles.recipeItem}>
+                            {recipeItem}
+                          </Text>
+                        ))}
                     </ScrollView>
                     <TouchableOpacity
                       activeOpacity={0.5}
@@ -658,6 +680,20 @@ const RecipeScanScreen = ({navigation}) => {
                   onChangeText={setEditRecipeIngredients}
                 />
               </View>
+              <View style={styles.modalServingsViewStyle}>
+                <Text
+                  allowFontScaling={false}
+                  style={[styles.modalContentsStyle]}>
+                  {`Servings: `}
+                </Text>
+                <TextInput
+                  allowFontScaling={false}
+                  style={styles.servingsInputStyle}
+                  keyboardType="numeric"
+                  value={servings}
+                  onChangeText={numericCheckHandle}
+                />
+              </View>
             </View>
           )}
         </GestureHandlerRootView>
@@ -740,7 +776,7 @@ const styles = StyleSheet.create({
   },
   capturedImage: {
     width: '100%',
-    height: heightPixel(200),
+    height: heightPixel(250),
   },
   recipeItem: {
     fontSize: fontPixel(14),
@@ -796,8 +832,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
+  modalServingsViewStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: heightPixel(5),
+  },
   modalContentsStyle: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Medium',
     color: 'black',
   },
   modalBtnsStyle: {
@@ -831,6 +874,18 @@ const styles = StyleSheet.create({
     height: heightPixel(320),
     padding: heightPixel(10),
   },
+  servingsInputStyle: {
+    borderColor: '#c0c0c0',
+    borderWidth: heightPixel(1),
+    borderRadius: heightPixel(5),
+    color: '#4b4b4b',
+    fontFamily: 'LEMONMILK-Regular',
+    fontSize: fontPixel(18),
+    paddingVertical: heightPixel(2),
+    paddingHorizontal: heightPixel(10),
+    textAlign: 'right',
+    width: SCREEN_WIDTH - heightPixel(200),
+  },
   recipeIngredientsViewStyle: {
     display: 'flex',
     width: '100%',
@@ -839,8 +894,8 @@ const styles = StyleSheet.create({
     paddingVertical: heightPixel(10),
   },
   recipeIngredientsDescriptionStyle: {
-    fontSize: fontPixel(18),
-    fontFamily: 'LEMONMILK-Regular',
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Medium',
     color: 'black',
   },
   logoStyle: {
@@ -859,9 +914,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: heightPixel(10),
   },
   switchTxtStyle: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(16),
+    fontFamily: 'LEMONMILK-Medium',
   },
 });
 

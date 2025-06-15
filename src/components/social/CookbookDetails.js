@@ -135,14 +135,17 @@ const CookbookDetails = ({item, onGoBack}) => {
                     maxHeight:
                       height - heightPixel(100) - SCREEN_WIDTH * 0.28 * 0.6,
                   }}>
-                  {recipeResult.split('\n').map((recipeItem, index) => (
-                    <Text
-                      allowFontScaling={false}
-                      key={index}
-                      style={styles.recipeItem}>
-                      {recipeItem}
-                    </Text>
-                  ))}
+                  {recipeResult
+                    .replace(/\*/g, '')
+                    .split('\n')
+                    .map((recipeItem, index) => (
+                      <Text
+                        allowFontScaling={false}
+                        key={index}
+                        style={styles.recipeItem}>
+                        {recipeItem}
+                      </Text>
+                    ))}
                 </ScrollView>
               )}
               <View
