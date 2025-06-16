@@ -63,7 +63,23 @@ const RecipeScanScreen = ({navigation}) => {
   const [editRecipeIngredients, setEditRecipeIngredients] = useState(null);
   const {selectedDiets, selectedMeal, saveRecipe} = useContext(GlobalContext);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [servings, setServings] = useState(1);
+  const [servings, setServings] = useState('1');
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const device = useCameraDevice('back', {
     physicalDevices: [
@@ -642,7 +658,15 @@ const RecipeScanScreen = ({navigation}) => {
           </View>
 
           {modalVisibleStatus && (
-            <View style={styles.modalStyle}>
+            <View
+              style={[
+                styles.modalStyle,
+                {
+                  marginTop: keyboardVisible
+                    ? SCREEN_HEIGHT * 0.05
+                    : SCREEN_HEIGHT * 0.2,
+                },
+              ]}>
               <View style={styles.scanGroupStyle}>
                 <TouchableOpacity
                   style={styles.makeRecipeButton}
@@ -703,7 +727,7 @@ const RecipeScanScreen = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  container: {flex: 1, alignItems: 'center'},
   textBlock: {flexDirection: 'row', flexWrap: 'wrap'},
   permissionContainer: {
     backgroundColor: '#9bba77',
