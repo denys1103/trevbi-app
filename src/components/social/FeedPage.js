@@ -906,6 +906,7 @@ const FeedPage = ({navigation, route}) => {
                       userid: selectedUser._id,
                       userAvatar: selectedUser.avatar,
                       userName: selectedUser.fullname,
+                      cookBookName: selectedUser.cookBookName,
                     });
                   }}>
                   <Image

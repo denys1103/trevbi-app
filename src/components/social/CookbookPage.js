@@ -24,7 +24,7 @@ import {
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const CookbookPage = ({navigation, route}) => {
-  const {userid, userAvatar, userName} = route?.params || {};
+  const {userid, userAvatar, userName, cookBookName} = route?.params || {};
   const {userInfo, getUserRecipeList} = useContext(GlobalContext);
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
@@ -58,11 +58,18 @@ const CookbookPage = ({navigation, route}) => {
 
   const goBackToHistory = () => {
     setSelectedItem(null);
+    fetchRecipesHistory();
   };
 
   if (selectedItem) {
     return (
-      <ViewDetailsComponent item={selectedItem} onGoBack={goBackToHistory} />
+      <ViewDetailsComponent
+        item={selectedItem}
+        cookBookName={cookBookName}
+        showEditAlert={userid == profile._id ? true : false}
+        navigation={navigation}
+        onGoBack={goBackToHistory}
+      />
     );
   }
 
@@ -89,37 +96,8 @@ const CookbookPage = ({navigation, route}) => {
               allowFontScaling={false}
               style={styles.recipeTitleStyle}
               numberOfLines={1}>
-              {item.title ? item.title : 'No title'}
+              {item.title ? item.title : 'No Title'}
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <MaterialCommunityIcons
-                size={fontPixel(24)}
-                name={'account-supervisor-outline'}
-                style={{color: 'black'}}
-              />
-              <Text
-                allowFontScaling={false}
-                style={styles.recipeServingsStyle}
-                numberOfLines={1}>
-                {item.servings ? item.servings.toString() : '0'}
-              </Text>
-              <MaterialCommunityIcons
-                size={fontPixel(24)}
-                name={'clock-time-three-outline'}
-                style={{color: 'black', paddingLeft: heightPixel(5)}}
-              />
-              <Text
-                allowFontScaling={false}
-                style={styles.recipeServingsStyle}
-                numberOfLines={1}>
-                {item.cookTime ? item.cookTime : ''}
-              </Text>
-            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -163,6 +141,12 @@ const CookbookPage = ({navigation, route}) => {
             source={require('../../../assets/images/TREVBI_SOCIAL_LOGO_small.png')}
           />
         </TouchableOpacity>
+        <Text
+          allowFontScaling={false}
+          style={styles.titleStyle}
+          numberOfLines={1}>
+          {cookBookName ? cookBookName : ''}
+        </Text>
         <FlatList
           data={searchHistoryData}
           keyExtractor={(item, index) => `${item._id}`}
@@ -233,35 +217,40 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   box: {
-    padding: heightPixel(8),
-    marginTop: 1,
-    marginBottom: 1,
     backgroundColor: 'white',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingBottom: heightPixel(10),
   },
   boxContent: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: heightPixel(10),
+    width: '100%',
   },
   image: {
-    width: heightPixel(60),
-    height: heightPixel(60),
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
+    resizeMode: 'cover',
   },
   recipeTitleStyle: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(16),
     color: 'black',
     fontFamily: 'LEMONMILK-Medium',
+    paddingVertical: heightPixel(10),
   },
   recipeServingsStyle: {
     fontSize: fontPixel(16),
     color: 'black',
     fontFamily: 'LEMONMILK-Light',
     paddingHorizontal: heightPixel(5),
+  },
+  titleStyle: {
+    fontSize: fontPixel(18),
+    color: 'black',
+    fontFamily: 'LEMONMILK-Medium',
+    width: '100%',
+    textAlign: 'center',
+    paddingBottom: heightPixel(10),
   },
 });
 

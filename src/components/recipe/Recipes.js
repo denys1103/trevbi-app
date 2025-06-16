@@ -25,11 +25,18 @@ import ViewDetailsComponent from './ViewDetails';
 import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const RecipesHistory = ({navigation}) => {
+const RecipesHistory = ({navigation, route}) => {
+  const {selectitem} = route?.params || {};
   const [historyData, setHistoryData] = useState([]);
   const [searchHistoryData, setSearchHistoryData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const {getRecipeList, deleteRecipe} = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (selectitem?._id) {
+      setSelectedItem(selectitem);
+    }
+  }, [selectitem]);
 
   const fetchRecipesHistory = async () => {
     try {
@@ -75,6 +82,7 @@ const RecipesHistory = ({navigation}) => {
 
   const goBackToHistory = () => {
     setSelectedItem(null);
+    fetchRecipesHistory();
   };
 
   if (selectedItem) {

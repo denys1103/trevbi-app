@@ -289,6 +289,21 @@ export function Profile({setEditVisible, navigation}) {
             <View style={styles.box}>
               <SimpleLineIcons
                 color={'#7d7d7d'}
+                name="notebook"
+                size={fontPixel(32)}
+              />
+              <View style={styles.boxContent}>
+                <Text allowFontScaling={false} style={styles.label}>
+                  CookBook Name
+                </Text>
+                <Text allowFontScaling={false} style={styles.profileDataStyle}>
+                  {profile?.cookBookName ? profile.cookBookName : ''}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.box}>
+              <SimpleLineIcons
+                color={'#7d7d7d'}
                 name="lock"
                 size={fontPixel(32)}
               />

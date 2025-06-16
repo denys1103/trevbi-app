@@ -424,6 +424,7 @@ const SocialProfileScreen = ({navigation}) => {
                       userid: profile._id,
                       userAvatar: profile.avatar,
                       userName: profile.fullname,
+                      cookBookName: profile.cookBookName,
                     });
                   }}>
                   <Image

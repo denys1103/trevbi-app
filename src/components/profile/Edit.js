@@ -61,6 +61,9 @@ export function ProfileEdit({setEditVisible, navigation}) {
     profile.phone_num ? profile.phone_num : '',
   );
   const [bio, setBio] = useState(profile.bio ? profile.bio : '');
+  const [cookBookName, setCookBookName] = useState(
+    profile.cookBookName ? profile.cookBookName : '',
+  );
 
   const [genderValue, setGenderValue] = useState(
     profile.gender ? profile.gender : '0',
@@ -89,6 +92,7 @@ export function ProfileEdit({setEditVisible, navigation}) {
     temp_profile.birth = birth;
     temp_profile.phone_num = phone_num;
     temp_profile.bio = bio;
+    temp_profile.cookBookName = cookBookName;
     saveProfile(temp_profile);
   };
 
@@ -266,6 +270,16 @@ export function ProfileEdit({setEditVisible, navigation}) {
             style={styles.bioInputStyle}
             value={bio}
             onChangeText={setBio}
+          />
+          <Text allowFontScaling={false} style={styles.label}>
+            CookBook
+          </Text>
+          <TextInput
+            allowFontScaling={false}
+            style={styles.input}
+            placeholder="Name your cookbook"
+            value={cookBookName}
+            onChangeText={setCookBookName}
           />
           <Text allowFontScaling={false} style={styles.label}>
             Email address

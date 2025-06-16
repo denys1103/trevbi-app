@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,24 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  Platform,
+  ActionSheetIOS,
+  Alert,
 } from 'react-native';
 import {fontPixel, heightPixel, recipeImageRootURL} from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Share from 'react-native-share';
+import {GlobalContext} from '../../context';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const CookbookDetails = ({item, onGoBack}) => {
+const CookbookDetails = ({
+  item,
+  cookBookName,
+  showEditAlert,
+  navigation,
+  onGoBack,
+}) => {
   const {height, width, scale} = useWindowDimensions();
   const [recipeResult, setRecipeResult] = useState(null);
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
@@ -25,6 +36,7 @@ const CookbookDetails = ({item, onGoBack}) => {
     item.servings ? item.servings.toString() : '',
   );
   const [cookTime, setCookTime] = useState(item.cookTime ? item.cookTime : '');
+  const {cookbookRequest} = useContext(GlobalContext);
   const loadData = async () => {
     try {
       setRecipeResult(item.text);
@@ -36,6 +48,79 @@ const CookbookDetails = ({item, onGoBack}) => {
   useEffect(() => {
     loadData();
   }, []);
+
+  const onEditCookBook = async item => {
+    navigation.navigate('Menu', {
+      screen: 'Recipes',
+      params: {selectitem: item},
+    });
+  };
+
+  const onShareCookBook = async item => {
+    const recipeImageUrl = recipeImg ? recipeImageRootURL + recipeImg : '';
+    // const shareLink = `https://myapp.com/post/${post._id}`;
+    const shareLink = `https://www.trevbi.com/beta`;
+    const shareOptions = {
+      title: item.title ? item.title : '',
+      message: `Take a look at this! \n\n${shareLink}`,
+      url: recipeImageUrl,
+      failOnCancel: false,
+    };
+    try {
+      await Share.open(shareOptions);
+    } catch (error) {
+      console.log('Share error:', error);
+    }
+  };
+
+  const onDeleteCookBook = async id => {
+    try {
+      const temp_recipe = {};
+      temp_recipe.recipeId = id;
+      temp_recipe.status = 0;
+      await cookbookRequest(temp_recipe);
+      onGoBack();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCookBookEditPress = item => {
+    if (Platform.OS === 'ios') {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ['Cancel', 'Edit', 'Share', 'Delete'],
+          destructiveButtonIndex: 3,
+          cancelButtonIndex: 0,
+        },
+        buttonIndex => {
+          if (buttonIndex === 1) {
+            onEditCookBook(item);
+          } else if (buttonIndex === 2) {
+            onShareCookBook(item);
+          } else if (buttonIndex === 3) {
+            onDeleteCookBook(item._id);
+          }
+        },
+      );
+    } else {
+      Alert.alert(
+        'Options',
+        '',
+        [
+          {text: 'Edit', onPress: () => onEditCookBook(item)},
+          {text: 'Share', onPress: () => onShareCookBook(item)},
+          {
+            text: 'Delete',
+            onPress: () => onDeleteCookBook(item._id),
+            style: 'destructive',
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ],
+        {cancelable: true},
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -70,52 +155,36 @@ const CookbookDetails = ({item, onGoBack}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.boxContent}>
+              {showEditAlert ? (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.boxContent}
+                  onPress={() => {
+                    handleCookBookEditPress(item);
+                  }}>
+                  <Text
+                    allowFontScaling={false}
+                    style={[
+                      styles.titleStyle,
+                      {flex: 1, paddingLeft: heightPixel(20)},
+                    ]}
+                    numberOfLines={1}>
+                    {cookBookName ? cookBookName : ''}
+                  </Text>
+                  <Entypo
+                    size={fontPixel(18)}
+                    name={'dots-three-vertical'}
+                    style={styles.iconStyle}
+                  />
+                </TouchableOpacity>
+              ) : (
                 <Text
                   allowFontScaling={false}
-                  style={styles.recipeTitleStyle}
+                  style={styles.titleStyle}
                   numberOfLines={1}>
-                  {title}
+                  {cookBookName ? cookBookName : ''}
                 </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'flex-end',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    paddingBottom: heightPixel(5),
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <MaterialCommunityIcons
-                      size={fontPixel(24)}
-                      name={'account-supervisor-outline'}
-                      style={{color: 'black'}}
-                    />
-                    <Text
-                      allowFontScaling={false}
-                      style={styles.recipeServingsStyle}
-                      numberOfLines={1}>
-                      {servings}
-                    </Text>
-                    <MaterialCommunityIcons
-                      size={fontPixel(24)}
-                      name={'clock-time-three-outline'}
-                      style={{color: 'black', paddingLeft: heightPixel(5)}}
-                    />
-                    <Text
-                      allowFontScaling={false}
-                      style={styles.recipeServingsStyle}
-                      numberOfLines={1}>
-                      {cookTime}
-                    </Text>
-                  </View>
-                </View>
-              </View>
+              )}
               <Image
                 source={
                   recipeImg
@@ -126,6 +195,12 @@ const CookbookDetails = ({item, onGoBack}) => {
                 }
                 style={styles.capturedImage}
               />
+              <Text
+                allowFontScaling={false}
+                style={styles.recipeTitleStyle}
+                numberOfLines={1}>
+                {title}
+              </Text>
               {recipeResult && (
                 <ScrollView
                   contentContainerStyle={{
@@ -179,7 +254,12 @@ const CookbookDetails = ({item, onGoBack}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
   scanPanelStyle: {
     padding: heightPixel(20),
     paddingTop: heightPixel(10),
@@ -214,13 +294,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   boxContent: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: heightPixel(10),
+    width: '100%',
+    position: 'relative',
   },
   recipeTitleStyle: {
-    fontSize: fontPixel(18),
+    fontSize: fontPixel(16),
     color: 'black',
     fontFamily: 'LEMONMILK-Medium',
     textAlign: 'center',
@@ -231,6 +312,17 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'LEMONMILK-Light',
     paddingHorizontal: heightPixel(5),
+  },
+  titleStyle: {
+    fontSize: fontPixel(18),
+    color: 'black',
+    fontFamily: 'LEMONMILK-Medium',
+    textAlign: 'center',
+    // flex: 1,
+  },
+  iconStyle: {
+    color: 'black',
+    marginLeft: heightPixel(10),
   },
 });
 
