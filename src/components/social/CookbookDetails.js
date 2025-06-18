@@ -30,7 +30,7 @@ const CookbookDetails = ({
   const {height, width, scale} = useWindowDimensions();
   const [recipeResult, setRecipeResult] = useState(null);
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
-  const [title, setTitle] = useState(item.title ? item.title : 'No Title');
+  const [title, setTitle] = useState(item.title ? item.title : '');
   const [recipeImg, setRecipeImg] = useState(item.img ? item.img : '');
   const [servings, setServings] = useState(
     item.servings ? item.servings.toString() : '',
@@ -180,7 +180,7 @@ const CookbookDetails = ({
               ) : (
                 <Text
                   allowFontScaling={false}
-                  style={styles.titleStyle}
+                  style={[styles.titleStyle, {paddingVertical: heightPixel(5)}]}
                   numberOfLines={1}>
                   {cookBookName ? cookBookName : ''}
                 </Text>
@@ -211,7 +211,7 @@ const CookbookDetails = ({
                       height - heightPixel(100) - SCREEN_WIDTH * 0.28 * 0.6,
                   }}>
                   {recipeResult
-                    .replace(/\*/g, '')
+                    .replace(/[*!]/g, '')
                     .split('\n')
                     .map((recipeItem, index) => (
                       <Text
@@ -299,6 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     position: 'relative',
+    paddingVertical: heightPixel(5),
   },
   recipeTitleStyle: {
     fontSize: fontPixel(16),
@@ -306,6 +307,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LEMONMILK-Medium',
     textAlign: 'center',
     width: '100%',
+    paddingVertical: heightPixel(5),
   },
   recipeServingsStyle: {
     fontSize: fontPixel(16),

@@ -316,7 +316,7 @@ export function Profile({setEditVisible, navigation}) {
                   value={isEnabled1}
                 />
                 <Text allowFontScaling={false} style={styles.profileDataStyle}>
-                  Lock - Unlock TREVBI Social
+                  Unlock - Lock TREVBI Social
                 </Text>
               </View>
             </View>

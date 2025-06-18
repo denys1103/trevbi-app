@@ -92,6 +92,7 @@ const RecipesHistory = ({navigation, route}) => {
           item={selectedItem}
           onGoBack={goBackToHistory}
           setRecipes={setSearchHistoryData}
+          navigation={navigation}
         />
       </GestureHandlerRootView>
     );
@@ -119,38 +120,9 @@ const RecipesHistory = ({navigation, route}) => {
             <Text
               allowFontScaling={false}
               style={styles.recipeTitleStyle}
-              numberOfLines={1}>
-              {item.title ? item.title : 'No title'}
+              numberOfLines={2}>
+              {item.title ? item.title : ''}
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <MaterialCommunityIcons
-                size={fontPixel(24)}
-                name={'account-supervisor-outline'}
-                style={{color: 'black'}}
-              />
-              <Text
-                allowFontScaling={false}
-                style={styles.recipeServingsStyle}
-                numberOfLines={1}>
-                {item.servings ? item.servings.toString() : '0'}
-              </Text>
-              <MaterialCommunityIcons
-                size={fontPixel(24)}
-                name={'clock-time-three-outline'}
-                style={{color: 'black', paddingLeft: heightPixel(5)}}
-              />
-              <Text
-                allowFontScaling={false}
-                style={styles.recipeServingsStyle}
-                numberOfLines={1}>
-                {item.cookTime ? item.cookTime : ''}
-              </Text>
-            </View>
           </View>
           <Image
             style={{
@@ -324,6 +296,7 @@ const styles = StyleSheet.create({
     fontSize: fontPixel(18),
     color: 'black',
     fontFamily: 'LEMONMILK-Medium',
+    width: SCREEN_WIDTH / 2,
   },
   recipeServingsStyle: {
     fontSize: fontPixel(16),

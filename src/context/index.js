@@ -322,7 +322,7 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
-  const saveRecipe = async recipeId => {
+  const saveRecipe = async (recipeId, recipeTitle) => {
     setIsLoading(true);
     if (!isConnected) {
       showModal('Check your internet connection.');
@@ -330,8 +330,9 @@ export const GlobalContextProvider = ({children}) => {
       return;
     }
     try {
-      const {data} = await client.post('/save-recipe', {
+      const {data} = await client.post('/save-recipeV2', {
         recipeId,
+        recipeTitle,
       });
 
       if (data.success) {

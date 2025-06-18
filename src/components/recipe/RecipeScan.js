@@ -65,6 +65,7 @@ const RecipeScanScreen = ({navigation}) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [servings, setServings] = useState('1');
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [recipeTitle, setRecipeTitle] = useState('');
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -209,7 +210,7 @@ const RecipeScanScreen = ({navigation}) => {
             formData.append('useAI', isEnabled ? 1 : 0);
             formData.append('servings', servings < 1 ? 1 : servings);
 
-            const response = await client.post('/makeMealRecipeV5', formData, {
+            const response = await client.post('/makeMealRecipeV6', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
@@ -219,26 +220,17 @@ const RecipeScanScreen = ({navigation}) => {
                 setRecipeId(response.data.results.recipeId);
               }
               if (response.data.results.recipeText) {
-                setRecipeResult(response.data.results.recipeText);
+                const recipeAllText = response.data.results.recipeText;
+                const recipeAllTextArr = recipeAllText
+                  .replace(/\*/g, '')
+                  .split('!');
+                const getRecipeTitle = recipeAllTextArr[0] || '';
+                const recipeContents = recipeAllTextArr.slice(1).join('!');
+                setRecipeTitle(getRecipeTitle);
+                setRecipeResult(recipeContents);
               }
               if (response.data.results.recipeImg) {
                 setRecipeResultImg(response.data.results.recipeImg);
-                // const photoPath = `${appDir}/recipe_img_${Date.now()}.jpg`;
-                // const recipeImageURl =
-                //   recipeImageRootURL + response.data.results.recipeImg;
-
-                // const downloadResult = await RNFS.downloadFile({
-                //   fromUrl: recipeImageURl,
-                //   toFile: photoPath,
-                // }).promise;
-
-                // if (downloadResult.statusCode === 200) {
-                //   const photoURI =
-                //     Platform.OS === 'ios' ? photoPath : `file://${photoPath}`;
-                //   setLocalRecipeResultImgUrl(photoURI);
-                // } else {
-                //   console.error('Download failed:', downloadResult.statusCode);
-                // }
               }
             } else {
               console.log('server error!');
@@ -262,7 +254,7 @@ const RecipeScanScreen = ({navigation}) => {
 
   const saveRecipeHandle = async () => {
     if (recipeId) {
-      await saveRecipe(recipeId);
+      await saveRecipe(recipeId, recipeTitle);
     } else {
       Alert.alert('Failed', 'Failed to save recipe.');
     }
@@ -290,6 +282,7 @@ const RecipeScanScreen = ({navigation}) => {
     setRecipeId(null);
     setIsEnabled(false);
     setServings(1);
+    setRecipeTitle('');
   };
 
   if (!hasPermission) {
@@ -493,17 +486,27 @@ const RecipeScanScreen = ({navigation}) => {
                       style={{
                         maxHeight: height - heightPixel(150),
                       }}>
-                      {recipeResult
-                        .replace(/\*/g, '')
-                        .split('\n')
-                        .map((recipeItem, index) => (
-                          <Text
-                            allowFontScaling={false}
-                            key={index}
-                            style={styles.recipeItem}>
-                            {recipeItem}
-                          </Text>
-                        ))}
+                      <Text allowFontScaling={false} style={styles.recipeItem}>
+                        {
+                          'Here’s a recipe based on the ingredients detected in your photo.\n\n'
+                        }
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={[
+                          styles.recipeItem,
+                          {fontFamily: 'LEMONMILK-Medium', color: 'black'},
+                        ]}>
+                        {recipeTitle}
+                      </Text>
+                      {recipeResult.split('\n').map((recipeItem, index) => (
+                        <Text
+                          allowFontScaling={false}
+                          key={index}
+                          style={styles.recipeItem}>
+                          {recipeItem}
+                        </Text>
+                      ))}
                     </ScrollView>
                     <TouchableOpacity
                       activeOpacity={0.5}

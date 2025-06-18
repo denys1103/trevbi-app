@@ -96,7 +96,7 @@ const CookbookPage = ({navigation, route}) => {
               allowFontScaling={false}
               style={styles.recipeTitleStyle}
               numberOfLines={1}>
-              {item.title ? item.title : 'No Title'}
+              {item.title ? item.title : ''}
             </Text>
           </View>
         </View>
