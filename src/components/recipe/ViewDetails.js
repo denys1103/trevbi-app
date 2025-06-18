@@ -69,7 +69,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes, navigation}) => {
                   Back
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => {
                   navigation.replace('EditRecipe', {
@@ -81,9 +81,39 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes, navigation}) => {
                   name={'edit'}
                   style={{color: '#063225'}}
                 />
+              </TouchableOpacity> */}
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={async () => {
+                  const temp_recipe = {};
+                  temp_recipe.recipeId = item._id;
+                  if (item.cookbook) {
+                    temp_recipe.status = 0;
+                    const recipeList = await cookbookRequest(temp_recipe);
+                    item.cookbook = 0;
+                    setRecipes(recipeList);
+                  } else {
+                    temp_recipe.status = 1;
+                    const recipeList = await cookbookRequest(temp_recipe);
+                    item.cookbook = 1;
+                    setRecipes(recipeList);
+                  }
+                }}>
+                <Image
+                  style={{
+                    width: heightPixel(30),
+                    height: heightPixel(30),
+                    resizeMode: 'cover',
+                  }}
+                  source={
+                    item.cookbook
+                      ? require('../../../assets/images/cookbook_active.png')
+                      : require('../../../assets/images/cookbook.png')
+                  }
+                />
               </TouchableOpacity>
             </View>
-            <View style={styles.boxContent}>
+            {/* <View style={styles.boxContent}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -123,7 +153,7 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes, navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </View> */}
             <TouchableOpacity onPress={handleImagePress}>
               <Image
                 source={

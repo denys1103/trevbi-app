@@ -5,7 +5,7 @@ import {MenuList} from './MenuList';
 import Feedback from './Feedback';
 import HowItWork from './HowItWork';
 import RecipesComponent from '../recipe/Recipes';
-import EditRecipeComponent from '../recipe/EditRecipeScreen';
+// import EditRecipeComponent from '../recipe/EditRecipeScreen';
 import HistoryComponent from '../scan/History';
 import {HeaderBackButton} from '@react-navigation/elements';
 
@@ -45,11 +45,11 @@ export function Menu() {
         component={RecipesComponent}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="EditRecipe"
         component={EditRecipeComponent}
         options={{headerShown: false}}
-      />
+      /> */}
       <Stack.Screen
         name="Profile"
         component={ProfileMenu}
