@@ -13,6 +13,7 @@ import {
 import {fontPixel, heightPixel, recipeImageRootURL} from '../../config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {GlobalContext} from '../../context';
 import FullScreenImageViewer from './FullScreenImageViewer';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
@@ -21,8 +22,9 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes, navigation}) => {
   const {height} = useWindowDimensions();
   const [recipeResult, setRecipeResult] = useState(null);
   const [recipeImg, setRecipeImg] = useState(item.img ? item.img : '');
-  const {cookbookRequest} = useContext(GlobalContext);
+  const {cookbookRequest, recipeToPost, isLoading} = useContext(GlobalContext);
   const [viewerVisible, setViewerVisible] = useState(false);
+  const [recipeTitle, setRecipeTitle] = useState(item.title ? item.title : '');
   const handleImagePress = () => {
     setViewerVisible(true);
   };
@@ -82,36 +84,62 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes, navigation}) => {
                   style={{color: '#063225'}}
                 />
               </TouchableOpacity> */}
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={async () => {
-                  const temp_recipe = {};
-                  temp_recipe.recipeId = item._id;
-                  if (item.cookbook) {
-                    temp_recipe.status = 0;
-                    const recipeList = await cookbookRequest(temp_recipe);
-                    item.cookbook = 0;
-                    setRecipes(recipeList);
-                  } else {
-                    temp_recipe.status = 1;
-                    const recipeList = await cookbookRequest(temp_recipe);
-                    item.cookbook = 1;
-                    setRecipes(recipeList);
-                  }
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingBottom: heightPixel(5),
                 }}>
-                <Image
-                  style={{
-                    width: heightPixel(30),
-                    height: heightPixel(30),
-                    resizeMode: 'cover',
-                  }}
-                  source={
-                    item.cookbook
-                      ? require('../../../assets/images/cookbook_active.png')
-                      : require('../../../assets/images/cookbook.png')
-                  }
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={{marginRight: heightPixel(20)}}
+                  onPress={() => {
+                    if (
+                      recipeImg &&
+                      recipeTitle &&
+                      recipeResult &&
+                      !isLoading
+                    ) {
+                      recipeToPost(recipeImg, recipeTitle, recipeResult);
+                    }
+                  }}>
+                  <Entypo
+                    size={fontPixel(34)}
+                    name={'circle-with-plus'}
+                    style={{color: '#063225'}}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={async () => {
+                    const temp_recipe = {};
+                    temp_recipe.recipeId = item._id;
+                    if (item.cookbook) {
+                      temp_recipe.status = 0;
+                      const recipeList = await cookbookRequest(temp_recipe);
+                      item.cookbook = 0;
+                      setRecipes(recipeList);
+                    } else {
+                      temp_recipe.status = 1;
+                      const recipeList = await cookbookRequest(temp_recipe);
+                      item.cookbook = 1;
+                      setRecipes(recipeList);
+                    }
+                  }}>
+                  <Image
+                    style={{
+                      width: heightPixel(30),
+                      height: heightPixel(30),
+                      resizeMode: 'cover',
+                    }}
+                    source={
+                      item.cookbook
+                        ? require('../../../assets/images/cookbook_active.png')
+                        : require('../../../assets/images/cookbook.png')
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
             {/* <View style={styles.boxContent}>
               <View
@@ -175,6 +203,22 @@ const ViewDetailsScreen = ({item, onGoBack, setRecipes, navigation}) => {
                   maxHeight:
                     height - heightPixel(100) - SCREEN_WIDTH * 0.28 * 0.6,
                 }}>
+                <Text
+                  allowFontScaling={false}
+                  style={[
+                    styles.recipeItem,
+                    {
+                      fontSize: fontPixel(16),
+                      fontFamily: 'LEMONMILK-Medium',
+                      color: 'black',
+                      textAlign: 'center',
+                      width: '100%',
+                      paddingVertical: heightPixel(5),
+                    },
+                  ]}
+                  numberOfLines={2}>
+                  {recipeTitle}
+                </Text>
                 {recipeResult.split('\n').map((recipeItem, index) => (
                   <Text
                     allowFontScaling={false}

@@ -210,7 +210,7 @@ const RecipeScanScreen = ({navigation}) => {
             formData.append('useAI', isEnabled ? 1 : 0);
             formData.append('servings', servings < 1 ? 1 : servings);
 
-            const response = await client.post('/makeMealRecipeV6', formData, {
+            const response = await client.post('/makeMealRecipeV7', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
@@ -219,15 +219,11 @@ const RecipeScanScreen = ({navigation}) => {
               if (response.data.results.recipeId) {
                 setRecipeId(response.data.results.recipeId);
               }
+              if (response.data.results.recipeTitle) {
+                setRecipeTitle(response.data.results.recipeTitle);
+              }
               if (response.data.results.recipeText) {
-                const recipeAllText = response.data.results.recipeText;
-                const recipeAllTextArr = recipeAllText
-                  .replace(/\*/g, '')
-                  .split('!');
-                const getRecipeTitle = recipeAllTextArr[0] || '';
-                const recipeContents = recipeAllTextArr.slice(1).join('!');
-                setRecipeTitle(getRecipeTitle);
-                setRecipeResult(recipeContents);
+                setRecipeResult(response.data.results.recipeText);
               }
               if (response.data.results.recipeImg) {
                 setRecipeResultImg(response.data.results.recipeImg);
@@ -281,7 +277,7 @@ const RecipeScanScreen = ({navigation}) => {
     setRecipeResultImg(null);
     setRecipeId(null);
     setIsEnabled(false);
-    setServings(1);
+    setServings('1');
     setRecipeTitle('');
   };
 
@@ -488,7 +484,7 @@ const RecipeScanScreen = ({navigation}) => {
                       }}>
                       <Text allowFontScaling={false} style={styles.recipeItem}>
                         {
-                          'Here’s a recipe based on the ingredients detected in your photo.\n\n'
+                          'Here’s a recipe based on the ingredients detected in your photo.\n'
                         }
                       </Text>
                       <Text
@@ -497,7 +493,7 @@ const RecipeScanScreen = ({navigation}) => {
                           styles.recipeItem,
                           {fontFamily: 'LEMONMILK-Medium', color: 'black'},
                         ]}>
-                        {recipeTitle}
+                        {recipeTitle} {'\n'}
                       </Text>
                       {recipeResult.split('\n').map((recipeItem, index) => (
                         <Text

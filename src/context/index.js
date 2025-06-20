@@ -1016,6 +1016,39 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const recipeToPost = async (imageName, title, note) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/recipeToPost', {
+        imageName,
+        title,
+        note,
+      });
+
+      if (data.success) {
+        setIsLoading(false);
+        showModal('Your recipe has been successfully posted!');
+        setMyPostList(data.myposts);
+      } else {
+        setIsLoading(false);
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLogin(false);
+        setIsLoading(false);
+        setError(null);
+        setMyPostList([]);
+      }
+    } catch (e) {
+      setIsLoading(false);
+    }
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -1092,6 +1125,7 @@ export const GlobalContextProvider = ({children}) => {
         updateCommentLike,
         deletePost,
         cookbookRequest,
+        recipeToPost,
         isLogin,
         showModal,
         hideModal,
