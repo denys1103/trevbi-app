@@ -38,6 +38,7 @@ const MembersPage = ({navigation, route}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const profile = userInfo.user;
 
   useEffect(() => {
@@ -130,8 +131,14 @@ const MembersPage = ({navigation, route}) => {
             Back
           </Text>
         </TouchableOpacity> */}
-        <View style={{paddingHorizontal: '10%', paddingTop: heightPixel(10)}}>
-          <SearchBar
+        <View
+          style={{
+            paddingHorizontal: '10%',
+            paddingTop: heightPixel(10),
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          {/* <SearchBar
             placeholder="Search User"
             onChangeText={setSearchQuery}
             platform={Platform.OS === 'ios' ? 'ios' : 'android'}
@@ -144,7 +151,47 @@ const MembersPage = ({navigation, route}) => {
             clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
             value={searchQuery}
             allowFontScaling={false}
-          />
+          /> */}
+          <View style={{flex: 1}}>
+            <SearchBar
+              placeholder="Search User"
+              onChangeText={setSearchQuery}
+              value={searchQuery}
+              platform={Platform.OS === 'ios' ? 'ios' : 'android'}
+              showCancel={false}
+              allowFontScaling={false}
+              containerStyle={{
+                borderRadius: heightPixel(20),
+                marginBottom: heightPixel(10),
+                padding: 0,
+                backgroundColor: 'transparent',
+              }}
+              inputContainerStyle={{
+                borderRadius: heightPixel(20),
+                // backgroundColor: '#f0f0f0',
+                height: heightPixel(40),
+              }}
+              inputStyle={{
+                fontSize: fontPixel(16),
+                allowFontScaling: false,
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+            />
+          </View>
+          {isFocused && (
+            <TouchableOpacity
+              onPress={() => {
+                setSearchQuery('');
+                setIsFocused(false);
+              }}>
+              <Text
+                style={{marginLeft: 10, color: '#61a148', fontSize: 16}}
+                allowFontScaling={false}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <TouchableOpacity
           activeOpacity={0.5}

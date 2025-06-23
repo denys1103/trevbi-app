@@ -303,8 +303,8 @@ export function Profile({setEditVisible, navigation}) {
             </View>
             <View style={styles.box}>
               <SimpleLineIcons
-                color={'#7d7d7d'}
-                name="lock"
+                color={isEnabled1 ? '#61a148' : '#7d7d7d'}
+                name={isEnabled1 ? 'lock-open' : 'lock'}
                 size={fontPixel(32)}
               />
               <View style={styles.lockBoxContent}>
