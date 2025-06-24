@@ -38,7 +38,6 @@ const MembersPage = ({navigation, route}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const profile = userInfo.user;
 
   useEffect(() => {
@@ -135,8 +134,8 @@ const MembersPage = ({navigation, route}) => {
           style={{
             paddingHorizontal: '10%',
             paddingTop: heightPixel(10),
-            flexDirection: 'row',
-            alignItems: 'center',
+            // flexDirection: 'row',
+            // alignItems: 'center',
           }}>
           <SearchBar
             placeholder="Search User"
@@ -151,47 +150,8 @@ const MembersPage = ({navigation, route}) => {
             clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
             value={searchQuery}
             allowFontScaling={false}
+            cancelButtonProps={{color: '#61a148'}}
           />
-          {/* <View style={{flex: 1}}>
-            <SearchBar
-              placeholder="Search User"
-              onChangeText={setSearchQuery}
-              value={searchQuery}
-              platform={Platform.OS === 'ios' ? 'ios' : 'android'}
-              showCancel={false}
-              allowFontScaling={false}
-              containerStyle={{
-                borderRadius: heightPixel(20),
-                marginBottom: heightPixel(10),
-                padding: 0,
-                backgroundColor: 'transparent',
-              }}
-              inputContainerStyle={{
-                borderRadius: heightPixel(20),
-                // backgroundColor: '#f0f0f0',
-                height: heightPixel(40),
-              }}
-              inputStyle={{
-                fontSize: fontPixel(16),
-                allowFontScaling: false,
-              }}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-            />
-          </View> */}
-          {/* {isFocused && (
-            <TouchableOpacity
-              onPress={() => {
-                setSearchQuery('');
-                setIsFocused(false);
-              }}>
-              <Text
-                style={{marginLeft: 10, color: '#61a148', fontSize: 16}}
-                allowFontScaling={false}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          )} */}
         </View>
         <TouchableOpacity
           activeOpacity={0.5}
@@ -286,6 +246,9 @@ const MembersPage = ({navigation, route}) => {
         <FlatList
           enableEmptySections={true}
           data={dataToShow}
+          bounces={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
           refreshControl={
             <RefreshControl
               refreshing={refreshingUsers}
