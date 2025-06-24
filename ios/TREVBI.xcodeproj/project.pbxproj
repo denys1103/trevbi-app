@@ -22,6 +22,7 @@
 		AA8683AB044B49F99687F27E /* LEMONMILK-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 76A8F33CEABF4AD89288D195 /* LEMONMILK-MediumItalic.otf */; };
 		C1296C3E03DF477AA4A0A81D /* LEMONMILK-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */; };
 		C311FEA52DFBA04900D589DD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C311FEA42DFBA04900D589DD /* GoogleService-Info.plist */; };
+		C350148D2E030C1400569F60 /* scanTest02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C350148C2E030C1400569F60 /* scanTest02.jpg */; };
 		C5FD8277FF3D44F0A1D28758 /* LEMONMILK-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4256AC8924D14B0FA2F6F42B /* LEMONMILK-Medium.otf */; };
 		E692F5A189D6404FB027C7DF /* LEMONMILK-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 15844FE2C5A444438A32536B /* LEMONMILK-RegularItalic.otf */; };
 		EB32059745CD48C7A96B0A05 /* LEMONMILK-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 861BA8D6BDF948929E18A24F /* LEMONMILK-LightItalic.otf */; };
@@ -65,6 +66,7 @@
 		92D433FB520448BFA06441F7 /* LEMONMILK-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "LEMONMILK-Light.otf"; path = "../assets/fonts/LEMONMILK-Light.otf"; sourceTree = "<group>"; };
 		95B15C8E98D0447CCCA73544 /* Pods_TREVBI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TREVBI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C311FEA42DFBA04900D589DD /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C350148C2E030C1400569F60 /* scanTest02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = scanTest02.jpg; path = /Users/administrator/Downloads/scanTest02.jpg; sourceTree = "<absolute>"; };
 		CABA894860CFAF85FE0B04D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = TREVBI/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -119,6 +121,7 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				CABA894860CFAF85FE0B04D3 /* PrivacyInfo.xcprivacy */,
+				C350148C2E030C1400569F60 /* scanTest02.jpg */,
 			);
 			name = TREVBI;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				C1296C3E03DF477AA4A0A81D /* LEMONMILK-Light.otf in Resources */,
 				EB32059745CD48C7A96B0A05 /* LEMONMILK-LightItalic.otf in Resources */,
 				C5FD8277FF3D44F0A1D28758 /* LEMONMILK-Medium.otf in Resources */,
+				C350148D2E030C1400569F60 /* scanTest02.jpg in Resources */,
 				0477CC842D514B7F000C27F4 /* scanTest01.jpg in Resources */,
 				AA8683AB044B49F99687F27E /* LEMONMILK-MediumItalic.otf in Resources */,
 				40077852AC63403483C103A7 /* LEMONMILK-Regular.otf in Resources */,
@@ -551,7 +555,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = G52X4Y7ZY9;
 				ENABLE_BITCODE = NO;
@@ -586,7 +590,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 53;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = G52X4Y7ZY9;
 				INFOPLIST_FILE = TREVBI/Info.plist;

@@ -138,7 +138,7 @@ const MembersPage = ({navigation, route}) => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          {/* <SearchBar
+          <SearchBar
             placeholder="Search User"
             onChangeText={setSearchQuery}
             platform={Platform.OS === 'ios' ? 'ios' : 'android'}
@@ -151,8 +151,8 @@ const MembersPage = ({navigation, route}) => {
             clearIcon={Platform.OS === 'ios' ? {name: 'close-circle'} : null}
             value={searchQuery}
             allowFontScaling={false}
-          /> */}
-          <View style={{flex: 1}}>
+          />
+          {/* <View style={{flex: 1}}>
             <SearchBar
               placeholder="Search User"
               onChangeText={setSearchQuery}
@@ -178,8 +178,8 @@ const MembersPage = ({navigation, route}) => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
             />
-          </View>
-          {isFocused && (
+          </View> */}
+          {/* {isFocused && (
             <TouchableOpacity
               onPress={() => {
                 setSearchQuery('');
@@ -191,7 +191,7 @@ const MembersPage = ({navigation, route}) => {
                 Cancel
               </Text>
             </TouchableOpacity>
-          )}
+          )} */}
         </View>
         <TouchableOpacity
           activeOpacity={0.5}

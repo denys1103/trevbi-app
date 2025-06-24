@@ -304,7 +304,7 @@ export function Profile({setEditVisible, navigation}) {
             <View style={styles.box}>
               <SimpleLineIcons
                 color={isEnabled1 ? '#61a148' : '#7d7d7d'}
-                name={isEnabled1 ? 'lock-open' : 'lock'}
+                name={!isEnabled1 ? 'lock-open' : 'lock'}
                 size={fontPixel(32)}
               />
               <View style={styles.lockBoxContent}>
