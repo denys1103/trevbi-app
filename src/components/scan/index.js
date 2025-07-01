@@ -729,6 +729,23 @@ const ScanAndRecognizeScreen = ({navigation}) => {
                         Ingredients
                       </Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[
+                        styles.scanButton,
+                        {marginBottom: heightPixel(0)},
+                      ]}
+                      onPress={getBarcodeAI}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Scan
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.scanButtonText}>
+                        Barcode
+                      </Text>
+                    </TouchableOpacity>
                     {/* <TouchableOpacity
                       activeOpacity={0.9}
                       style={styles.scanButton}

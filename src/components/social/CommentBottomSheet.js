@@ -154,6 +154,15 @@ const CommentBottomSheet = React.forwardRef(
       onCommentBtnPress({_id: postItem._id, comment: oneComment});
     };
 
+    const formatLike = count => {
+      if (count >= 1_000_000) {
+        return (count / 1_000_000).toFixed(0).replace(/\.0$/, '') + 'M';
+      } else if (count >= 1_000) {
+        return (count / 1_000).toFixed(0).replace(/\.0$/, '') + 'K';
+      }
+      return count.toString();
+    };
+
     const renderComment = ({item}) => (
       // <View style={styles.commentRow}>
       //   <Text allowFontScaling={false} style={styles.commentUser}>
@@ -210,11 +219,37 @@ const CommentBottomSheet = React.forwardRef(
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.6}
-          style={{padding: heightPixel(10)}}
+          style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           onPress={() => {
             onCommentLikePress(item._id);
           }}>
-          <Ionicons
+          <Image
+            style={{
+              width: heightPixel(37),
+              height: heightPixel(30),
+              resizeMode: 'cover',
+              marginHorizontal: heightPixel(8),
+            }}
+            source={
+              item.like.includes(userInfo.user._id)
+                ? require('../../../assets/images/kiss_like.png')
+                : require('../../../assets/images/kiss.png')
+            }
+          />
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontSize: fontPixel(10),
+              color: 'black',
+              paddingHorizontal: heightPixel(10),
+            }}>
+            {item.like ? formatLike(item.like.length) : 0}
+          </Text>
+          {/* <Ionicons
             name={
               item?.like
                 ? item.like.includes(userInfo.user._id)
@@ -230,7 +265,7 @@ const CommentBottomSheet = React.forwardRef(
                   : 'black'
                 : 'black'
             }
-          />
+          /> */}
         </TouchableOpacity>
       </View>
     );
