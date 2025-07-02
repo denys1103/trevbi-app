@@ -270,6 +270,8 @@ const ScanAndRecognizeScreen = ({navigation}) => {
   };
 
   const captureAndRecognizeText = async () => {
+    setEnableOnCodeScanned(false);
+    setBarcodeScanModalVisibleStatus(false);
     try {
       await createAppDir();
       setOkBtnStatus(false);

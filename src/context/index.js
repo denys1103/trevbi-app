@@ -867,6 +867,34 @@ export const GlobalContextProvider = ({children}) => {
     }
   };
 
+  const addReplyComment = async (...commentInfo) => {
+    setIsLoading(true);
+    if (!isConnected) {
+      showModal('Check your internet connection.');
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const {data} = await client.post('/add-replycomment', {...commentInfo});
+
+      if (data.success) {
+        setIsLoading(false);
+        return data.updatedPost;
+      } else {
+        showModal(data.message);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLogin(false);
+        setIsLoading(false);
+        setError(null);
+        return {};
+      }
+    } catch (e) {
+      setIsLoading(false);
+      return {};
+    }
+  };
+
   const deleteComment = async (...commentInfo) => {
     setIsLoading(true);
     if (!isConnected) {
@@ -1120,6 +1148,7 @@ export const GlobalContextProvider = ({children}) => {
         getUserMemberList,
         getUserData,
         addComment,
+        addReplyComment,
         deleteComment,
         updateComment,
         updateCommentLike,

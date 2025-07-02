@@ -28,6 +28,201 @@ import {GlobalContext} from '../../context';
 import {fontPixel, heightPixel, imageURL} from '../../config';
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
 
+const CommentItem = ({
+  item,
+  onCommentLikePress,
+  formatLike,
+  userInfo,
+  navigation,
+  handleLongPress,
+  setReplyTo,
+}) => {
+  const [showReplies, setShowReplies] = useState(false);
+
+  return (
+    <View style={styles.commentRow}>
+      <View style={styles.commentContainer}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            if (item.userid._id) {
+              navigation.replace('FeedPage', {
+                userid: item.userid._id,
+              });
+            }
+          }}>
+          <Image
+            style={styles.userAvatar}
+            source={
+              item.userid?.avatar
+                ? {
+                    uri: imageURL + item.userid.avatar,
+                  }
+                : require('../../../assets/images/free_user.png')
+            }
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onLongPress={() => {
+            if (item.userid._id) {
+              if (item.userid._id === userInfo.user._id) {
+                handleLongPress(item);
+              }
+            }
+          }}
+          style={styles.userBoxContent}>
+          <Text allowFontScaling={false} style={styles.flexRow}>
+            <Text allowFontScaling={false} style={styles.fullnameTextStyle}>
+              {item.userid?.fullname ? `${item.userid.fullname} ` : ''}
+            </Text>
+            <Text allowFontScaling={false} style={styles.commentTextStyle}>
+              {item.comment}
+            </Text>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => {
+            onCommentLikePress(item._id);
+          }}>
+          <Image
+            style={{
+              width: heightPixel(25),
+              height: heightPixel(20),
+              resizeMode: 'cover',
+              marginHorizontal: heightPixel(8),
+            }}
+            source={
+              item.like.includes(userInfo.user._id)
+                ? require('../../../assets/images/kiss_like.png')
+                : require('../../../assets/images/kiss.png')
+            }
+          />
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontSize: fontPixel(10),
+              color: 'black',
+              paddingHorizontal: heightPixel(10),
+            }}>
+            {item.like ? formatLike(item.like.length) : 0}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => {
+            setReplyTo(item);
+            setShowReplies(true);
+          }}>
+          <Image
+            style={{
+              width: heightPixel(25),
+              height: heightPixel(20),
+              resizeMode: 'cover',
+              marginHorizontal: heightPixel(8),
+            }}
+            source={require('../../../assets/images/comment.png')}
+          />
+          <Text
+            allowFontScaling={false}
+            style={{
+              fontSize: fontPixel(10),
+              color: 'black',
+              paddingHorizontal: heightPixel(10),
+            }}>
+            {item.replies ? item.replies.length : 0}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {showReplies && item.replies && item.replies.length > 0 && (
+        <>
+          <View style={styles.replyContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                setReplyTo(null);
+                setShowReplies(false);
+              }}
+              style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <View
+                style={{
+                  width: heightPixel(25),
+                  height: heightPixel(2),
+                  backgroundColor: '#657786',
+                  alignSelf: 'center',
+                }}
+              />
+              <Text
+                allowFontScaling={false}
+                style={{
+                  marginLeft: heightPixel(10),
+                  fontSize: fontPixel(16),
+                  fontWeight: 'bold',
+                  color: '#657786',
+                }}>
+                Hide replies
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{marginLeft: 30}}>
+            {item.replies &&
+              item.replies.map(reply => (
+                <View key={reply._id} style={styles.commentContainer}>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() => {
+                      if (reply.userid._id) {
+                        navigation.replace('FeedPage', {
+                          userid: reply.userid._id,
+                        });
+                      }
+                    }}>
+                    <Image
+                      style={styles.userAvatar}
+                      source={
+                        reply.userid?.avatar
+                          ? {
+                              uri: imageURL + reply.userid.avatar,
+                            }
+                          : require('../../../assets/images/free_user.png')
+                      }
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.userBoxContent}>
+                    <Text allowFontScaling={false} style={styles.flexRow}>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.fullnameTextStyle}>
+                        {reply.userid?.fullname
+                          ? `${reply.userid.fullname} `
+                          : ''}
+                      </Text>
+                      <Text
+                        allowFontScaling={false}
+                        style={styles.commentTextStyle}>
+                        {reply.comment}
+                      </Text>
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+          </View>
+        </>
+      )}
+    </View>
+  );
+};
+
 const CommentBottomSheet = React.forwardRef(
   ({postItem, onCommentBtnPress}, ref) => {
     const snapPoints = useMemo(() => ['100%'], []);
@@ -39,6 +234,7 @@ const CommentBottomSheet = React.forwardRef(
     const {
       userInfo,
       addComment,
+      addReplyComment,
       deleteComment,
       updateComment,
       updateCommentLike,
@@ -77,17 +273,20 @@ const CommentBottomSheet = React.forwardRef(
         onCommentBtnPress(updatedPost);
         setEditingComment(null);
       } else {
-        const updatedPost = await addComment({
-          id: postItem._id,
-          comment: text.trim(),
-        });
-        onCommentBtnPress(updatedPost);
-        // const newComment = {
-        //   id: Date.now().toString(),
-        //   user: 'You',
-        //   text: replyTo ? `↪ ${replyTo.user}: ${text}` : text,
-        // };
-        // setComments(prev => [newComment, ...prev]);
+        if (replyTo) {
+          const updatedPost = await addReplyComment({
+            postId: postItem._id,
+            commentId: replyTo._id,
+            replyComment: text.trim(),
+          });
+          onCommentBtnPress(updatedPost);
+        } else {
+          const updatedPost = await addComment({
+            id: postItem._id,
+            comment: text.trim(),
+          });
+          onCommentBtnPress(updatedPost);
+        }
       }
       setText('');
       setReplyTo(null);
@@ -163,113 +362,6 @@ const CommentBottomSheet = React.forwardRef(
       return count.toString();
     };
 
-    const renderComment = ({item}) => (
-      // <View style={styles.commentRow}>
-      //   <Text allowFontScaling={false} style={styles.commentUser}>
-      //     {item.userid.fullname}
-      //   </Text>
-      //   <Text allowFontScaling={false} style={styles.commentText}>
-      //     {item.comment}
-      //   </Text>
-      //   <TouchableOpacity onPress={() => setReplyTo(item)}>
-      //     <Text allowFontScaling={false} style={styles.replyButton}>
-      //       Reply
-      //     </Text>
-      //   </TouchableOpacity>
-      // </View>
-      <View style={styles.commentRow}>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={() => {
-            if (item.userid._id) {
-              navigation.replace('FeedPage', {
-                userid: item.userid._id,
-              });
-            }
-          }}>
-          <Image
-            style={styles.userAvatar}
-            source={
-              item.userid?.avatar
-                ? {
-                    uri: imageURL + item.userid.avatar,
-                  }
-                : require('../../../assets/images/free_user.png')
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onLongPress={() => {
-            if (item.userid._id) {
-              if (item.userid._id === userInfo.user._id) {
-                handleLongPress(item);
-              }
-            }
-          }}
-          style={styles.userBoxContent}>
-          <Text allowFontScaling={false} style={styles.flexRow}>
-            <Text allowFontScaling={false} style={styles.fullnameTextStyle}>
-              {item.userid?.fullname ? `${item.userid.fullname} ` : ''}
-            </Text>
-            <Text allowFontScaling={false} style={styles.commentTextStyle}>
-              {item.comment}
-            </Text>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={() => {
-            onCommentLikePress(item._id);
-          }}>
-          <Image
-            style={{
-              width: heightPixel(37),
-              height: heightPixel(30),
-              resizeMode: 'cover',
-              marginHorizontal: heightPixel(8),
-            }}
-            source={
-              item.like.includes(userInfo.user._id)
-                ? require('../../../assets/images/kiss_like.png')
-                : require('../../../assets/images/kiss.png')
-            }
-          />
-          <Text
-            allowFontScaling={false}
-            style={{
-              fontSize: fontPixel(10),
-              color: 'black',
-              paddingHorizontal: heightPixel(10),
-            }}>
-            {item.like ? formatLike(item.like.length) : 0}
-          </Text>
-          {/* <Ionicons
-            name={
-              item?.like
-                ? item.like.includes(userInfo.user._id)
-                  ? 'heart'
-                  : 'heart-outline'
-                : 'heart-outline'
-            }
-            size={fontPixel(22)}
-            color={
-              item?.like
-                ? item.like.includes(userInfo.user._id)
-                  ? 'red'
-                  : 'black'
-                : 'black'
-            }
-          /> */}
-        </TouchableOpacity>
-      </View>
-    );
-
     if (!postItem) return null;
 
     return (
@@ -288,14 +380,27 @@ const CommentBottomSheet = React.forwardRef(
           <BottomSheetFlatList
             data={postItem?.comment || []}
             keyExtractor={item => item._id}
-            renderItem={renderComment}
+            renderItem={({item}) => (
+              <CommentItem
+                item={item}
+                onCommentLikePress={onCommentLikePress}
+                formatLike={formatLike}
+                userInfo={userInfo}
+                navigation={navigation}
+                handleLongPress={handleLongPress}
+                setReplyTo={setReplyTo}
+              />
+            )}
             contentContainerStyle={{backgroundColor: 'white', flexGrow: 1}}
           />
           <View style={styles.inputWrapper}>
             {replyTo && (
               <View style={styles.replyBanner}>
                 <Text allowFontScaling={false} style={styles.replyText}>
-                  Replying to {replyTo.user}
+                  Replying to{' '}
+                  {replyTo.userid?.fullname
+                    ? `${replyTo.userid.fullname} `
+                    : ''}
                 </Text>
                 <TouchableOpacity onPress={() => setReplyTo(null)}>
                   <Text allowFontScaling={false} style={styles.cancelReply}>
@@ -344,7 +449,7 @@ const CommentBottomSheet = React.forwardRef(
                   opacity: animatedValue,
                 }}>
                 <TouchableOpacity onPress={handleSend}>
-                  <Ionicons name="send" size={fontPixel(24)} color="#007AFF" />
+                  <Ionicons name="send" size={fontPixel(24)} color="#61a148" />
                 </TouchableOpacity>
               </Animated.View>
             </View>
@@ -359,12 +464,22 @@ export default CommentBottomSheet;
 
 const styles = StyleSheet.create({
   commentRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginBottom: heightPixel(12),
     borderBottomWidth: 0.5,
     borderColor: '#eee',
     paddingBottom: heightPixel(8),
     paddingHorizontal: heightPixel(10),
+  },
+  commentContainer: {
+    flexDirection: 'row',
+    paddingBottom: heightPixel(5),
+  },
+  replyContainer: {
+    flexDirection: 'row',
+    marginTop: heightPixel(20),
+    marginBottom: heightPixel(20),
+    marginLeft: heightPixel(30),
   },
   commentUser: {
     fontWeight: 'bold',
@@ -372,10 +487,6 @@ const styles = StyleSheet.create({
   },
   commentText: {
     marginBottom: heightPixel(4),
-  },
-  replyButton: {
-    color: '#007AFF',
-    fontSize: fontPixel(12),
   },
   inputWrapper: {
     width: '100%',
@@ -412,11 +523,12 @@ const styles = StyleSheet.create({
   },
   replyText: {
     flex: 1,
-    color: '#007AFF',
+    color: '#61a148',
+    fontSize: fontPixel(16),
   },
   cancelReply: {
     fontSize: fontPixel(18),
-    color: '#007AFF',
+    color: '#61a148',
     paddingHorizontal: heightPixel(8),
   },
   userBoxContent: {
@@ -424,7 +536,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     paddingHorizontal: heightPixel(10),
-    width: SCREEN_WIDTH - heightPixel(100),
+    width: SCREEN_WIDTH - heightPixel(135),
   },
   userAvatar: {
     width: heightPixel(40),
